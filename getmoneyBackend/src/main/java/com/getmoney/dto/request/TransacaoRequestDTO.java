@@ -2,6 +2,8 @@ package com.getmoney.dto.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransacaoRequestDTO {
 
@@ -17,6 +19,8 @@ public class TransacaoRequestDTO {
 
     private Integer categoriaId;
 
+    private List<Integer> metasIds;
+
     public TransacaoRequestDTO() {}
 
     public TransacaoRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer usuarioId, Integer categoriaId) {
@@ -26,6 +30,7 @@ public class TransacaoRequestDTO {
         this.status = status;
         this.usuarioId = usuarioId;
         this.categoriaId = categoriaId;
+        this.metasIds = new ArrayList<>();
     }
 
 
@@ -75,5 +80,13 @@ public class TransacaoRequestDTO {
 
     public void setUsuarioId(Integer usuarioId) {
         this.usuarioId = usuarioId;
+    }
+
+    public List<Integer> getMetasIds() {
+        return metasIds;
+    }
+
+    public void setMetasIds(List<Integer> metasIds) {
+        this.metasIds = metasIds;
     }
 }

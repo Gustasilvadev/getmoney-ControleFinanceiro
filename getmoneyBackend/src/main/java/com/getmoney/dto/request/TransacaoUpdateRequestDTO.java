@@ -2,12 +2,15 @@ package com.getmoney.dto.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransacaoUpdateRequestDTO {
     private BigDecimal valor;
     private String descricao;
     private LocalDate data;
     private Integer status;
+    private List<Integer> metasIds;
 
     public TransacaoUpdateRequestDTO() {}
 
@@ -16,6 +19,7 @@ public class TransacaoUpdateRequestDTO {
         this.descricao = descricao;
         this.data = data;
         this.status = status;
+        this.metasIds = new ArrayList<>();
     }
 
     // Getters e Setters (SEM categoriaId)
@@ -49,5 +53,13 @@ public class TransacaoUpdateRequestDTO {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<Integer> getMetasIds() {
+        return metasIds;
+    }
+
+    public void setMetasIds(List<Integer> metasIds) {
+        this.metasIds = metasIds;
     }
 }

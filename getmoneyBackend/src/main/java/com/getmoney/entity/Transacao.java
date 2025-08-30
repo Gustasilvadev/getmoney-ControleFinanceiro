@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="transacao")
@@ -33,6 +35,12 @@ public class Transacao {
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
+
+    @ManyToMany
+    @JoinTable(name = "meta_transacao",
+            joinColumns = @JoinColumn(name = "transacao_id"),
+            inverseJoinColumns = @JoinColumn(name = "meta_id"))
+    private List<Meta> metas = new ArrayList<>();
 
 
     //Inicializa os dados no momento da criacao
@@ -100,5 +108,11 @@ public class Transacao {
         this.categoria = categoria;
     }
 
+    public List<Meta> getMetas() {
+        return metas;
+    }
 
+    public void setMetas(List<Meta> metas) {
+        this.metas = metas;
+    }
 }

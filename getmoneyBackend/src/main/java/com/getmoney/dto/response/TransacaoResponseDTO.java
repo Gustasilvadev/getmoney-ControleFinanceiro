@@ -4,6 +4,9 @@ import com.getmoney.entity.Transacao;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TransacaoResponseDTO {
 
@@ -25,6 +28,8 @@ public class TransacaoResponseDTO {
 
     private String categoriaTipo;
 
+    private List<MetaResponseDTO> metas;
+
 
     public TransacaoResponseDTO(Transacao transacao) {
         this.id = transacao.getId();
@@ -36,9 +41,14 @@ public class TransacaoResponseDTO {
         this.categoriaId = transacao.getCategoria().getId();
         this.categoriaNome = transacao.getCategoria().getNome();
         this.categoriaTipo = transacao.getCategoria().getTipo().name();
+        this.metas = transacao.getMetas().stream()
+                .map(meta -> new MetaResponseDTO(meta))
+                .collect(Collectors.toList());
     }
 
-    public TransacaoResponseDTO() {}
+    public TransacaoResponseDTO() {
+        this.metas = new ArrayList<>();
+    }
 
 
     public Integer getId() {
@@ -111,5 +121,13 @@ public class TransacaoResponseDTO {
 
     public void setCategoriaTipo(String categoriaTipo) {
         this.categoriaTipo = categoriaTipo;
+    }
+
+    public List<MetaResponseDTO> getMetas() {
+        return metas;
+    }
+
+    public void setMetas(List<MetaResponseDTO> metas) {
+        this.metas = metas;
     }
 }
