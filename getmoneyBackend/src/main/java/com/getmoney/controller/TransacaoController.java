@@ -1,12 +1,15 @@
 package com.getmoney.controller;
 
 import com.getmoney.dto.request.TransacaoRequestDTO;
+import com.getmoney.dto.request.TransacaoUpdateRequestDTO;
+import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Transacao;
 import com.getmoney.service.TransacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,40 +30,33 @@ public class TransacaoController {
 
     @GetMapping("/listar")
     @Operation(summary="Listar transacoes", description="Endpoint para listar todas as transacoes")
-    public ResponseEntity <List<Transacao>> listarTransacoes(){
+    public ResponseEntity <List<TransacaoResponseDTO>> listarTransacoes(){
         return ResponseEntity.ok(transacaoService.listarTransacoes());
     }
 
     @GetMapping("/listarPorTransacaoId/{transacaoId}")
     @Operation(summary = "Listar transacao pelo id de transacao", description = "Endpoint para obter transacao pelo id de transacao")
-    public ResponseEntity<Transacao>listarPorTransacaoId(@PathVariable Integer transacaoId){
-        Transacao transacao = transacaoService.listarPorTransaccaoId(transacaoId);
-        if(transacao == null) {
-            return ResponseEntity.noContent().build();
-        }else{
+    public ResponseEntity<TransacaoResponseDTO>listarPorTransacaoId(@PathVariable Integer transacaoId){
+        try {
+            TransacaoResponseDTO transacao = transacaoService.listarPorTransacaoId(transacaoId);
             return ResponseEntity.ok(transacao);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build(); // 404 Not Found
         }
     }
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova transacao", description = "Endpoint para criar um novo registro de transacao")
-    public ResponseEntity<Transacao> criarTransacao(@RequestBody TransacaoRequestDTO requestDTO) {
-        // Service converte DTO --> Entidade e salva no banco
-        Transacao transacaoSalva = transacaoService.criarTransacao(requestDTO);
-        // Devolve a entidade salva
-        return ResponseEntity.status(HttpStatus.CREATED).body(transacaoSalva);
+    public ResponseEntity<TransacaoResponseDTO> criarTransacao(@Valid @RequestBody TransacaoRequestDTO transacaoRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(transacaoService.criarTransacao(transacaoRequestDTO));
     }
 
     @PutMapping("/editarPorTransacaoId/{transacaoId}")
     @Operation(summary="Editar transacoes pelo id da transacao", description="Endpoint para editar pelo id da transacao")
-    public ResponseEntity<Transacao> editarPorTransacaoId(@PathVariable Integer transacaoId,
-                                                          @RequestBody Transacao transacao) {
-        try {
-            Transacao transacaoAtualizada = transacaoService.editarPorTransacaoId(transacaoId, transacao);
-            return ResponseEntity.ok(transacaoAtualizada); // 200 OK com a transacao atualizado
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build(); // 404 se não achar a transacao
-        }
+    public ResponseEntity<TransacaoResponseDTO> editarPorTransacaoId(@PathVariable Integer transacaoId,
+                                                                     @Valid @RequestBody TransacaoUpdateRequestDTO transacaoUpdateRequestDTO) {
+
+        return ResponseEntity.ok(transacaoService.editarPorTransacaoId(transacaoId,transacaoUpdateRequestDTO));
     }
 
     @DeleteMapping("/deletarPorTransacaoId/{transacaoId}")

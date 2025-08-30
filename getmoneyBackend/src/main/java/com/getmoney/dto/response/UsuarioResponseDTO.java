@@ -26,13 +26,6 @@ public class UsuarioResponseDTO {
 
     public UsuarioResponseDTO() {}
 
-    public UsuarioResponseDTO(Integer id, String nome, String email, LocalDate dataCriacao, Integer status) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.dataCriacao = dataCriacao;
-        this.status = status;
-    }
 
     public Integer getId() {
         return id;

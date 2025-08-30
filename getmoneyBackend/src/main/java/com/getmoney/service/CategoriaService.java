@@ -1,10 +1,13 @@
 package com.getmoney.service;
 
+import com.getmoney.dto.request.CategoriaRequestDTO;
+import com.getmoney.dto.response.CategoriaResponseDTO;
 import com.getmoney.entity.Categoria;
-import com.getmoney.entity.Usuario;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.repository.CategoriaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +15,10 @@ import java.util.List;
 @Service
 public class CategoriaService {
 
-    private CategoriaRepository categoriaRepository;
+    private final CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public CategoriaService(CategoriaRepository categoriaRepository) {
         this.categoriaRepository = categoriaRepository;
@@ -27,33 +33,30 @@ public class CategoriaService {
     }
 
     public List<Categoria> listarPorCategoriaTipo(Integer categoriaTipo) {
-        // Converter o código inteiro para o enum
         CategoriaTipo tipo = CategoriaTipo.fromCodigo(categoriaTipo);
-
-        // Buscar todas as categorias do tipo especificado
         return categoriaRepository.findByTipo(tipo);
     }
 
-    public Categoria criarCategoria(Categoria categoria){
-        return this.categoriaRepository.save(categoria);
+    public CategoriaResponseDTO criarCategoria(CategoriaRequestDTO categoriaRequestDTO){
+
+        Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
+        Categoria categoriaSalva = this.categoriaRepository.save(categoria);
+        CategoriaResponseDTO categoriaResponseDTO = modelMapper.map(categoriaSalva, CategoriaResponseDTO.class);
+        return categoriaResponseDTO;
     }
 
-    public Categoria editarPorCategoriaId(Integer categoriaId, Categoria categoria){
-        return categoriaRepository.findById(categoriaId)
-                .map(categoriaExistente -> {
+    public CategoriaResponseDTO atualizarCategoria(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
 
-                    if (!categoriaExistente.getNome().equals(categoria.getNome())) {
-                        categoriaExistente.setNome(categoria.getNome());
-                    }
-                    if (!categoriaExistente.getTipo().equals(categoria.getTipo())) {
-                        categoriaExistente.setTipo(categoria.getTipo());
-                    }
-                    if (!categoriaExistente.getStatus().equals(categoria.getStatus())) {
-                        categoriaExistente.setStatus(categoria.getStatus());
-                    }
-                    return categoriaRepository.save(categoriaExistente);
-                })
-                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrado com id " + categoriaId));
+        Categoria categoriaBuscada = this.listarPorCategoriaId(categoriaId);
+
+        if (categoriaBuscada != null) {
+            modelMapper.map(categoriaRequestDTO, categoriaBuscada);
+            Categoria categoriaSalva = categoriaRepository.save(categoriaBuscada);
+            return modelMapper.map(categoriaSalva, CategoriaResponseDTO.class);
+        } else {
+            return null;
+        }
+
     }
 
     public void deletarPorCategoriaId(Integer categoriaId){

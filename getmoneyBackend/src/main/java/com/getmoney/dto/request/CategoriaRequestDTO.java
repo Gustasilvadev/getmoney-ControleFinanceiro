@@ -8,6 +8,8 @@ public class CategoriaRequestDTO {
 
     private CategoriaTipo tipo;
 
+    private Integer status;
+
     public CategoriaRequestDTO() {}
 
     public CategoriaRequestDTO(String nome, CategoriaTipo tipo) {
@@ -30,6 +32,14 @@ public class CategoriaRequestDTO {
 
     public void setTipo(CategoriaTipo tipo) {
         this.tipo = tipo;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
 

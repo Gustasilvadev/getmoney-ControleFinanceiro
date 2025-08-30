@@ -1,5 +1,7 @@
 package com.getmoney.controller;
 
+import com.getmoney.dto.request.CategoriaRequestDTO;
+import com.getmoney.dto.response.CategoriaResponseDTO;
 import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Usuario;
 import com.getmoney.service.CategoriaService;
@@ -9,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +30,7 @@ public class CategoriaController {
     public CategoriaController(CategoriaService categoriaService) {
         this.categoriaService = categoriaService;
     }
+
 
     @GetMapping("/listar")
     @Operation(summary="Listar categorias", description="Endpoint para listar todas as categorias")
@@ -58,22 +63,16 @@ public class CategoriaController {
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova categoria", description = "Endpoint para criar um novo registro de categoria")
-    public ResponseEntity<Categoria> criarCategoria(@Valid @RequestBody Categoria categoria){
-        Categoria novaCategoria = categoriaService.criarCategoria(categoria);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
+    public ResponseEntity<CategoriaResponseDTO> criarCategoria(@Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.criarCategoria(categoriaRequestDTO));
 
     }
 
-    @PutMapping("/editarPorCategoriaId/{categoriaId}")
+    @PutMapping("/editarCategoria/{categoriaId}")
     @Operation(summary="Editar categorias pelo id da categoria", description="Endpoint para editar pelo id da categoria")
-    public ResponseEntity<Categoria> editarPorCategoriaId(@PathVariable Integer categoriaId,
-                                                 @RequestBody Categoria categoria) {
-        try {
-            Categoria categoriaAtualizada = categoriaService.editarPorCategoriaId(categoriaId, categoria);
-            return ResponseEntity.ok(categoriaAtualizada); // 200 OK com a categoria atualizado
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build(); // 404 se não achar a categoria
-        }
+    public ResponseEntity<CategoriaResponseDTO> editarCategoria(@PathVariable Integer categoriaId,
+                                                 @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
+        return ResponseEntity.ok(categoriaService.atualizarCategoria(categoriaId, categoriaRequestDTO));
     }
 
     @DeleteMapping("/deletarPorCategoriaId/{categoriaId}")

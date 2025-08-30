@@ -21,14 +21,7 @@ public class CategoriaResponseDTO {
 
     public CategoriaResponseDTO() {}
 
-    public CategoriaResponseDTO(Integer id, String nome, CategoriaTipo tipo, Integer status) {
-        this.id = id;
-        this.nome = nome;
-        this.tipo = tipo;
-        this.status = status;
-    }
 
-    // Getters e Setters
     public Integer getId() {
         return id;
     }

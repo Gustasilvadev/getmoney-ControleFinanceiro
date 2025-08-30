@@ -40,21 +40,7 @@ public class TransacaoResponseDTO {
 
     public TransacaoResponseDTO() {}
 
-    public TransacaoResponseDTO(Integer id, BigDecimal valor, String descricao, LocalDate data,
-                                Integer status, Integer usuarioId, Integer categoriaId,
-                                String categoriaNome, String categoriaTipo) {
-        this.id = id;
-        this.valor = valor;
-        this.descricao = descricao;
-        this.data = data;
-        this.status = status;
-        this.usuarioId = usuarioId;
-        this.categoriaId = categoriaId;
-        this.categoriaNome = categoriaNome;
-        this.categoriaTipo = categoriaTipo;
-    }
 
-    // Getters e Setters
     public Integer getId() {
         return id;
     }
