@@ -2,15 +2,20 @@ package com.getmoney.controller;
 
 import com.getmoney.dto.request.LoginRequestDTO;
 import com.getmoney.dto.request.RegistroRequestDTO;
+import com.getmoney.dto.response.LoginResponseDTO;
+import com.getmoney.dto.response.UsuarioResponseDTO;
 import com.getmoney.entity.Usuario;
 import com.getmoney.repository.UsuarioRepository;
 import com.getmoney.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,8 +34,10 @@ public class AutenticacaoController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    private final UsuarioRepository usuarioRepository;
+
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private ModelMapper modelMapper;
 
     @Autowired
     private TokenService tokenService;
@@ -48,12 +55,12 @@ public class AutenticacaoController {
      */
     @PostMapping("/registrarUsuario")
     @Operation(summary = "Registrar novo usuário", description = "Endpoint para registrar um novo usuário")
-    public ResponseEntity registrarUsuario(@RequestBody @Valid RegistroRequestDTO requestDTO) {
-        if(this.usuarioRepository.findByEmail(requestDTO.getEmail())!=null)
+    public ResponseEntity registrarUsuario(@RequestBody @Valid RegistroRequestDTO registroRequestDTO) {
+        if(this.usuarioRepository.findByEmail(registroRequestDTO.getEmail())!=null)
             return ResponseEntity.badRequest().build();
 
-        String encryptedSenha = new BCryptPasswordEncoder().encode(requestDTO.getSenha());
-        Usuario novoUsuario = new Usuario(requestDTO.getNome(),requestDTO.getEmail(),encryptedSenha);
+        String encryptedSenha = new BCryptPasswordEncoder().encode(registroRequestDTO.getSenha());
+        Usuario novoUsuario = new Usuario(registroRequestDTO.getNome(),registroRequestDTO.getEmail(),encryptedSenha);
 
         this.usuarioRepository.save(novoUsuario);
         return ResponseEntity.ok().build();
@@ -65,10 +72,20 @@ public class AutenticacaoController {
      */
     @PostMapping("/autenticarUsuario")
     @Operation(summary = "Autentica o usuário", description = "Endpoint para autenticar o usuário")
-    public ResponseEntity autenticarUsuario(@RequestBody @Valid LoginRequestDTO loginRequest) {
-        var emailSenha = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getSenha());
-        var autenticacao = this.authenticationManager.authenticate(emailSenha);
-        var token = tokenService.generateToken((Usuario) autenticacao.getPrincipal());
-        return ResponseEntity.ok(token);
+    public ResponseEntity<LoginResponseDTO> autenticarUsuario(@RequestBody @Valid LoginRequestDTO loginRequest) {
+        try {
+            var emailSenha = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getSenha());
+            var autenticacao = this.authenticationManager.authenticate(emailSenha);
+
+            Usuario usuarioAutenticado = (Usuario) autenticacao.getPrincipal(); //retorna o objeto que representa o usuário autenticado
+            var token = tokenService.generateToken(usuarioAutenticado); //Gera o token JWT para o usuário.
+            LoginResponseDTO loginResponse = modelMapper.map(usuarioAutenticado, LoginResponseDTO.class);
+            loginResponse.setToken(token);
+            return ResponseEntity.ok(loginResponse);
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }
+

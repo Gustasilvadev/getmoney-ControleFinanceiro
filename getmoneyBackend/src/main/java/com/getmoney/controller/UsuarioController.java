@@ -1,11 +1,13 @@
 package com.getmoney.controller;
 
 
-import com.getmoney.entity.Usuario;
+import com.getmoney.dto.request.UsuarioRequestDTO;
+import com.getmoney.dto.response.UsuarioResponseDTO;
 import com.getmoney.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -27,22 +29,21 @@ public class UsuarioController {
 
     @GetMapping("/listar")
     @Operation(summary="Listar usuários", description="Endpoint para listar todos os usuários")
-    public ResponseEntity<List<Usuario>> listarUsuarios(){
+    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
 
     @PutMapping("/editarPorUsuarioId/{usuarioId}")
     @Operation(summary="Editar usuário pelo id do usuário", description="Endpoint para editar pelo id do usuário")
-    public ResponseEntity<Usuario> editarUsuario(@PathVariable Integer usuarioId,
-                                                 @RequestBody Usuario usuario) {
+    public ResponseEntity<UsuarioResponseDTO> editarUsuario(@PathVariable Integer usuarioId,
+                                                            @RequestBody @Valid UsuarioRequestDTO usuarioRequestDTO) {
         try {
-            Usuario usuarioAtualizado = usuarioService.editarPorUsuarioId(usuarioId, usuario);
-            return ResponseEntity.ok(usuarioAtualizado); // 200 OK com a usuario atualizado
+            UsuarioResponseDTO usuarioAtualizado = usuarioService.editarPorUsuarioId(usuarioId, usuarioRequestDTO);
+            return ResponseEntity.ok(usuarioAtualizado);
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build(); // 404 se não achar a usuario
+            return ResponseEntity.notFound().build();
         }
+
     }
-
 }
-

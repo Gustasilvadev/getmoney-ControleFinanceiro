@@ -45,7 +45,7 @@ public class CategoriaService {
         return categoriaResponseDTO;
     }
 
-    public CategoriaResponseDTO atualizarCategoria(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
+    public CategoriaResponseDTO editarPorCategoriaId(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
 
         Categoria categoriaBuscada = this.listarPorCategoriaId(categoriaId);
 

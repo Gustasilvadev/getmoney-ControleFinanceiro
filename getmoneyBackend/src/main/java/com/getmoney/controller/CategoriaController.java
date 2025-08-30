@@ -72,7 +72,7 @@ public class CategoriaController {
     @Operation(summary="Editar categorias pelo id da categoria", description="Endpoint para editar pelo id da categoria")
     public ResponseEntity<CategoriaResponseDTO> editarCategoria(@PathVariable Integer categoriaId,
                                                  @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
-        return ResponseEntity.ok(categoriaService.atualizarCategoria(categoriaId, categoriaRequestDTO));
+        return ResponseEntity.ok(categoriaService.editarPorCategoriaId(categoriaId, categoriaRequestDTO));
     }
 
     @DeleteMapping("/deletarPorCategoriaId/{categoriaId}")

@@ -6,14 +6,12 @@ public class UsuarioRequestDTO {
 
     private String email;
 
-    private String senha;
 
     public UsuarioRequestDTO() {}
 
-    public UsuarioRequestDTO(String nome, String email, String senha) {
+    public UsuarioRequestDTO(String nome, String email) {
         this.nome = nome;
         this.email = email;
-        this.senha = senha;
     }
 
     public String getNome() {
@@ -32,11 +30,4 @@ public class UsuarioRequestDTO {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
 }
