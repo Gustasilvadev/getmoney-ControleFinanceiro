@@ -91,13 +91,12 @@ public class TransacaoService {
 
         if (transacaoUpdateRequestDTO.getMetasIds() != null) {
             if (transacaoUpdateRequestDTO.getMetasIds().isEmpty()) {
-                transacaoExistente.setMetas(new ArrayList<>()); // Remove todas as metas
+                transacaoExistente.setMetas(new ArrayList<>());
             } else {
                 List<Meta> metas = metaRepository.findAllById(transacaoUpdateRequestDTO.getMetasIds());
                 transacaoExistente.setMetas(metas);
             }
         }
-        // Salvar a transação atualizada
         Transacao transacaoAtualizada = transacaoRepository.save(transacaoExistente);
 
         return modelMapper.map(transacaoAtualizada, TransacaoResponseDTO.class);

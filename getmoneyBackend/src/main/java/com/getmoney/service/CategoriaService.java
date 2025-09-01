@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoriaService {
@@ -24,17 +25,25 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public List<Categoria> listarCategorias(){
-        return  this.categoriaRepository.findAll();
+    public List<CategoriaResponseDTO> listarCategorias() {
+        List<Categoria> categorias = categoriaRepository.findAll();
+        return categorias.stream()
+                .map(CategoriaResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
-    public Categoria listarPorCategoriaId(Integer categoriaId) {
-        return categoriaRepository.findById(categoriaId).orElseThrow(() -> new EntityNotFoundException("Categoria com ID " + categoriaId + " não encontrado"));
+    public CategoriaResponseDTO listarPorCategoriaId(Integer categoriaId) {
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria com ID " + categoriaId + " não encontrado"));
+        return new CategoriaResponseDTO(categoria);
     }
 
-    public List<Categoria> listarPorCategoriaTipo(Integer categoriaTipo) {
+    public List<CategoriaResponseDTO> listarPorCategoriaTipo(Integer categoriaTipo) {
         CategoriaTipo tipo = CategoriaTipo.fromCodigo(categoriaTipo);
-        return categoriaRepository.findByTipo(tipo);
+        List<Categoria> categorias = categoriaRepository.findByTipo(tipo);
+        return categorias.stream()
+                .map(CategoriaResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     public CategoriaResponseDTO criarCategoria(CategoriaRequestDTO categoriaRequestDTO){
@@ -46,17 +55,13 @@ public class CategoriaService {
     }
 
     public CategoriaResponseDTO editarPorCategoriaId(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
+        Categoria categoriaExistente = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria com ID " + categoriaId + " não encontrada"));
 
-        Categoria categoriaBuscada = this.listarPorCategoriaId(categoriaId);
+        modelMapper.map(categoriaRequestDTO, categoriaExistente);
 
-        if (categoriaBuscada != null) {
-            modelMapper.map(categoriaRequestDTO, categoriaBuscada);
-            Categoria categoriaSalva = categoriaRepository.save(categoriaBuscada);
-            return modelMapper.map(categoriaSalva, CategoriaResponseDTO.class);
-        } else {
-            return null;
-        }
-
+        Categoria categoriaAtualizada = categoriaRepository.save(categoriaExistente);
+        return new CategoriaResponseDTO(categoriaAtualizada);
     }
 
     public void deletarPorCategoriaId(Integer categoriaId){

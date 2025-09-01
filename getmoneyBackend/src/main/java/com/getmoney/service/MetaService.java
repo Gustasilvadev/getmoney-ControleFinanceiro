@@ -72,7 +72,6 @@ public class MetaService {
 
         modelMapper.map(metaRequestUpdateDTO, metaExistente);
 
-        // Salvar a transação atualizada
         Meta metaAtualizada = metaRepository.save(metaExistente);
 
         return modelMapper.map(metaAtualizada, MetaResponseDTO.class);

@@ -34,31 +34,20 @@ public class CategoriaController {
 
     @GetMapping("/listar")
     @Operation(summary="Listar categorias", description="Endpoint para listar todas as categorias")
-    public ResponseEntity <List<Categoria>> listarCategorias(){
+    public ResponseEntity <List<CategoriaResponseDTO>> listarCategorias(){
         return ResponseEntity.ok(categoriaService.listarCategorias());
     }
 
     @GetMapping("/listarPorCategoriaId/{categoriaId}")
     @Operation(summary = "Listar categoria pelo id de categoria", description = "Endpoint para obter categoria pelo id de categoria")
-    public ResponseEntity<Categoria>listarPorCategoriaId(@PathVariable Integer categoriaId){
-        Categoria categoria = categoriaService.listarPorCategoriaId(categoriaId);
-        if(categoria == null) {
-            return ResponseEntity.noContent().build();
-        }else{
-            return ResponseEntity.ok(categoria);
-        }
+    public ResponseEntity<CategoriaResponseDTO>listarPorCategoriaId(@PathVariable Integer categoriaId){
+        return ResponseEntity.ok(categoriaService.listarPorCategoriaId(categoriaId));
     }
 
     @GetMapping("/listarPorCategoriaTipo/{CategoriaTipo}")
     @Operation(summary = "Listar categoria pelo tipo de categoria", description = "Endpoint para obter categoria pelo tipo de categoria")
-    public ResponseEntity<List<Categoria>> listarPorTipo(@PathVariable("CategoriaTipo") Integer categoriaTipo) {
-        List<Categoria> categorias = categoriaService.listarPorCategoriaTipo(categoriaTipo);
-
-        if (categorias.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(categorias);
+    public ResponseEntity<List<CategoriaResponseDTO >> listarPorTipo(@PathVariable("CategoriaTipo") Integer categoriaTipo) {
+        return ResponseEntity.ok(categoriaService.listarPorCategoriaTipo(categoriaTipo));
     }
 
     @PostMapping("/criar")
