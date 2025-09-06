@@ -1,8 +1,6 @@
 package com.getmoney.repository;
 
-import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Meta;
-import com.getmoney.enums.CategoriaTipo;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
