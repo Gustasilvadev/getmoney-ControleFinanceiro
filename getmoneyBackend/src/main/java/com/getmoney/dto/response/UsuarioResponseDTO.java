@@ -3,25 +3,27 @@ package com.getmoney.dto.response;
 import com.getmoney.entity.Usuario;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class UsuarioResponseDTO {
 
     private Integer id;
-
     private String nome;
-
     private String email;
-
     private LocalDate dataCriacao;
-
     private Integer status;
 
-    public UsuarioResponseDTO(Usuario usuario) {
-        this.id = usuario.getId();
-        this.nome = usuario.getNome();
-        this.email = usuario.getEmail();
-        this.dataCriacao = usuario.getDataCriacao();
-        this.status = usuario.getStatus();
+    private List<TransacaoBasicaResponseDTO> transacoes;
+    private List<MetaBasicaResponseDTO> metas;
+
+    public UsuarioResponseDTO(Integer id, String nome, String email, LocalDate dataCriacao, Integer status, List<TransacaoBasicaResponseDTO> transacoes, List<MetaBasicaResponseDTO> metas) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.dataCriacao = dataCriacao;
+        this.status = status;
+        this.transacoes = transacoes;
+        this.metas = metas;
     }
 
     public UsuarioResponseDTO() {}
@@ -58,12 +60,29 @@ public class UsuarioResponseDTO {
     public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
+
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<TransacaoBasicaResponseDTO> getTransacoes() {
+        return transacoes;
+    }
+
+    public void setTransacoes(List<TransacaoBasicaResponseDTO> transacoes) {
+        this.transacoes = transacoes;
+    }
+
+    public List<MetaBasicaResponseDTO> getMetas() {
+        return metas;
+    }
+
+    public void setMetas(List<MetaBasicaResponseDTO> metas) {
+        this.metas = metas;
     }
 }
 

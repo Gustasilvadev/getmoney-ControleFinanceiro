@@ -2,7 +2,6 @@ package com.getmoney.dto.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TransacaoUpdateRequestDTO {
@@ -10,19 +9,23 @@ public class TransacaoUpdateRequestDTO {
     private String descricao;
     private LocalDate data;
     private Integer status;
-    private List<Integer> metasIds;
+
+    private Integer usuarioId;
+    private Integer categoriaId;
+    private List<Integer> metasId;
 
     public TransacaoUpdateRequestDTO() {}
 
-    public TransacaoUpdateRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status) {
+    public TransacaoUpdateRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer usuarioId, Integer categoriaId, List<Integer> metasId) {
         this.valor = valor;
         this.descricao = descricao;
         this.data = data;
         this.status = status;
-        this.metasIds = new ArrayList<>();
+        this.usuarioId = usuarioId;
+        this.categoriaId = categoriaId;
+        this.metasId = metasId;
     }
 
-    // Getters e Setters (SEM categoriaId)
     public BigDecimal getValor() {
         return valor;
     }
@@ -55,11 +58,27 @@ public class TransacaoUpdateRequestDTO {
         this.status = status;
     }
 
-    public List<Integer> getMetasIds() {
-        return metasIds;
+    public Integer getUsuarioId() {
+        return usuarioId;
     }
 
-    public void setMetasIds(List<Integer> metasIds) {
-        this.metasIds = metasIds;
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public Integer getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Integer categoriaId) {
+        this.categoriaId = categoriaId;
+    }
+
+    public List<Integer> getMetasId() {
+        return metasId;
+    }
+
+    public void setMetasId(List<Integer> metasId) {
+        this.metasId = metasId;
     }
 }

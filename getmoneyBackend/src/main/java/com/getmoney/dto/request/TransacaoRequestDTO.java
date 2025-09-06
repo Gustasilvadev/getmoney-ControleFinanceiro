@@ -8,18 +8,13 @@ import java.util.List;
 public class TransacaoRequestDTO {
 
     private BigDecimal valor;
-
     private String descricao;
-
     private LocalDate data;
-
     private Integer status;
 
     private Integer usuarioId;
-
     private Integer categoriaId;
-
-    private List<Integer> metasIds;
+    private List<Integer> metasId = new ArrayList<>();
 
     public TransacaoRequestDTO() {}
 
@@ -30,7 +25,7 @@ public class TransacaoRequestDTO {
         this.status = status;
         this.usuarioId = usuarioId;
         this.categoriaId = categoriaId;
-        this.metasIds = new ArrayList<>();
+        this.metasId = new ArrayList<>();
     }
 
 
@@ -82,11 +77,11 @@ public class TransacaoRequestDTO {
         this.usuarioId = usuarioId;
     }
 
-    public List<Integer> getMetasIds() {
-        return metasIds;
+    public List<Integer> getMetasId() {
+        return metasId;
     }
 
-    public void setMetasIds(List<Integer> metasIds) {
-        this.metasIds = metasIds;
+    public void setMetasId(List<Integer> metasId) {
+        this.metasId = metasId;
     }
 }

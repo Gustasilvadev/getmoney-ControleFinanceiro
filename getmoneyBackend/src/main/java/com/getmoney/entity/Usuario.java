@@ -39,6 +39,9 @@ public class Usuario implements UserDetails {
     @JsonIgnore
     private List<Transacao> transacoes;
 
+    @OneToMany(mappedBy = "usuario")
+    @JsonIgnore
+    private List<Meta> metas;
 
 
     @PrePersist
@@ -84,10 +87,16 @@ public class Usuario implements UserDetails {
         return true;
     }
 
-    public Usuario(String nome, String email, String senha) {
+
+    public Usuario(Integer id, String nome, String email, String senha, LocalDate dataCriacao, Integer status, List<Transacao> transacoes, List<Meta> metas) {
+        this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.dataCriacao = dataCriacao;
+        this.status = status;
+        this.transacoes = transacoes;
+        this.metas = metas;
     }
 
     public Usuario() {
@@ -147,5 +156,13 @@ public class Usuario implements UserDetails {
 
     public void setTransacoes(List<Transacao> transacoes) {
         this.transacoes = transacoes;
+    }
+
+    public List<Meta> getMetas() {
+        return metas;
+    }
+
+    public void setMetas(List<Meta> metas) {
+        this.metas = metas;
     }
 }

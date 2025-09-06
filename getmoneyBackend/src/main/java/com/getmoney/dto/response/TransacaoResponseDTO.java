@@ -11,24 +11,14 @@ import java.util.stream.Collectors;
 public class TransacaoResponseDTO {
 
     private Integer id;
-
     private BigDecimal valor;
-
     private String descricao;
-
     private LocalDate data;
-
     private Integer status;
 
     private Integer usuarioId;
-
     private Integer categoriaId;
-
-    private String categoriaNome;
-
-    private String categoriaTipo;
-
-    private List<MetaResponseDTO> metas;
+    private List<MetaBasicaResponseDTO> metas;
 
 
     public TransacaoResponseDTO(Transacao transacao) {
@@ -39,11 +29,7 @@ public class TransacaoResponseDTO {
         this.status = transacao.getStatus();
         this.usuarioId = transacao.getUsuario().getId();
         this.categoriaId = transacao.getCategoria().getId();
-        this.categoriaNome = transacao.getCategoria().getNome();
-        this.categoriaTipo = transacao.getCategoria().getTipo().name();
-        this.metas = transacao.getMetas().stream()
-                .map(meta -> new MetaResponseDTO(meta))
-                .collect(Collectors.toList());
+        this.metas = metas != null ? metas : new ArrayList<>();
     }
 
     public TransacaoResponseDTO() {
@@ -107,27 +93,11 @@ public class TransacaoResponseDTO {
         this.categoriaId = categoriaId;
     }
 
-    public String getCategoriaNome() {
-        return categoriaNome;
-    }
-
-    public void setCategoriaNome(String categoriaNome) {
-        this.categoriaNome = categoriaNome;
-    }
-
-    public String getCategoriaTipo() {
-        return categoriaTipo;
-    }
-
-    public void setCategoriaTipo(String categoriaTipo) {
-        this.categoriaTipo = categoriaTipo;
-    }
-
-    public List<MetaResponseDTO> getMetas() {
+    public List<MetaBasicaResponseDTO> getMetas() {
         return metas;
     }
 
-    public void setMetas(List<MetaResponseDTO> metas) {
+    public void setMetas(List<MetaBasicaResponseDTO> metas) {
         this.metas = metas;
     }
 }

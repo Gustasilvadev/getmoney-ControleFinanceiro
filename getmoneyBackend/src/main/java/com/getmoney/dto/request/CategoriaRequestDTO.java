@@ -5,9 +5,7 @@ import com.getmoney.enums.CategoriaTipo;
 public class CategoriaRequestDTO {
 
     private String nome;
-
     private CategoriaTipo tipo;
-
     private Integer status;
 
     public CategoriaRequestDTO() {}

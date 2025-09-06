@@ -4,9 +4,7 @@ package com.getmoney.dto.request;
 public class RegistroRequestDTO {
 
     private String nome;
-
     private String email;
-
     private String senha;
 
 

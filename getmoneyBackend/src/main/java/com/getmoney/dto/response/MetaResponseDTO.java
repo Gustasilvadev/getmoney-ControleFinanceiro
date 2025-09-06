@@ -4,26 +4,28 @@ import com.getmoney.entity.Meta;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MetaResponseDTO {
 
     private Integer id;
     private String nome;
-    private BigDecimal valor_alvo;
+    private BigDecimal valorAlvo;
     private Integer status;
     private LocalDate data;
     private Integer usuarioId;
-    private String usuarioNome;
+    private List<TransacaoBasicaResponseDTO> transacoes = new ArrayList<>();;
 
 
     public MetaResponseDTO(Meta meta) {
         this.id = meta.getId();
         this.nome = meta.getNome();
-        this.valor_alvo = meta.getValor_alvo();
+        this.valorAlvo = meta.getValorAlvo();
         this.status = meta.getStatus();
         this.data = meta.getData();
         this.usuarioId = meta.getUsuario().getId();
-        this.usuarioNome = meta.getUsuario().getNome();
+        this.transacoes = transacoes != null ? transacoes : new ArrayList<>();
     }
 
     public MetaResponseDTO() {
@@ -45,12 +47,12 @@ public class MetaResponseDTO {
         this.nome = nome;
     }
 
-    public BigDecimal getValor_alvo() {
-        return valor_alvo;
+    public BigDecimal getValorAlvo() {
+        return valorAlvo;
     }
 
-    public void setValor_alvo(BigDecimal valor_alvo) {
-        this.valor_alvo = valor_alvo;
+    public void setValorAlvo(BigDecimal valorAlvo) {
+        this.valorAlvo = valorAlvo;
     }
 
     public Integer getStatus() {
@@ -77,11 +79,11 @@ public class MetaResponseDTO {
         this.usuarioId = usuarioId;
     }
 
-    public String getUsuarioNome() {
-        return usuarioNome;
+    public List<TransacaoBasicaResponseDTO> getTransacoes() {
+        return transacoes;
     }
 
-    public void setUsuarioNome(String usuarioNome) {
-        this.usuarioNome = usuarioNome;
+    public void setTransacoes(List<TransacaoBasicaResponseDTO> transacoes) {
+        this.transacoes = transacoes;
     }
 }

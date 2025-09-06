@@ -6,7 +6,7 @@ import java.time.LocalDate;
 public class MetaRequestUpdateDTO {
 
     private String nome;
-    private BigDecimal valor_alvo;
+    private BigDecimal valorAlvo;
     private Integer status;
     private LocalDate data;
 
@@ -14,9 +14,9 @@ public class MetaRequestUpdateDTO {
     public MetaRequestUpdateDTO() {
     }
 
-    public MetaRequestUpdateDTO(String nome, BigDecimal valor_alvo, Integer status, LocalDate data) {
+    public MetaRequestUpdateDTO(String nome, BigDecimal valorAlvo, Integer status, LocalDate data) {
         this.nome = nome;
-        this.valor_alvo = valor_alvo;
+        this.valorAlvo = valorAlvo;
         this.status = status;
         this.data = data;
     }
@@ -29,12 +29,12 @@ public class MetaRequestUpdateDTO {
         this.nome = nome;
     }
 
-    public BigDecimal getValor_alvo() {
-        return valor_alvo;
+    public BigDecimal getValorAlvo() {
+        return valorAlvo;
     }
 
-    public void setValor_alvo(BigDecimal valor_alvo) {
-        this.valor_alvo = valor_alvo;
+    public void setValorAlvo(BigDecimal valorAlvo) {
+        this.valorAlvo = valorAlvo;
     }
 
     public Integer getStatus() {

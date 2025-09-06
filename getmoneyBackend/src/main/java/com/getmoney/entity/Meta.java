@@ -1,5 +1,6 @@
 package com.getmoney.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -20,7 +21,7 @@ public class Meta {
     private String nome;
 
     @Column(name = "meta_valor_alvo",  precision = 10, scale = 2)
-    private BigDecimal valor_alvo;
+    private BigDecimal valorAlvo;
 
     @Column(name = "meta_status")
     private Integer status;
@@ -33,16 +34,17 @@ public class Meta {
     private Usuario usuario;
 
     @ManyToMany(mappedBy = "metas")
+    @JsonIgnore
     private List<Transacao> transacoes = new ArrayList<>();
 
 
     public Meta() {
     }
 
-    public Meta(Integer id, String nome, BigDecimal valor_alvo, Integer status, LocalDate data, Usuario usuario) {
+    public Meta(Integer id, String nome, BigDecimal valorAlvo, Integer status, LocalDate data, Usuario usuario) {
         this.id = id;
         this.nome = nome;
-        this.valor_alvo = valor_alvo;
+        this.valorAlvo = valorAlvo;
         this.status = status;
         this.data = data;
         this.usuario = usuario;
@@ -64,12 +66,12 @@ public class Meta {
         this.nome = nome;
     }
 
-    public BigDecimal getValor_alvo() {
-        return valor_alvo;
+    public BigDecimal getValorAlvo() {
+        return valorAlvo;
     }
 
-    public void setValor_alvo(BigDecimal valor_alvo) {
-        this.valor_alvo = valor_alvo;
+    public void setValorAlvo(BigDecimal valorAlvo) {
+        this.valorAlvo = valorAlvo;
     }
 
     public Integer getStatus() {
@@ -96,4 +98,11 @@ public class Meta {
         this.usuario = usuario;
     }
 
+    public List<Transacao> getTransacoes() {
+        return transacoes;
+    }
+
+    public void setTransacoes(List<Transacao> transacoes) {
+        this.transacoes = transacoes;
+    }
 }

@@ -1,5 +1,6 @@
 package com.getmoney.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -40,6 +41,8 @@ public class Transacao {
     @JoinTable(name = "meta_transacao",
             joinColumns = @JoinColumn(name = "transacao_id"),
             inverseJoinColumns = @JoinColumn(name = "meta_id"))
+
+    @JsonIgnore
     private List<Meta> metas = new ArrayList<>();
 
 
