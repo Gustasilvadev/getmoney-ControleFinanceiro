@@ -1,17 +1,36 @@
 package com.getmoney.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public class TransacaoUpdateRequestDTO {
+
+    @NotNull(message = "O valor é obrigatório")
     private BigDecimal valor;
+
+    @NotBlank(message = "A descrição é obrigatória")
+    @Size(min = 2, max = 100, message = "A descrição deve ter entre 2 e 100 caracteres")
     private String descricao;
+
+    @NotNull(message = "A data é obrigatória")
+    @PastOrPresent(message = "A data não pode ser futura")
     private LocalDate data;
+
+    @NotNull(message = "O status é obrigatório")
     private Integer status;
 
+    @NotNull(message = "O ID do usuário é obrigatório")
     private Integer usuarioId;
+
+    @NotNull(message = "O ID da categoria é obrigatório")
     private Integer categoriaId;
+
     private List<Integer> metasId;
 
     public TransacaoUpdateRequestDTO() {}

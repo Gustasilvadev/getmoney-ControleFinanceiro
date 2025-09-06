@@ -2,12 +2,12 @@ package com.getmoney.service;
 
 import com.getmoney.dto.request.CategoriaRequestDTO;
 import com.getmoney.dto.response.CategoriaResponseDTO;
-import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Categoria;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.repository.CategoriaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +66,7 @@ public class CategoriaService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public CategoriaResponseDTO criarCategoria(CategoriaRequestDTO categoriaRequestDTO){
 
         Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
@@ -73,7 +74,7 @@ public class CategoriaService {
         CategoriaResponseDTO categoriaResponseDTO = modelMapper.map(categoriaSalva, CategoriaResponseDTO.class);
         return categoriaResponseDTO;
     }
-
+    @Transactional
     public CategoriaResponseDTO editarPorCategoriaId(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
         Categoria categoriaExistente = categoriaRepository.ObterCategoriaPeloId(categoriaId);
         if (categoriaExistente == null) {
@@ -85,7 +86,7 @@ public class CategoriaService {
         Categoria categoriaAtualizada = categoriaRepository.save(categoriaExistente);
         return new CategoriaResponseDTO(categoriaAtualizada);
     }
-
+    @Transactional
     public void deletarPorCategoriaId(Integer categoriaId){
         if (!categoriaRepository.existsById(categoriaId)) {
             throw new EntityNotFoundException("Categoria não encontrada com ID: " + categoriaId);

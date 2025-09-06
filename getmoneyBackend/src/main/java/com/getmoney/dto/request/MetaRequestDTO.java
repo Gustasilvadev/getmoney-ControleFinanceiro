@@ -1,14 +1,28 @@
 package com.getmoney.dto.request;
 
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class MetaRequestDTO {
 
+    @NotBlank(message = "O nome da meta é obrigatório")
+    @Size(min = 2, max = 50, message = "O nome deve ter entre 2 e 50 caracteres")
     private String nome;
+
+    @NotNull(message = "O valor alvo é obrigatório")
+    @Positive(message = "O valor alvo deve ser maior que zero")
     private BigDecimal valorAlvo;
+
+    @NotNull(message = "O status é obrigatório")
     private Integer status;
+
+    @NotNull(message = "A data é obrigatória")
+    @FutureOrPresent(message = "A data deve ser hoje ou uma data futura")
     private LocalDate data;
+
+    @NotNull(message = "O ID do usuário é obrigatório")
     private Integer usuarioId;
 
     public MetaRequestDTO() {
