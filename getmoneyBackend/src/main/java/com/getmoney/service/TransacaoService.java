@@ -12,6 +12,7 @@ import com.getmoney.repository.MetaRepository;
 import com.getmoney.repository.TransacaoRepository;
 import com.getmoney.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class TransacaoService {
 
         return new TransacaoResponseDTO(transacao);
     }
-
+    @Transactional
     public TransacaoResponseDTO criarTransacao(TransacaoRequestDTO transacaoRequestDTO) {
         Transacao transacao = new Transacao();
         transacao.setValor(transacaoRequestDTO.getValor());
@@ -82,7 +83,7 @@ public class TransacaoService {
         return new TransacaoResponseDTO(transacaoSalva);
     }
 
-
+    @Transactional
     public TransacaoResponseDTO editarPorTransacaoId(Integer transacaoId, TransacaoUpdateRequestDTO transacaoUpdateRequestDTO) {
         Transacao transacaoExistente = transacaoRepository.ObterTransacaoPeloId(transacaoId);
         if (transacaoExistente == null) {
@@ -107,11 +108,11 @@ public class TransacaoService {
 
         return modelMapper.map(transacaoAtualizada, TransacaoResponseDTO.class);
     }
-
+    @Transactional
     public void deletarPorTransacaoId(Integer transacaoId) {
         boolean transacaoExistente = transacaoRepository.existsById(transacaoId);
         if(transacaoExistente){
-            transacaoRepository.deleteById(transacaoId);
+            transacaoRepository.apagarTransacao(transacaoId);
         }
     }
 }

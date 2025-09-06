@@ -2,11 +2,9 @@ package com.getmoney.service;
 
 import com.getmoney.dto.request.UsuarioRequestDTO;
 import com.getmoney.dto.response.UsuarioResponseDTO;
-import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Usuario;
-import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.repository.UsuarioRepository;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,24 +27,28 @@ public class UsuarioService {
 
 
     public List<UsuarioResponseDTO> listarUsuarios() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<Usuario> usuarios = usuarioRepository.listarUsuariosAtivos();
         return usuarios.stream()
                 .map(usuario -> modelMapper.map(usuario, UsuarioResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
     public UsuarioResponseDTO listarPorUsuarioId(Integer usuarioId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new EntityNotFoundException("Usuario com ID " + usuarioId + " não encontrado"));
+        Usuario usuario = usuarioRepository.ObterUsuarioPeloId(usuarioId);
+        if (usuario == null) {
+            throw new RuntimeException("Usuario não encontrada com ID: " + usuarioId);
+        }
 
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
 
 
-
+    @Transactional
     public UsuarioResponseDTO editarPorUsuarioId(Integer usuarioId, UsuarioRequestDTO usuarioRequestDTO) {
-        Usuario usuarioExistente = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        Usuario usuarioExistente = usuarioRepository.ObterUsuarioPeloId(usuarioId);
+        if (usuarioExistente == null) {
+            throw new RuntimeException("Usuario não encontrada com ID: " + usuarioId);
+        }
 
         modelMapper.getConfiguration()
                 .setSkipNullEnabled(true)

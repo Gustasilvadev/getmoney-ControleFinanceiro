@@ -10,6 +10,7 @@ import com.getmoney.entity.Usuario;
 import com.getmoney.repository.MetaRepository;
 import com.getmoney.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +65,13 @@ public class MetaService {
 
 
     public MetaResponseDTO listarPorMetaId(Integer metaId) {
-        Meta meta = metaRepository.findById(metaId)
-                .orElseThrow(() -> new EntityNotFoundException("Meta não encontrada com id: " + metaId));
-
+        Meta meta = metaRepository.ObterMetaPeloId(metaId);
+        if (meta == null) {
+            throw new RuntimeException("Meta não encontrada com ID: " + metaId);
+        }
         return new MetaResponseDTO(meta);
     }
-
+    @Transactional
     public MetaResponseDTO criarMeta(MetaRequestDTO metaRequestDTO) {
         Meta meta = new Meta();
         meta.setNome(metaRequestDTO.getNome());
@@ -86,10 +88,12 @@ public class MetaService {
         Meta metaSalva = metaRepository.save(meta);
         return new MetaResponseDTO(metaSalva);
     }
-
+    @Transactional
     public MetaResponseDTO editarPorMetaId(Integer metaId, MetaRequestUpdateDTO metaRequestUpdateDTO) {
-        Meta metaExistente = metaRepository.findById(metaId)
-                .orElseThrow(() -> new EntityNotFoundException("Meta não encontrada com id " + metaId));
+        Meta metaExistente = metaRepository.ObterMetaPeloId(metaId);
+        if (metaExistente == null) {
+            throw new RuntimeException("Meta não encontrada com ID: " + metaId);
+        }
 
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
@@ -102,11 +106,11 @@ public class MetaService {
 
         return modelMapper.map(metaAtualizada, MetaResponseDTO.class);
     }
-
+    @Transactional
     public void deletarPorMetaId(Integer metaId) {
         boolean metaExistente = metaRepository.existsById(metaId);
         if(metaExistente){
-            metaRepository.deleteById(metaId);
+            metaRepository.apagarMeta(metaId);
         }
     }
 }
