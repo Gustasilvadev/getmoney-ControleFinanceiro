@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/api/autenticacao")
 @Tag(name="Autenticacao", description = "Api de gerenciamento de autenticacao")
@@ -56,11 +58,15 @@ public class AutenticacaoController {
     @PostMapping("/registrarUsuario")
     @Operation(summary = "Registrar novo usuário", description = "Endpoint para registrar um novo usuário")
     public ResponseEntity registrarUsuario(@RequestBody @Valid RegistroRequestDTO registroRequestDTO) {
-        if(this.usuarioRepository.findByEmail(registroRequestDTO.getEmail())!=null)
+        if(this.usuarioRepository.findByEmail(registroRequestDTO.getEmail()) != null)
             return ResponseEntity.badRequest().build();
 
         String encryptedSenha = new BCryptPasswordEncoder().encode(registroRequestDTO.getSenha());
-        Usuario novoUsuario = new Usuario(registroRequestDTO.getNome(),registroRequestDTO.getEmail(),encryptedSenha);
+
+        Usuario novoUsuario = modelMapper.map(registroRequestDTO, Usuario.class);
+        novoUsuario.setSenha(encryptedSenha);
+        novoUsuario.setDataCriacao(LocalDate.now());
+        novoUsuario.setStatus(1);
 
         this.usuarioRepository.save(novoUsuario);
         return ResponseEntity.ok().build();

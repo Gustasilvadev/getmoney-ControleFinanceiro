@@ -3,6 +3,8 @@ package com.getmoney.service;
 import com.getmoney.dto.request.MetaRequestDTO;
 import com.getmoney.dto.request.MetaRequestUpdateDTO;
 import com.getmoney.dto.response.MetaResponseDTO;
+import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
+import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Meta;
 import com.getmoney.entity.Usuario;
 import com.getmoney.repository.MetaRepository;
@@ -13,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,12 +33,35 @@ public class MetaService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<MetaResponseDTO> listarMetas(){
-        List<Meta> metas = metaRepository.findAll();
+    public List<MetaResponseDTO> listarMetas() {
+        List<Meta> metas = metaRepository.listarMetasAtivas();
+
         return metas.stream()
-                .map(meta -> modelMapper.map(meta, MetaResponseDTO.class))
+                .map(meta -> {
+                    MetaResponseDTO metaResponseDTO = modelMapper.map(meta, MetaResponseDTO.class);
+                    metaResponseDTO.setUsuarioId(meta.getUsuario().getId());
+
+                    if (meta.getTransacoes() != null) {
+                        List<TransacaoBasicaResponseDTO> transacoesDTO = meta.getTransacoes().stream()
+                                .map(transacao -> {
+                                    TransacaoBasicaResponseDTO dto = modelMapper.map(transacao, TransacaoBasicaResponseDTO.class);
+
+                                    if (transacao.getCategoria() != null) {
+                                        dto.setCategoriaId(transacao.getCategoria().getId());
+                                        dto.setCategoriaNome(transacao.getCategoria().getNome());
+                                        dto.setCategoriaTipo(transacao.getCategoria().getTipo().toString());
+                                    }
+                                    return dto;
+                                })
+                                .collect(Collectors.toList());
+                        metaResponseDTO.setTransacoes(transacoesDTO);
+                    }
+
+                    return metaResponseDTO;
+                })
                 .collect(Collectors.toList());
     }
+
 
     public MetaResponseDTO listarPorMetaId(Integer metaId) {
         Meta meta = metaRepository.findById(metaId)
@@ -47,7 +73,7 @@ public class MetaService {
     public MetaResponseDTO criarMeta(MetaRequestDTO metaRequestDTO) {
         Meta meta = new Meta();
         meta.setNome(metaRequestDTO.getNome());
-        meta.setValor_alvo(metaRequestDTO.getValor_alvo());
+        meta.setValorAlvo(metaRequestDTO.getValorAlvo());
         meta.setStatus(metaRequestDTO.getStatus());
         meta.setData(metaRequestDTO.getData());
 

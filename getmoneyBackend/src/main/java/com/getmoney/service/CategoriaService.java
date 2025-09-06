@@ -2,6 +2,8 @@ package com.getmoney.service;
 
 import com.getmoney.dto.request.CategoriaRequestDTO;
 import com.getmoney.dto.response.CategoriaResponseDTO;
+import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
+import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Categoria;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.repository.CategoriaRepository;
@@ -10,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,15 +29,32 @@ public class CategoriaService {
     }
 
     public List<CategoriaResponseDTO> listarCategorias() {
-        List<Categoria> categorias = categoriaRepository.findAll();
+        List<Categoria> categorias = categoriaRepository.listarCategoriasAtivas();
+
         return categorias.stream()
-                .map(CategoriaResponseDTO::new)
+                .map(categoria -> {
+                    CategoriaResponseDTO categoriaResponseDTO = modelMapper.map(categoria, CategoriaResponseDTO.class);
+
+                    if (categoria.getTransacoes() != null) {
+                        List<TransacaoResponseDTO> transacoesDTO = categoria.getTransacoes()
+                                .stream()
+                                .map(TransacaoResponseDTO::new)
+                                .collect(Collectors.toList());
+                        categoriaResponseDTO.setTransacoes(transacoesDTO);
+                    } else {
+                        categoriaResponseDTO.setTransacoes(new ArrayList<>());
+                    }
+
+                    return categoriaResponseDTO;
+                })
                 .collect(Collectors.toList());
     }
 
     public CategoriaResponseDTO listarPorCategoriaId(Integer categoriaId) {
-        Categoria categoria = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria com ID " + categoriaId + " não encontrado"));
+        Categoria categoria = categoriaRepository.ObterCategoriaPeloId(categoriaId);
+        if (categoria == null) {
+            throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
+        }
         return new CategoriaResponseDTO(categoria);
     }
 
@@ -55,8 +75,10 @@ public class CategoriaService {
     }
 
     public CategoriaResponseDTO editarPorCategoriaId(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
-        Categoria categoriaExistente = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria com ID " + categoriaId + " não encontrada"));
+        Categoria categoriaExistente = categoriaRepository.ObterCategoriaPeloId(categoriaId);
+        if (categoriaExistente == null) {
+            throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
+        }
 
         modelMapper.map(categoriaRequestDTO, categoriaExistente);
 
@@ -65,9 +87,10 @@ public class CategoriaService {
     }
 
     public void deletarPorCategoriaId(Integer categoriaId){
-        boolean categoriaExistente = categoriaRepository.existsById(categoriaId);
-        if(categoriaExistente){
-            categoriaRepository.deleteById(categoriaId);
+        if (!categoriaRepository.existsById(categoriaId)) {
+            throw new EntityNotFoundException("Categoria não encontrada com ID: " + categoriaId);
         }
+        categoriaRepository.apagarCatgoria(categoriaId);
     }
 }
+
