@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -24,5 +25,22 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
 
     @Query("SELECT t FROM Transacao t WHERE t.id = :id AND t.status >=0")
     Transacao ObterTransacaoPeloId(@Param("id")Integer transacaoId);
+
+
+    /**
+     * Soma todos os valores das transações do tipo Receita (tipo = 1)
+     * associadas ao ID do usuário fornecido.
+     */
+    @Query("SELECT COALESCE(SUM(t.valor), 0) FROM Transacao t " +
+            "JOIN t.categoria c WHERE t.usuario.id = :usuarioId AND c.tipo = 1")
+    BigDecimal TotalReceitas(@Param("usuarioId") Integer usuarioId);
+
+    /**
+     * Soma todos os valores das transações do tipo Despesa (tipo = 0)
+     * associadas ao ID do usuário fornecido.
+     */
+    @Query("SELECT COALESCE(SUM(t.valor), 0) FROM Transacao t " +
+            "JOIN t.categoria c WHERE t.usuario.id = :usuarioId AND c.tipo = 0")
+    BigDecimal TotalDespesas(@Param("usuarioId") Integer usuarioId);
 
 }
