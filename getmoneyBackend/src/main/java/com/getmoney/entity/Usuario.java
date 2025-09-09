@@ -1,6 +1,7 @@
 package com.getmoney.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.getmoney.enums.Status;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,7 +34,7 @@ public class Usuario implements UserDetails {
     private LocalDate dataCriacao;
 
     @Column(name="usuario_status")
-    private Integer status;
+    private Status status;
 
     @OneToMany(mappedBy = "usuario")
     @JsonIgnore
@@ -48,7 +49,7 @@ public class Usuario implements UserDetails {
     public void prePersist() {
         this.dataCriacao = LocalDate.now();
         if (this.status == null) {
-            this.status = 1; // Ao criar o usuario automaticamente --> 1 = ativo
+            this.status = status.ATIVO; // Ao criar o usuario automaticamente --> 1 = ativo
         }
     }
 
@@ -88,7 +89,7 @@ public class Usuario implements UserDetails {
     }
 
 
-    public Usuario(Integer id, String nome, String email, String senha, LocalDate dataCriacao, Integer status, List<Transacao> transacoes, List<Meta> metas) {
+    public Usuario(Integer id, String nome, String email, String senha, LocalDate dataCriacao, Status status, List<Transacao> transacoes, List<Meta> metas) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -142,11 +143,11 @@ public class Usuario implements UserDetails {
         this.dataCriacao = dataCriacao;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -1,6 +1,7 @@
 package com.getmoney.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.getmoney.enums.Status;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -26,8 +27,9 @@ public class Transacao {
     @Column(name = "transacao_data")
     private LocalDate data;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "transacao_status")
-    private Integer status;
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -51,8 +53,22 @@ public class Transacao {
     public void prePersist() {
         this.data = LocalDate.now();
         if (this.status == null) {
-            this.status = 1; // Ao criar a transacao automaticamente --> 1 = ativo
+            this.status = status.ATIVO;
         }
+    }
+
+    public Transacao() {
+    }
+
+    public Transacao(Integer id, BigDecimal valor, String descricao, LocalDate data, Status status, Usuario usuario, Categoria categoria, List<Meta> metas) {
+        this.id = id;
+        this.valor = valor;
+        this.descricao = descricao;
+        this.data = data;
+        this.status = status;
+        this.usuario = usuario;
+        this.categoria = categoria;
+        this.metas = metas;
     }
 
     public Integer getId() {
@@ -87,11 +103,11 @@ public class Transacao {
         this.data = data;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

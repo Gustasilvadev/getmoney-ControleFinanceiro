@@ -1,6 +1,7 @@
 package com.getmoney.dto.request;
 
 import com.getmoney.enums.CategoriaTipo;
+import com.getmoney.enums.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,7 +16,7 @@ public class CategoriaRequestDTO {
     private CategoriaTipo tipo;
 
     @NotNull(message = "O status é obrigatório")
-    private Integer status;
+    private Status status;
 
     public CategoriaRequestDTO() {}
 
@@ -41,11 +42,11 @@ public class CategoriaRequestDTO {
         this.tipo = tipo;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

@@ -1,6 +1,7 @@
 package com.getmoney.dto.response;
 
 import com.getmoney.entity.Transacao;
+import com.getmoney.enums.Status;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ public class TransacaoResponseDTO {
     private BigDecimal valor;
     private String descricao;
     private LocalDate data;
-    private Integer status;
+    private Status status;
 
     private Integer usuarioId;
     private Integer categoriaId;
@@ -69,11 +70,11 @@ public class TransacaoResponseDTO {
         this.data = data;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

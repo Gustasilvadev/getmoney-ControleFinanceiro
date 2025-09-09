@@ -1,6 +1,7 @@
 package com.getmoney.dto.response;
 
 import com.getmoney.entity.Usuario;
+import com.getmoney.enums.Status;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,12 +12,12 @@ public class UsuarioResponseDTO {
     private String nome;
     private String email;
     private LocalDate dataCriacao;
-    private Integer status;
+    private Status status;
 
     private List<TransacaoBasicaResponseDTO> transacoes;
     private List<MetaBasicaResponseDTO> metas;
 
-    public UsuarioResponseDTO(Integer id, String nome, String email, LocalDate dataCriacao, Integer status, List<TransacaoBasicaResponseDTO> transacoes, List<MetaBasicaResponseDTO> metas) {
+    public UsuarioResponseDTO(Integer id, String nome, String email, LocalDate dataCriacao, Status status, List<TransacaoBasicaResponseDTO> transacoes, List<MetaBasicaResponseDTO> metas) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -61,11 +62,11 @@ public class UsuarioResponseDTO {
         this.dataCriacao = dataCriacao;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

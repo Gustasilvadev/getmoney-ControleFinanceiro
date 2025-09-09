@@ -5,6 +5,7 @@ import com.getmoney.dto.request.RegistroRequestDTO;
 import com.getmoney.dto.response.LoginResponseDTO;
 import com.getmoney.dto.response.UsuarioResponseDTO;
 import com.getmoney.entity.Usuario;
+import com.getmoney.enums.Status;
 import com.getmoney.repository.UsuarioRepository;
 import com.getmoney.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,7 +67,7 @@ public class AutenticacaoController {
         Usuario novoUsuario = modelMapper.map(registroRequestDTO, Usuario.class);
         novoUsuario.setSenha(encryptedSenha);
         novoUsuario.setDataCriacao(LocalDate.now());
-        novoUsuario.setStatus(1);
+        novoUsuario.setStatus(Status.ATIVO);
 
         this.usuarioRepository.save(novoUsuario);
         return ResponseEntity.ok().build();

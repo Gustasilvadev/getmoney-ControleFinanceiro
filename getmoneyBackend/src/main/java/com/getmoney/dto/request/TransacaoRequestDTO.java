@@ -1,5 +1,6 @@
 package com.getmoney.dto.request;
 
+import com.getmoney.enums.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -24,7 +25,7 @@ public class TransacaoRequestDTO {
     private LocalDate data;
 
     @NotNull(message = "O status é obrigatório")
-    private Integer status;
+    private Status status;
 
     @NotNull(message = "O ID do usuário é obrigatório")
     private Integer usuarioId;
@@ -36,7 +37,7 @@ public class TransacaoRequestDTO {
 
     public TransacaoRequestDTO() {}
 
-    public TransacaoRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer usuarioId, Integer categoriaId) {
+    public TransacaoRequestDTO(BigDecimal valor, String descricao, LocalDate data, Status status, Integer usuarioId, Integer categoriaId) {
         this.valor = valor;
         this.descricao = descricao;
         this.data = data;
@@ -79,11 +80,11 @@ public class TransacaoRequestDTO {
         this.data = data;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

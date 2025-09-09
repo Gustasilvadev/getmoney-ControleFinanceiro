@@ -4,26 +4,21 @@ import com.getmoney.entity.Categoria;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.enums.Status;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class CategoriaResponseDTO {
-
+public class CategoriaBasicaResponseDTO {
     private Integer id;
     private String nome;
     private CategoriaTipo tipo;
     private Status status;
-    private List<TransacaoResponseDTO> transacoes;
 
-    public CategoriaResponseDTO(Categoria categoria) {
+    public CategoriaBasicaResponseDTO(Categoria categoria) {
         this.id = categoria.getId();
         this.nome = categoria.getNome();
         this.tipo = categoria.getTipo();
         this.status = categoria.getStatus();
-        this.transacoes = transacoes != null ? transacoes : new ArrayList<>();
     }
 
-    public CategoriaResponseDTO() {}
+    public CategoriaBasicaResponseDTO() {}
 
 
     public Integer getId() {
@@ -56,13 +51,5 @@ public class CategoriaResponseDTO {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public List<TransacaoResponseDTO> getTransacoes() {
-        return transacoes;
-    }
-
-    public void setTransacoes(List<TransacaoResponseDTO> transacoes) {
-        this.transacoes = transacoes;
     }
 }

@@ -2,6 +2,7 @@ package com.getmoney.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.getmoney.enums.CategoriaTipo;
+import com.getmoney.enums.Status;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -22,8 +23,9 @@ public class Categoria {
     @Column(name = "categoria_tipo")
     private CategoriaTipo tipo;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name="categoria_status")
-    private Integer status;
+    private Status status;
 
     @OneToMany(mappedBy = "categoria")
     @JsonIgnore
@@ -32,10 +34,20 @@ public class Categoria {
     @PrePersist
     public void prePersist() {
         if (this.status == null) {
-            this.status = 1; // Ao criar a categoria automaticamente --> 1 = ativo
+            this.status = status.ATIVO;
         }
     }
 
+    public Categoria() {
+    }
+
+    public Categoria(Integer id, String nome, CategoriaTipo tipo, Status status, List<Transacao> transacoes) {
+        this.id = id;
+        this.nome = nome;
+        this.tipo = tipo;
+        this.status = status;
+        this.transacoes = transacoes;
+    }
 
     public Integer getId() {
         return id;
@@ -69,11 +81,11 @@ public class Categoria {
         this.transacoes = transacoes;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

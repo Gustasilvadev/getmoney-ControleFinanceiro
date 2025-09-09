@@ -1,6 +1,7 @@
 package com.getmoney.dto.response;
 
 import com.getmoney.entity.Meta;
+import com.getmoney.enums.Status;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ public class MetaResponseDTO {
     private Integer id;
     private String nome;
     private BigDecimal valorAlvo;
-    private Integer status;
+    private Status status;
     private LocalDate data;
     private Integer usuarioId;
     private List<TransacaoBasicaResponseDTO> transacoes = new ArrayList<>();;
@@ -55,11 +56,11 @@ public class MetaResponseDTO {
         this.valorAlvo = valorAlvo;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

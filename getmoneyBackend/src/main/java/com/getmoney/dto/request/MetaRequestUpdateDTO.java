@@ -1,5 +1,6 @@
 package com.getmoney.dto.request;
 
+import com.getmoney.enums.Status;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -16,7 +17,7 @@ public class MetaRequestUpdateDTO {
     private BigDecimal valorAlvo;
 
     @NotNull(message = "O status é obrigatório")
-    private Integer status;
+    private Status status;
 
     @NotNull(message = "A data é obrigatória")
     @FutureOrPresent(message = "A data deve ser hoje ou uma data futura")
@@ -26,7 +27,7 @@ public class MetaRequestUpdateDTO {
     public MetaRequestUpdateDTO() {
     }
 
-    public MetaRequestUpdateDTO(String nome, BigDecimal valorAlvo, Integer status, LocalDate data) {
+    public MetaRequestUpdateDTO(String nome, BigDecimal valorAlvo, Status status, LocalDate data) {
         this.nome = nome;
         this.valorAlvo = valorAlvo;
         this.status = status;
@@ -49,11 +50,11 @@ public class MetaRequestUpdateDTO {
         this.valorAlvo = valorAlvo;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
