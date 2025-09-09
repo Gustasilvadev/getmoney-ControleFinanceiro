@@ -26,7 +26,6 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
     @Query("SELECT t FROM Transacao t WHERE t.id = :id AND t.status >=0")
     Transacao ObterTransacaoPeloId(@Param("id")Integer transacaoId);
 
-
     /**
      * Soma todos os valores das transações do tipo Receita (tipo = 1)
      * associadas ao ID do usuário fornecido.
@@ -42,5 +41,19 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
     @Query("SELECT COALESCE(SUM(t.valor), 0) FROM Transacao t " +
             "JOIN t.categoria c WHERE t.usuario.id = :usuarioId AND c.tipo = 0")
     BigDecimal TotalDespesas(@Param("usuarioId") Integer usuarioId);
+
+
+
+    @Query("SELECT t FROM Transacao t WHERE t.categoria.id = :categoriaId AND t.status >= 0")
+    List<Transacao> listarTransacaoPorCategoriaId(@Param("categoriaId") Integer categoriaId);
+
+    @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE m.id = :metaId AND t.status >= 0")
+    List<Transacao> ListarTransacaoPorMetaId(@Param("metaId") Integer metaId);
+
+    @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE t.id = :id AND m.id = :metaId AND t.status >= 0")
+    Transacao listarTransacaoIdEMetaId(@Param("id") Integer id, @Param("metaId") Integer metaId);
+
+    @Query("SELECT t FROM Transacao t WHERE t.id = :id AND t.categoria.id = :categoriaId AND t.status >= 0")
+    Transacao listarTransacaoIdECategoriaId(@Param("id") Integer id, @Param("categoriaId") Integer categoriaId);
 
 }

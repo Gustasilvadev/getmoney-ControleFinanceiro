@@ -1,6 +1,7 @@
 package com.getmoney.service;
 
 import com.getmoney.dto.request.CategoriaRequestDTO;
+import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
 import com.getmoney.dto.response.CategoriaResponseDTO;
 import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Categoria;
@@ -57,6 +58,15 @@ public class CategoriaService {
         }
         return new CategoriaResponseDTO(categoria);
     }
+
+    public CategoriaBasicaResponseDTO listarTransacaoCategoriaId(Integer categoriaId) {
+        Categoria categoria = categoriaRepository.ObterCategoriaPeloId(categoriaId);
+        if (categoria == null) {
+            throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
+        }
+        return new CategoriaBasicaResponseDTO(categoria);
+    }
+
 
     public List<CategoriaResponseDTO> listarPorCategoriaTipo(Integer categoriaTipo) {
         CategoriaTipo tipo = CategoriaTipo.fromCodigo(categoriaTipo);
