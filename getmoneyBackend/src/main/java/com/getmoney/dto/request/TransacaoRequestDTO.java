@@ -25,7 +25,7 @@ public class TransacaoRequestDTO {
     private LocalDate data;
 
     @NotNull(message = "O status é obrigatório")
-    private Status status;
+    private Integer status;
 
     @NotNull(message = "O ID do usuário é obrigatório")
     private Integer usuarioId;
@@ -37,7 +37,7 @@ public class TransacaoRequestDTO {
 
     public TransacaoRequestDTO() {}
 
-    public TransacaoRequestDTO(BigDecimal valor, String descricao, LocalDate data, Status status, Integer usuarioId, Integer categoriaId) {
+    public TransacaoRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer usuarioId, Integer categoriaId) {
         this.valor = valor;
         this.descricao = descricao;
         this.data = data;
@@ -80,11 +80,11 @@ public class TransacaoRequestDTO {
         this.data = data;
     }
 
-    public Status getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

@@ -27,7 +27,7 @@ public class Transacao {
     @Column(name = "transacao_data")
     private LocalDate data;
 
-    @Enumerated(EnumType.ORDINAL)
+
     @Column(name = "transacao_status")
     private Status status;
 

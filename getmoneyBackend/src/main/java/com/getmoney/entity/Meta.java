@@ -24,7 +24,7 @@ public class Meta {
     @Column(name = "meta_valor_alvo",  precision = 10, scale = 2)
     private BigDecimal valorAlvo;
 
-    @Enumerated(EnumType.ORDINAL)
+
     @Column(name = "meta_status")
     private Status status;
 

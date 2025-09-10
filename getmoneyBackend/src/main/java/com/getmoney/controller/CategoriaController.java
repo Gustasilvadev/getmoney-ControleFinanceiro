@@ -1,21 +1,16 @@
 package com.getmoney.controller;
 
 import com.getmoney.dto.request.CategoriaRequestDTO;
+import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
 import com.getmoney.dto.response.CategoriaResponseDTO;
-import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Usuario;
 import com.getmoney.service.CategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,9 +29,10 @@ public class CategoriaController {
 
     @GetMapping("/listar")
     @Operation(summary="Listar categorias", description="Endpoint para listar todas as categorias")
-    public ResponseEntity <List<CategoriaResponseDTO>> listarCategorias(){
+    public ResponseEntity <List<CategoriaResponseDTO>> listarCategorias(@AuthenticationPrincipal Usuario usuario){
         return ResponseEntity.ok(categoriaService.listarCategorias());
     }
+
 
     @GetMapping("/listarPorCategoriaId/{categoriaId}")
     @Operation(summary = "Listar categoria pelo id de categoria", description = "Endpoint para obter categoria pelo id de categoria")
@@ -49,6 +45,15 @@ public class CategoriaController {
     public ResponseEntity<List<CategoriaResponseDTO >> listarPorTipo(@PathVariable("CategoriaTipo") Integer categoriaTipo) {
         return ResponseEntity.ok(categoriaService.listarPorCategoriaTipo(categoriaTipo));
     }
+
+    @GetMapping("/listarPorCategoriaNome")
+    @Operation(summary = "Listar categorias por nome", description = "Endpoint para listar categorias filtrando por nome. Se nenhum nome for informado, retorna todas as categorias ativas.")
+    public ResponseEntity<List<CategoriaBasicaResponseDTO>> listarPorCategoriaNome(@RequestParam(required = false) String nome) {
+        List<CategoriaBasicaResponseDTO> categorias = categoriaService.buscarPorCategoriaNome(nome);
+        return ResponseEntity.ok(categorias);
+    }
+
+
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova categoria", description = "Endpoint para criar um novo registro de categoria")

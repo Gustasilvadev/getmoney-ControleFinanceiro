@@ -7,6 +7,7 @@ import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Meta;
 import com.getmoney.entity.Usuario;
+import com.getmoney.enums.Status;
 import com.getmoney.repository.MetaRepository;
 import com.getmoney.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -76,7 +77,8 @@ public class MetaService {
         Meta meta = new Meta();
         meta.setNome(metaRequestDTO.getNome());
         meta.setValorAlvo(metaRequestDTO.getValorAlvo());
-        meta.setStatus(metaRequestDTO.getStatus());
+        Status status = Status.fromCodigo(metaRequestDTO.getStatus());
+        meta.setStatus(status);
         meta.setData(metaRequestDTO.getData());
 
 

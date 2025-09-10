@@ -1,6 +1,7 @@
 package com.getmoney.enums;
 
 public enum Status {
+    APAGADO(-1),
     INATIVO(0),
     ATIVO(1);
 

@@ -3,16 +3,21 @@ package com.getmoney.service;
 import com.getmoney.dto.request.CategoriaRequestDTO;
 import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
 import com.getmoney.dto.response.CategoriaResponseDTO;
+import com.getmoney.dto.response.CategoriaValorTotalResponseDTO;
 import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Categoria;
+import com.getmoney.entity.Transacao;
 import com.getmoney.enums.CategoriaTipo;
+import com.getmoney.enums.Status;
 import com.getmoney.repository.CategoriaRepository;
+import com.getmoney.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,6 +80,44 @@ public class CategoriaService {
                 .map(CategoriaResponseDTO::new)
                 .collect(Collectors.toList());
     }
+
+    public List<CategoriaBasicaResponseDTO> buscarPorCategoriaNome(String nome) {
+        List<Categoria> categorias;
+
+        if (nome == null || nome.trim().isEmpty()) {
+            categorias = categoriaRepository.listarCategoriasAtivas();
+        } else {
+            categorias = categoriaRepository.buscarPorCategoriaNome(nome.trim());
+        }
+
+        return categorias.stream()
+                .map(CategoriaBasicaResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<CategoriaValorTotalResponseDTO> listarCategoriasComValorTotal(Integer usuarioId) {
+
+        // Busca categorias usadas pelo usuário
+        List<Categoria> categorias = categoriaRepository.buscarCategoriasPorUsuarioId(usuarioId);
+
+        return categorias.stream()
+                .map(categoria -> {
+                    // Calcula o valor total das transações DO USUÁRIO nesta categoria
+                    BigDecimal valorTotal = categoria.getTransacoes().stream()
+                            .filter(transacao -> transacao.getStatus() == Status.ATIVO &&
+                                    transacao.getUsuario().getId().equals(usuarioId))
+                            .map(Transacao::getValor)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    return new CategoriaValorTotalResponseDTO(
+                            categoria.getId(),
+                            categoria.getNome(),
+                            valorTotal
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public CategoriaResponseDTO criarCategoria(CategoriaRequestDTO categoriaRequestDTO){

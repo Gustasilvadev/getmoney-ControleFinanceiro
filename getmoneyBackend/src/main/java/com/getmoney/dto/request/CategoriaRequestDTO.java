@@ -16,7 +16,7 @@ public class CategoriaRequestDTO {
     private CategoriaTipo tipo;
 
     @NotNull(message = "O status é obrigatório")
-    private Status status;
+    private Integer  status;
 
     public CategoriaRequestDTO() {}
 
@@ -42,11 +42,11 @@ public class CategoriaRequestDTO {
         this.tipo = tipo;
     }
 
-    public Status getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 }

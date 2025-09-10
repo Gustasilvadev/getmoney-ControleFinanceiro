@@ -1,5 +1,6 @@
 package com.getmoney.repository;
 
+import com.getmoney.dto.response.CategoriaValorTotalResponseDTO;
 import com.getmoney.entity.Categoria;
 import com.getmoney.enums.CategoriaTipo;
 import jakarta.transaction.Transactional;
@@ -22,8 +23,22 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     @Query("SELECT c FROM Categoria c WHERE c.status >= 0")
     List<Categoria> listarCategoriasAtivas();
 
+    @Query("SELECT DISTINCT c FROM Categoria c JOIN c.transacoes t WHERE t.usuario.id = :usuarioId ")
+    List<Categoria> buscarCategoriasPorUsuarioId(@Param("usuarioId") Integer usuarioId);
+
     @Query("SELECT c FROM Categoria c WHERE c.id = :id AND c.status >=0")
     Categoria ObterCategoriaPeloId(@Param("id")Integer categoriaId);
 
     List<Categoria> findByTipo(CategoriaTipo tipo);
+
+    // Buscar categorias por nome
+    @Query("SELECT c FROM Categoria c WHERE c.nome LIKE %:nome% AND c.status >= 0")
+    List<Categoria> buscarPorCategoriaNome(@Param("nome") String nome);
+
+
+    // Contar quantas transações uma categoria possui
+    @Query("SELECT COUNT(t) FROM Transacao t WHERE t.categoria.id = :categoriaId AND t.status >= 0")
+    int countTransacoesPorCategoria(@Param("categoriaId") Integer categoriaId);
+
+
 }

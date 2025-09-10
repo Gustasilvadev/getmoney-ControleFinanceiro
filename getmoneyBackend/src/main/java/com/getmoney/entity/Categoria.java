@@ -23,7 +23,7 @@ public class Categoria {
     @Column(name = "categoria_tipo")
     private CategoriaTipo tipo;
 
-    @Enumerated(EnumType.ORDINAL)
+
     @Column(name="categoria_status")
     private Status status;
 

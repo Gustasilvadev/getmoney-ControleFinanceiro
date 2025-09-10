@@ -8,6 +8,7 @@ import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Meta;
 import com.getmoney.entity.Transacao;
 import com.getmoney.entity.Usuario;
+import com.getmoney.enums.Status;
 import com.getmoney.repository.CategoriaRepository;
 import com.getmoney.repository.MetaRepository;
 import com.getmoney.repository.TransacaoRepository;
@@ -103,7 +104,8 @@ public class TransacaoService {
         transacao.setValor(transacaoRequestDTO.getValor());
         transacao.setDescricao(transacaoRequestDTO.getDescricao());
         transacao.setData(transacaoRequestDTO.getData());
-        transacao.setStatus(transacaoRequestDTO.getStatus());
+        Status status = Status.fromCodigo(transacaoRequestDTO.getStatus());
+        transacao.setStatus(status);
 
         Usuario usuario = usuarioRepository.findById(transacaoRequestDTO.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
@@ -131,12 +133,33 @@ public class TransacaoService {
             throw new RuntimeException("Transacao não encontrada com ID: " + transacaoId);
         }
 
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setSkipNullEnabled(true)
-                .setPropertyCondition(Conditions.isNotNull());
-        modelMapper.map(transacaoUpdateRequestDTO, transacaoExistente);
+        // Atualiza manualmente os campos necessários
+        if (transacaoUpdateRequestDTO.getValor() != null) {
+            transacaoExistente.setValor(transacaoUpdateRequestDTO.getValor());
+        }
+        if (transacaoUpdateRequestDTO.getDescricao() != null) {
+            transacaoExistente.setDescricao(transacaoUpdateRequestDTO.getDescricao());
+        }
+        if (transacaoUpdateRequestDTO.getData() != null) {
+            transacaoExistente.setData(transacaoUpdateRequestDTO.getData());
+        }
+        if (transacaoUpdateRequestDTO.getStatus() != null) {
+            transacaoExistente.setStatus(Status.fromCodigo(transacaoUpdateRequestDTO.getStatus()));
+        }
 
+        // Atualiza relações (usuário e categoria)
+        if (transacaoUpdateRequestDTO.getUsuarioId() != null) {
+            Usuario usuario = usuarioRepository.findById(transacaoUpdateRequestDTO.getUsuarioId())
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            transacaoExistente.setUsuario(usuario);
+        }
+        if (transacaoUpdateRequestDTO.getCategoriaId() != null) {
+            Categoria categoria = categoriaRepository.findById(transacaoUpdateRequestDTO.getCategoriaId())
+                    .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+            transacaoExistente.setCategoria(categoria);
+        }
+
+        // Atualiza metas
         if (transacaoUpdateRequestDTO.getMetasId() != null) {
             if (transacaoUpdateRequestDTO.getMetasId().isEmpty()) {
                 transacaoExistente.setMetas(new ArrayList<>());
@@ -145,8 +168,8 @@ public class TransacaoService {
                 transacaoExistente.setMetas(metas);
             }
         }
-        Transacao transacaoAtualizada = transacaoRepository.save(transacaoExistente);
 
+        Transacao transacaoAtualizada = transacaoRepository.save(transacaoExistente);
         return modelMapper.map(transacaoAtualizada, TransacaoResponseDTO.class);
     }
     @Transactional
