@@ -43,10 +43,6 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
     BigDecimal TotalDespesas(@Param("usuarioId") Integer usuarioId);
 
 
-
-    @Query("SELECT t FROM Transacao t WHERE t.categoria.id = :categoriaId AND t.status >= 0")
-    List<Transacao> listarTransacaoPorCategoriaId(@Param("categoriaId") Integer categoriaId);
-
     @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE m.id = :metaId AND t.status >= 0")
     List<Transacao> ListarTransacaoPorMetaId(@Param("metaId") Integer metaId);
 
@@ -55,5 +51,8 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
 
     @Query("SELECT t FROM Transacao t WHERE t.id = :id AND t.categoria.id = :categoriaId AND t.status >= 0")
     Transacao listarTransacaoIdECategoriaId(@Param("id") Integer id, @Param("categoriaId") Integer categoriaId);
+
+    @Query("SELECT t FROM Transacao t WHERE t.categoria.id = :categoriaId AND t.status >= 0")
+    List<Transacao> listarTransacaoPorCategoriaId(@Param("categoriaId") Integer categoriaId);
 
 }

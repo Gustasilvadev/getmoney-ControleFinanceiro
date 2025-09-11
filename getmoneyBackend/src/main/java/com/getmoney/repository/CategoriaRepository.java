@@ -36,9 +36,4 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     List<Categoria> buscarPorCategoriaNome(@Param("nome") String nome);
 
 
-    // Contar quantas transações uma categoria possui
-    @Query("SELECT COUNT(t) FROM Transacao t WHERE t.categoria.id = :categoriaId AND t.status >= 0")
-    int countTransacoesPorCategoria(@Param("categoriaId") Integer categoriaId);
-
-
 }

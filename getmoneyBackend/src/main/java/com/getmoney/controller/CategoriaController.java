@@ -3,6 +3,7 @@ package com.getmoney.controller;
 import com.getmoney.dto.request.CategoriaRequestDTO;
 import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
 import com.getmoney.dto.response.CategoriaResponseDTO;
+import com.getmoney.dto.response.CategoriaTransacaoResponseDTO;
 import com.getmoney.entity.Usuario;
 import com.getmoney.service.CategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,6 +55,14 @@ public class CategoriaController {
     }
 
 
+    @GetMapping("/{categoriaId}/transacoes")
+    @Operation(summary = "Listar categoria com as transações", description = "Endpoint para listar as transações da categoria .")
+    public ResponseEntity<CategoriaTransacaoResponseDTO> getCategoriaComTransacoes(
+            @PathVariable Integer categoriaId) {
+
+        CategoriaTransacaoResponseDTO response = categoriaService.getCategoriaComTransacoes(categoriaId);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova categoria", description = "Endpoint para criar um novo registro de categoria")

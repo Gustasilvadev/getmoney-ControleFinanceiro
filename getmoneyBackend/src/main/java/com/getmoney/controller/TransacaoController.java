@@ -55,6 +55,8 @@ public class TransacaoController {
 
         return ResponseEntity.ok(categoria);
     }
+
+
     // Endpoint: /api/transacao/{id}/categoria/{categoriaId}
     @GetMapping("/{transacaoId}/categoria/{categoriaId}")
     @Operation(summary = "Buscar transação por ID e categoria por ID", description = "Retorna os dados de uma transação específica se ela pertencer à categoria informada")

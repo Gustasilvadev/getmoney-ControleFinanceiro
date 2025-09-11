@@ -1,16 +1,13 @@
 package com.getmoney.service;
 
 import com.getmoney.dto.request.CategoriaRequestDTO;
-import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
-import com.getmoney.dto.response.CategoriaResponseDTO;
-import com.getmoney.dto.response.CategoriaValorTotalResponseDTO;
-import com.getmoney.dto.response.TransacaoResponseDTO;
+import com.getmoney.dto.response.*;
 import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Transacao;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.enums.Status;
 import com.getmoney.repository.CategoriaRepository;
-import com.getmoney.repository.UsuarioRepository;
+import com.getmoney.repository.TransacaoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -26,12 +23,14 @@ import java.util.stream.Collectors;
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
+    private TransacaoRepository transacaoRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public CategoriaService(CategoriaRepository categoriaRepository) {
+    public CategoriaService(CategoriaRepository categoriaRepository, TransacaoRepository transacaoRepository ) {
         this.categoriaRepository = categoriaRepository;
+        this.transacaoRepository = transacaoRepository;
     }
 
     public List<CategoriaResponseDTO> listarCategorias() {
@@ -79,6 +78,26 @@ public class CategoriaService {
         return categorias.stream()
                 .map(CategoriaResponseDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public CategoriaTransacaoResponseDTO getCategoriaComTransacoes(Integer categoriaId) {
+        // Busca a categoria
+        Categoria categoria = categoriaRepository.listarCategoriasAtivas().get(categoriaId);
+        if (categoria == null) {
+            throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
+        }
+
+        // Filtra as transações ativas manualmente
+        List<Transacao> transacoesAtivas = categoria.getTransacoes().stream()
+                .filter(transacao -> transacao.getStatus() == Status.ATIVO)
+                .collect(Collectors.toList());
+
+        CategoriaTransacaoResponseDTO response = modelMapper.map(categoria, CategoriaTransacaoResponseDTO.class);
+        response.setTransacoes(transacoesAtivas.stream()
+                .map(transacao -> modelMapper.map(transacao, TransacaoPorCategoriaResponseDTO.class))
+                .collect(Collectors.toList()));
+
+        return response;
     }
 
     public List<CategoriaBasicaResponseDTO> buscarPorCategoriaNome(String nome) {

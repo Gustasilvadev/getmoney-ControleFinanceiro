@@ -57,13 +57,6 @@ public class TransacaoService {
         return modelMapper.map(transacao, TransacaoResponseDTO.class);
     }
 
-    public List<TransacaoResponseDTO> listarTransacoesPorCategoria(Integer categoriaId) {
-        List<Transacao> transacoes = transacaoRepository.listarTransacaoPorCategoriaId(categoriaId);
-        return transacoes.stream()
-                .map(transacao -> modelMapper.map(transacao, TransacaoResponseDTO.class))
-                .collect(Collectors.toList());
-    }
-
     public List<TransacaoBasicaResponseDTO> listarTransacoesPorMeta(Integer metaId) {
         List<Transacao> transacoes = transacaoRepository.ListarTransacaoPorMetaId(metaId);
         return transacoes.stream()
