@@ -35,6 +35,10 @@ public class MetaService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    /**
+     * Lista todas as metas ativas, com informações do usuário e transações associadas
+     * Se uma meta não possuir transações, a lista de transações será vazia.
+     */
     public List<MetaResponseDTO> listarMetas() {
         List<Meta> metas = metaRepository.listarMetasAtivas();
 

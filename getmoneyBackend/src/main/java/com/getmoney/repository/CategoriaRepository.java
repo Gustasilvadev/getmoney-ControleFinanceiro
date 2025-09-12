@@ -23,6 +23,10 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     @Query("SELECT c FROM Categoria c WHERE c.status >= 0")
     List<Categoria> listarCategoriasAtivas();
 
+
+    /**
+     * Busca categorias distintas associadas a transações de um usuário específico.
+     */
     @Query("SELECT DISTINCT c FROM Categoria c JOIN c.transacoes t WHERE t.usuario.id = :usuarioId ")
     List<Categoria> buscarCategoriasPorUsuarioId(@Param("usuarioId") Integer usuarioId);
 
@@ -31,7 +35,9 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
 
     List<Categoria> findByTipo(CategoriaTipo tipo);
 
-    // Buscar categorias por nome
+    /**
+     * Busca categorias pelo nome, considerando apenas as com status maior ou igual a zero.
+     */
     @Query("SELECT c FROM Categoria c WHERE c.nome LIKE %:nome% AND c.status >= 0")
     List<Categoria> buscarPorCategoriaNome(@Param("nome") String nome);
 

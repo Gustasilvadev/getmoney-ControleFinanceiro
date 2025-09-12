@@ -57,6 +57,9 @@ public class TransacaoService {
         return modelMapper.map(transacao, TransacaoResponseDTO.class);
     }
 
+    /**
+     * Lista todas as transações associadas a uma meta específica
+     */
     public List<TransacaoBasicaResponseDTO> listarTransacoesPorMeta(Integer metaId) {
         List<Transacao> transacoes = transacaoRepository.ListarTransacaoPorMetaId(metaId);
         return transacoes.stream()
@@ -64,6 +67,10 @@ public class TransacaoService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Obtém uma transação específica pelo ID e ID da categoria associada
+     * Lança exceção se a transação não for encontrada para a categoria especificada.
+     */
     public TransacaoResponseDTO obterTransacaoPorCategoria(Integer id, Integer categoriaId) {
         Transacao transacao = transacaoRepository.listarTransacaoIdECategoriaId(id, categoriaId);
         if (transacao == null) {
@@ -72,6 +79,10 @@ public class TransacaoService {
         return modelMapper.map(transacao, TransacaoResponseDTO.class);
     }
 
+    /**
+     * Obtém uma transação específica pelo ID e ID da meta associada
+     * Lança exceção se a transação não for encontrada para a meta especificada.
+     */
     public TransacaoResponseDTO obterTransacaoPorMeta(Integer id, Integer metaId) {
         Transacao transacao = transacaoRepository.listarTransacaoIdEMetaId(id, metaId);
         if (transacao == null) {
@@ -79,8 +90,6 @@ public class TransacaoService {
         }
         return modelMapper.map(transacao, TransacaoResponseDTO.class);
     }
-
-
 
 
     public TransacaoResponseDTO listarPorTransacaoId(Integer transacaoId) {
@@ -91,6 +100,11 @@ public class TransacaoService {
 
         return new TransacaoResponseDTO(transacao);
     }
+
+    /**
+     * Cria uma nova transação com base nos dados fornecidos
+     * Associando-a a um usuário, categoria e metas (se especificadas)
+     */
     @Transactional
     public TransacaoResponseDTO criarTransacao(TransacaoRequestDTO transacaoRequestDTO) {
         Transacao transacao = new Transacao();
@@ -119,6 +133,10 @@ public class TransacaoService {
         return new TransacaoResponseDTO(transacaoSalva);
     }
 
+    /**
+     * Edita uma transação existente pelo ID, atualizando apenas os campos fornecidos
+     * Permite alterar usuário, categoria, metas
+     */
     @Transactional
     public TransacaoResponseDTO editarPorTransacaoId(Integer transacaoId, TransacaoUpdateRequestDTO transacaoUpdateRequestDTO) {
         Transacao transacaoExistente = transacaoRepository.ObterTransacaoPeloId(transacaoId);
@@ -126,7 +144,6 @@ public class TransacaoService {
             throw new RuntimeException("Transacao não encontrada com ID: " + transacaoId);
         }
 
-        // Atualiza manualmente os campos necessários
         if (transacaoUpdateRequestDTO.getValor() != null) {
             transacaoExistente.setValor(transacaoUpdateRequestDTO.getValor());
         }
@@ -140,19 +157,12 @@ public class TransacaoService {
             transacaoExistente.setStatus(Status.fromCodigo(transacaoUpdateRequestDTO.getStatus()));
         }
 
-        // Atualiza relações (usuário e categoria)
-        if (transacaoUpdateRequestDTO.getUsuarioId() != null) {
-            Usuario usuario = usuarioRepository.findById(transacaoUpdateRequestDTO.getUsuarioId())
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-            transacaoExistente.setUsuario(usuario);
-        }
         if (transacaoUpdateRequestDTO.getCategoriaId() != null) {
             Categoria categoria = categoriaRepository.findById(transacaoUpdateRequestDTO.getCategoriaId())
                     .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
             transacaoExistente.setCategoria(categoria);
         }
 
-        // Atualiza metas
         if (transacaoUpdateRequestDTO.getMetasId() != null) {
             if (transacaoUpdateRequestDTO.getMetasId().isEmpty()) {
                 transacaoExistente.setMetas(new ArrayList<>());
@@ -165,6 +175,7 @@ public class TransacaoService {
         Transacao transacaoAtualizada = transacaoRepository.save(transacaoExistente);
         return modelMapper.map(transacaoAtualizada, TransacaoResponseDTO.class);
     }
+
     @Transactional
     public void deletarPorTransacaoId(Integer transacaoId) {
         boolean transacaoExistente = transacaoRepository.existsById(transacaoId);

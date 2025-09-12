@@ -46,13 +46,17 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
     @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE m.id = :metaId AND t.status >= 0")
     List<Transacao> ListarTransacaoPorMetaId(@Param("metaId") Integer metaId);
 
+
+    /**
+     * Busca uma transação específica pelo seu ID e pelo ID de uma meta associada, considerando apenas transações ativas.
+     */
     @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE t.id = :id AND m.id = :metaId AND t.status >= 0")
     Transacao listarTransacaoIdEMetaId(@Param("id") Integer id, @Param("metaId") Integer metaId);
 
+    /**
+     * Busca uma transação específica pelo seu ID e pelo ID de sua categoria, considerando apenas transações ativas.
+     */
     @Query("SELECT t FROM Transacao t WHERE t.id = :id AND t.categoria.id = :categoriaId AND t.status >= 0")
     Transacao listarTransacaoIdECategoriaId(@Param("id") Integer id, @Param("categoriaId") Integer categoriaId);
-
-    @Query("SELECT t FROM Transacao t WHERE t.categoria.id = :categoriaId AND t.status >= 0")
-    List<Transacao> listarTransacaoPorCategoriaId(@Param("categoriaId") Integer categoriaId);
 
 }

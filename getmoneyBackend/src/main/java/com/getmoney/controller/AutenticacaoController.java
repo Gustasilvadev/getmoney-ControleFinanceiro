@@ -54,7 +54,6 @@ public class AutenticacaoController {
 
     /**
      * Cria um novo usuario no sistema
-     *
      */
     @PostMapping("/registrarUsuario")
     @Operation(summary = "Registrar novo usuário", description = "Endpoint para registrar um novo usuário")

@@ -46,4 +46,19 @@ public class UsuarioController {
         }
 
     }
+
+    /**
+     * Busca um usuário pelo ID
+     * Lança uma exceção se o usuário não for encontrado.
+     */
+    @GetMapping("/listarPorUsuarioId/{usuarioId}")
+    @Operation(summary = "Buscar usuário pelo ID", description = "Endpoint para obter um usuário pelo seu Id")
+    public ResponseEntity<UsuarioResponseDTO> listarPorUsuarioId(@PathVariable Integer usuarioId) {
+        try {
+            UsuarioResponseDTO usuario = usuarioService.listarPorUsuarioId(usuarioId);
+            return ResponseEntity.ok(usuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

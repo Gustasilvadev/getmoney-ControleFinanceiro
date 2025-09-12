@@ -1,6 +1,5 @@
 package com.getmoney.dto.response;
 
-import com.getmoney.entity.Usuario;
 import com.getmoney.enums.Status;
 
 import java.time.LocalDate;

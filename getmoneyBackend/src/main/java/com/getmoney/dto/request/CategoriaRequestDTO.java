@@ -20,11 +20,11 @@ public class CategoriaRequestDTO {
 
     public CategoriaRequestDTO() {}
 
-    public CategoriaRequestDTO(String nome, CategoriaTipo tipo) {
+    public CategoriaRequestDTO(String nome, CategoriaTipo tipo, Integer status) {
         this.nome = nome;
         this.tipo = tipo;
+        this.status = status;
     }
-
 
     public String getNome() {
         return nome;

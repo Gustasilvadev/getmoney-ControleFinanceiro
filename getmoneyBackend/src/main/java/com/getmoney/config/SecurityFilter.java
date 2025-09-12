@@ -50,7 +50,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     /**
      * Recupera token do cabeçalho Authorization
-     * Remove prefixo "Bearer " se presente
+     * Remove prefixo "Bearer "
      */
     private String recoverToken(HttpServletRequest request){
         var authHeader = request.getHeader("Authorization");

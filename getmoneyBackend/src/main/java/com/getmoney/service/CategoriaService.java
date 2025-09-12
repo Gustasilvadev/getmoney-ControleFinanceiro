@@ -33,6 +33,10 @@ public class CategoriaService {
         this.transacaoRepository = transacaoRepository;
     }
 
+    /**
+     * Lista todas as categorias ativas, com suas transações associadas
+     * Se uma categoria não possuir transações, a lista de transações será vazia.
+     */
     public List<CategoriaResponseDTO> listarCategorias() {
         List<Categoria> categorias = categoriaRepository.listarCategoriasAtivas();
 
@@ -55,6 +59,9 @@ public class CategoriaService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Busca uma categoria pelo ID
+     */
     public CategoriaResponseDTO listarPorCategoriaId(Integer categoriaId) {
         Categoria categoria = categoriaRepository.ObterCategoriaPeloId(categoriaId);
         if (categoria == null) {
@@ -63,6 +70,9 @@ public class CategoriaService {
         return new CategoriaResponseDTO(categoria);
     }
 
+    /**
+     * Busca uma categoria pelo ID
+     */
     public CategoriaBasicaResponseDTO listarTransacaoCategoriaId(Integer categoriaId) {
         Categoria categoria = categoriaRepository.ObterCategoriaPeloId(categoriaId);
         if (categoria == null) {
@@ -71,7 +81,9 @@ public class CategoriaService {
         return new CategoriaBasicaResponseDTO(categoria);
     }
 
-
+    /**
+     * Lista categorias por tipo
+     */
     public List<CategoriaResponseDTO> listarPorCategoriaTipo(Integer categoriaTipo) {
         CategoriaTipo tipo = CategoriaTipo.fromCodigo(categoriaTipo);
         List<Categoria> categorias = categoriaRepository.findByTipo(tipo);
@@ -80,14 +92,15 @@ public class CategoriaService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Busca uma categoria ativa pelo ID e retorna as informações da categoria e suas transações ativas
+     */
     public CategoriaTransacaoResponseDTO getCategoriaComTransacoes(Integer categoriaId) {
-        // Busca a categoria
         Categoria categoria = categoriaRepository.listarCategoriasAtivas().get(categoriaId);
         if (categoria == null) {
             throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
         }
 
-        // Filtra as transações ativas manualmente
         List<Transacao> transacoesAtivas = categoria.getTransacoes().stream()
                 .filter(transacao -> transacao.getStatus() == Status.ATIVO)
                 .collect(Collectors.toList());
@@ -100,6 +113,10 @@ public class CategoriaService {
         return response;
     }
 
+    /**
+     * Busca categorias por nome
+     * Se o nome for nulo ou vazio, retorna todas as categorias ativas.
+     */
     public List<CategoriaBasicaResponseDTO> buscarPorCategoriaNome(String nome) {
         List<Categoria> categorias;
 
@@ -114,6 +131,11 @@ public class CategoriaService {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * Lista categorias utilizadas por um usuário específico, calculando o valor total
+     * das transações ativas do usuário em cada categoria
+     */
     public List<CategoriaValorTotalResponseDTO> listarCategoriasComValorTotal(Integer usuarioId) {
 
         // Busca categorias usadas pelo usuário
@@ -121,7 +143,7 @@ public class CategoriaService {
 
         return categorias.stream()
                 .map(categoria -> {
-                    // Calcula o valor total das transações DO USUÁRIO nesta categoria
+
                     BigDecimal valorTotal = categoria.getTransacoes().stream()
                             .filter(transacao -> transacao.getStatus() == Status.ATIVO &&
                                     transacao.getUsuario().getId().equals(usuarioId))
@@ -139,24 +161,52 @@ public class CategoriaService {
 
 
     @Transactional
-    public CategoriaResponseDTO criarCategoria(CategoriaRequestDTO categoriaRequestDTO){
+    public CategoriaResponseDTO criarCategoria(CategoriaRequestDTO categoriaRequestDTO) {
 
-        Categoria categoria = modelMapper.map(categoriaRequestDTO, Categoria.class);
-        Categoria categoriaSalva = this.categoriaRepository.save(categoria);
-        CategoriaResponseDTO categoriaResponseDTO = modelMapper.map(categoriaSalva, CategoriaResponseDTO.class);
-        return categoriaResponseDTO;
-    }
-    @Transactional
-    public CategoriaResponseDTO editarPorCategoriaId(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
-        Categoria categoriaExistente = categoriaRepository.ObterCategoriaPeloId(categoriaId);
-        if (categoriaExistente == null) {
-            throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
+        Categoria categoria = new Categoria();
+        categoria.setNome(categoriaRequestDTO.getNome());
+        categoria.setTipo(categoriaRequestDTO.getTipo());
+
+        if (categoriaRequestDTO.getStatus() != null) {
+            try {
+                Status status = Status.fromCodigo(categoriaRequestDTO.getStatus());
+                categoria.setStatus(status);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Status inválido: " + categoriaRequestDTO.getStatus());
+            }
         }
 
-        modelMapper.map(categoriaRequestDTO, categoriaExistente);
+        Categoria categoriaSalva = this.categoriaRepository.save(categoria);
+        CategoriaResponseDTO categoriaResponseDTO = modelMapper.map(categoriaSalva, CategoriaResponseDTO.class);
+
+        return categoriaResponseDTO;
+    }
+
+    @Transactional
+    public CategoriaResponseDTO editarPorCategoriaId(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
+        Categoria categoriaExistente = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com ID: " + categoriaId));
+
+        if (categoriaRequestDTO.getNome() != null) {
+            categoriaExistente.setNome(categoriaRequestDTO.getNome());
+        }
+
+        if (categoriaRequestDTO.getTipo() != null) {
+            categoriaExistente.setTipo(categoriaRequestDTO.getTipo());
+        }
+
+        if (categoriaRequestDTO.getStatus() != null) {
+            try {
+                Status status = Status.fromCodigo(categoriaRequestDTO.getStatus());
+                categoriaExistente.setStatus(status);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Status inválido: " + categoriaRequestDTO.getStatus());
+            }
+        }
 
         Categoria categoriaAtualizada = categoriaRepository.save(categoriaExistente);
-        return new CategoriaResponseDTO(categoriaAtualizada);
+
+        return modelMapper.map(categoriaAtualizada, CategoriaResponseDTO.class);
     }
     @Transactional
     public void deletarPorCategoriaId(Integer categoriaId){

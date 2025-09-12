@@ -15,14 +15,19 @@ public class CategoriaResponseDTO {
     private Status status;
     private List<TransacaoResponseDTO> transacoes;
 
+    public CategoriaResponseDTO(Integer id, String nome, CategoriaTipo tipo, Status status, List<TransacaoResponseDTO> transacoes) {
+        this.id = id;
+        this.nome = nome;
+        this.tipo = tipo;
+        this.status = status;
+        this.transacoes = transacoes;
+    }
     public CategoriaResponseDTO(Categoria categoria) {
         this.id = categoria.getId();
         this.nome = categoria.getNome();
         this.tipo = categoria.getTipo();
         this.status = categoria.getStatus();
-        this.transacoes = transacoes != null ? transacoes : new ArrayList<>();
     }
-
     public CategoriaResponseDTO() {}
 
 

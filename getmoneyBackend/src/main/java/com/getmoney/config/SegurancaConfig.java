@@ -23,7 +23,6 @@ public class SegurancaConfig {
 
     /**
      * Cria e configura um bean do tipo PasswordEncoder para criptografia de senhas.
-     * Realiza operações de codificação ou verificação de senhas.
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
