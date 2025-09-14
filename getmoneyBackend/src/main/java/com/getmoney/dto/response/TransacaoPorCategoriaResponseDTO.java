@@ -1,5 +1,6 @@
 package com.getmoney.dto.response;
 
+import com.getmoney.entity.Transacao;
 import com.getmoney.enums.Status;
 
 import java.math.BigDecimal;
@@ -26,7 +27,15 @@ public class TransacaoPorCategoriaResponseDTO {
         this.usuarioId = usuarioId;
     }
 
-    // Getters e Setters
+    public TransacaoPorCategoriaResponseDTO(Transacao transacao) {
+        this.id = transacao.getId();
+        this.valor = transacao.getValor();
+        this.descricao = transacao.getDescricao();
+        this.data = transacao.getData();
+        this.status = transacao.getStatus();
+        this.usuarioId = transacao.getUsuario() != null ? transacao.getUsuario().getId() : null;
+    }
+
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -45,4 +54,3 @@ public class TransacaoPorCategoriaResponseDTO {
     public Integer getUsuarioId() { return usuarioId; }
     public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }
 }
-

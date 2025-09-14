@@ -45,9 +45,9 @@ public class CategoriaService {
                     CategoriaResponseDTO categoriaResponseDTO = modelMapper.map(categoria, CategoriaResponseDTO.class);
 
                     if (categoria.getTransacoes() != null) {
-                        List<TransacaoResponseDTO> transacoesDTO = categoria.getTransacoes()
+                        List<TransacaoPorCategoriaResponseDTO> transacoesDTO = categoria.getTransacoes()
                                 .stream()
-                                .map(TransacaoResponseDTO::new)
+                                .map(TransacaoPorCategoriaResponseDTO::new)
                                 .collect(Collectors.toList());
                         categoriaResponseDTO.setTransacoes(transacoesDTO);
                     } else {
@@ -67,7 +67,21 @@ public class CategoriaService {
         if (categoria == null) {
             throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
         }
-        return new CategoriaResponseDTO(categoria);
+
+        // Busca apenas as transações ativas desta categoria
+        List<Transacao> transacoesAtivas = transacaoRepository.listarTransacoesAtivasPorCategoriaId(categoriaId);
+
+        CategoriaResponseDTO dto = new CategoriaResponseDTO();
+        dto.setId(categoria.getId());
+        dto.setNome(categoria.getNome());
+        dto.setTipo(categoria.getTipo());
+        dto.setStatus(categoria.getStatus());
+
+        dto.setTransacoes(transacoesAtivas.stream()
+                .map(TransacaoPorCategoriaResponseDTO::new)
+                .collect(Collectors.toList()));
+
+        return dto;
     }
 
     /**
@@ -87,30 +101,28 @@ public class CategoriaService {
     public List<CategoriaResponseDTO> listarPorCategoriaTipo(Integer categoriaTipo) {
         CategoriaTipo tipo = CategoriaTipo.fromCodigo(categoriaTipo);
         List<Categoria> categorias = categoriaRepository.findByTipo(tipo);
+
+        // Busca todas as transações ativas uma única vez
+        List<Transacao> transacoesAtivas = transacaoRepository.listarTransacoesAtivas();
+
         return categorias.stream()
-                .map(CategoriaResponseDTO::new)
+                .map(categoria -> {
+                    CategoriaResponseDTO dto = new CategoriaResponseDTO();
+                    dto.setId(categoria.getId());
+                    dto.setNome(categoria.getNome());
+                    dto.setTipo(categoria.getTipo());
+                    dto.setStatus(categoria.getStatus());
+
+                    // Filtra as transações ativas que pertencem a esta categoria
+                    dto.setTransacoes(transacoesAtivas.stream()
+                            .filter(transacao -> transacao.getCategoria() != null &&
+                                    transacao.getCategoria().getId().equals(categoria.getId()))
+                            .map(TransacaoPorCategoriaResponseDTO::new)
+                            .collect(Collectors.toList()));
+
+                    return dto;
+                })
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Busca uma categoria ativa pelo ID e retorna as informações da categoria e suas transações ativas
-     */
-    public CategoriaTransacaoResponseDTO getCategoriaComTransacoes(Integer categoriaId) {
-        Categoria categoria = categoriaRepository.listarCategoriasAtivas().get(categoriaId);
-        if (categoria == null) {
-            throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
-        }
-
-        List<Transacao> transacoesAtivas = categoria.getTransacoes().stream()
-                .filter(transacao -> transacao.getStatus() == Status.ATIVO)
-                .collect(Collectors.toList());
-
-        CategoriaTransacaoResponseDTO response = modelMapper.map(categoria, CategoriaTransacaoResponseDTO.class);
-        response.setTransacoes(transacoesAtivas.stream()
-                .map(transacao -> modelMapper.map(transacao, TransacaoPorCategoriaResponseDTO.class))
-                .collect(Collectors.toList()));
-
-        return response;
     }
 
     /**

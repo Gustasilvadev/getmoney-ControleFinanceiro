@@ -58,8 +58,8 @@ public class TokenService {
      * Gera data de expiração com 2 horas de duração
      * Considera timezone de -03:00 (Brasília)
      */
-        private Instant genExpirationDate(){
-            return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
-        }
+    private Instant genExpirationDate(){
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
 
 }

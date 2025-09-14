@@ -17,7 +17,13 @@ import java.util.List;
 @Repository
 public interface AnaliseRepository extends JpaRepository<Usuario,Integer>{
 
-    // Resumo de categorias (gráfico de pizza)
+    /**
+     * Retorna o total gasto por categoria de despesas para um usuário específico
+     * Utilizado para montar gráfico de pizza
+     * Filtra apenas categorias do tipo DESPESA
+     * Considera transações e categorias ativas
+     * Ordena do maior para o menor valor
+     */
     @Query("SELECT c, SUM(t.valor) " +
             "FROM Transacao t " +
             "JOIN t.categoria c " +
@@ -32,8 +38,11 @@ public interface AnaliseRepository extends JpaRepository<Usuario,Integer>{
             @Param("tipoDespesa") CategoriaTipo tipoDespesa,
             @Param("statusAtivo") Status statusAtivo);
 
-    // Evolução mensal (gráfico de linha)
-    @Query("SELECT YEAR(t.data), MONTH(t.data), " +
+    /**
+     * Retorna a evolução mensal de receitas e despesas
+     * Ordena cronologicamente
+     */
+     @Query("SELECT YEAR(t.data), MONTH(t.data), " +
             "SUM(CASE WHEN c.tipo = :tipoDespesa THEN t.valor ELSE 0 END), " +
             "SUM(CASE WHEN c.tipo = :tipoReceita THEN t.valor ELSE 0 END) " +
             "FROM Transacao t " +
@@ -51,15 +60,19 @@ public interface AnaliseRepository extends JpaRepository<Usuario,Integer>{
             @Param("tipoReceita") CategoriaTipo tipoReceita,
             @Param("statusAtivo") Status statusAtivo);
 
-    // Progresso das metas
+
+    /**
+     * Retorna a meta e soma das transações com o progresso atual em porcentagem
+     * Utilizado para mostrar barra de progresso
+     */
     @Query("SELECT m, COALESCE(SUM(t.valor), 0) " +
             "FROM Meta m " +
             "LEFT JOIN m.transacoes t " +
             "WHERE m.usuario.id = :usuarioId " +
-            "AND m.status = :statusAtivo " +  // Use o enum diretamente
-            "AND (t IS NULL OR t.status = :statusAtivo) " +  // Use o enum diretamente
+            "AND m.status = :statusAtivo " +
+            "AND (t IS NULL OR t.status = :statusAtivo) " +
             "GROUP BY m")
     List<Object[]> ListarMetasComProgressoPorUsuario(
             @Param("usuarioId") Integer usuarioId,
-            @Param("statusAtivo") Status statusAtivo);  // Recebe o enum como parâmetro
+            @Param("statusAtivo") Status statusAtivo);
 }

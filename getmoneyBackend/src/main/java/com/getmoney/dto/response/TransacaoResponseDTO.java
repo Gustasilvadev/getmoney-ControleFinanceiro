@@ -19,7 +19,7 @@ public class TransacaoResponseDTO {
 
     private Integer usuarioId;
     private Integer categoriaId;
-    private List<MetaBasicaResponseDTO> metas;
+    private List<MetaBasicaResponseDTO> metasId;
 
 
     public TransacaoResponseDTO(Transacao transacao) {
@@ -30,11 +30,11 @@ public class TransacaoResponseDTO {
         this.status = transacao.getStatus();
         this.usuarioId = transacao.getUsuario().getId();
         this.categoriaId = transacao.getCategoria().getId();
-        this.metas = metas != null ? metas : new ArrayList<>();
+        this.metasId = metasId != null ? metasId : new ArrayList<>();
     }
 
     public TransacaoResponseDTO() {
-        this.metas = new ArrayList<>();
+        this.metasId = new ArrayList<>();
     }
 
 
@@ -94,11 +94,11 @@ public class TransacaoResponseDTO {
         this.categoriaId = categoriaId;
     }
 
-    public List<MetaBasicaResponseDTO> getMetas() {
-        return metas;
+    public List<MetaBasicaResponseDTO> getMetasId() {
+        return metasId;
     }
 
-    public void setMetas(List<MetaBasicaResponseDTO> metas) {
-        this.metas = metas;
+    public void setMetasId(List<MetaBasicaResponseDTO> metasId) {
+        this.metasId = metasId;
     }
 }

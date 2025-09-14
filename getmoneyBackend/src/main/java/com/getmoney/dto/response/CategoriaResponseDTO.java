@@ -13,9 +13,9 @@ public class CategoriaResponseDTO {
     private String nome;
     private CategoriaTipo tipo;
     private Status status;
-    private List<TransacaoResponseDTO> transacoes;
+    private List<TransacaoPorCategoriaResponseDTO> transacoes;
 
-    public CategoriaResponseDTO(Integer id, String nome, CategoriaTipo tipo, Status status, List<TransacaoResponseDTO> transacoes) {
+    public CategoriaResponseDTO(Integer id, String nome, CategoriaTipo tipo, Status status, List<TransacaoPorCategoriaResponseDTO> transacoes) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
@@ -63,11 +63,11 @@ public class CategoriaResponseDTO {
         this.status = status;
     }
 
-    public List<TransacaoResponseDTO> getTransacoes() {
+    public List<TransacaoPorCategoriaResponseDTO> getTransacoes() {
         return transacoes;
     }
 
-    public void setTransacoes(List<TransacaoResponseDTO> transacoes) {
+    public void setTransacoes(List<TransacaoPorCategoriaResponseDTO> transacoes) {
         this.transacoes = transacoes;
     }
 }

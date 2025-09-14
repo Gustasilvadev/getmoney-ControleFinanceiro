@@ -54,16 +54,6 @@ public class CategoriaController {
         return ResponseEntity.ok(categorias);
     }
 
-
-    @GetMapping("/{categoriaId}/transacoes")
-    @Operation(summary = "Listar categoria com as transações", description = "Endpoint para listar as transações da categoria .")
-    public ResponseEntity<CategoriaTransacaoResponseDTO> getCategoriaComTransacoes(
-            @PathVariable Integer categoriaId) {
-
-        CategoriaTransacaoResponseDTO response = categoriaService.getCategoriaComTransacoes(categoriaId);
-        return ResponseEntity.ok(response);
-    }
-
     @PostMapping("/criar")
     @Operation(summary = "Criar nova categoria", description = "Endpoint para criar um novo registro de categoria")
     public ResponseEntity<CategoriaResponseDTO> criarCategoria(@Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO){

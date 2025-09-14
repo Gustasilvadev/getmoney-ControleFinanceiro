@@ -20,7 +20,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
     @Query("UPDATE Transacao t SET t.status = -1 WHERE t.id = :id")
     void apagarTransacao(@Param("id")Integer transacaoId);
 
-    @Query("SELECT t FROM Transacao t WHERE t.status >= 0")
+    @Query("SELECT t FROM Transacao t WHERE t.status > 0")
     List<Transacao> listarTransacoesAtivas();
 
     @Query("SELECT t FROM Transacao t WHERE t.id = :id AND t.status >=0")
@@ -42,21 +42,34 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
             "JOIN t.categoria c WHERE t.usuario.id = :usuarioId AND c.tipo = 0")
     BigDecimal TotalDespesas(@Param("usuarioId") Integer usuarioId);
 
-
-    @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE m.id = :metaId AND t.status >= 0")
+    /**
+     * Lista todas as transacoes da meta
+     */
+    @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE m.id = :metaId AND t.status > 0")
     List<Transacao> ListarTransacaoPorMetaId(@Param("metaId") Integer metaId);
 
+    /**
+     * Lista todas as transacoes da categoria
+     */
+    @Query("SELECT t FROM Transacao t WHERE t.categoria.id = :categoriaId AND t.status > 0")
+    List<Transacao> listarTransacoesAtivasPorCategoriaId(@Param("categoriaId") Integer categoriaId);
 
     /**
      * Busca uma transação específica pelo seu ID e pelo ID de uma meta associada, considerando apenas transações ativas.
      */
-    @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE t.id = :id AND m.id = :metaId AND t.status >= 0")
+    @Query("SELECT t FROM Transacao t JOIN t.metas m WHERE t.id = :id AND m.id = :metaId AND t.status > 0")
     Transacao listarTransacaoIdEMetaId(@Param("id") Integer id, @Param("metaId") Integer metaId);
 
     /**
      * Busca uma transação específica pelo seu ID e pelo ID de sua categoria, considerando apenas transações ativas.
      */
-    @Query("SELECT t FROM Transacao t WHERE t.id = :id AND t.categoria.id = :categoriaId AND t.status >= 0")
-    Transacao listarTransacaoIdECategoriaId(@Param("id") Integer id, @Param("categoriaId") Integer categoriaId);
-
+    @Query("SELECT t FROM Transacao t " +
+            "WHERE t.id = :id " +
+            "AND t.categoria.id = :categoriaId " +
+            "AND t.usuario.id = :usuarioId " +
+            "AND t.status > 0")
+    Transacao listarTransacaoIdECategoriaId(
+            @Param("id") Integer id,
+            @Param("categoriaId") Integer categoriaId,
+            @Param("usuarioId") Integer usuarioId);
 }

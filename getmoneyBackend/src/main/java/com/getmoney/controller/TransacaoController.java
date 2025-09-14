@@ -6,6 +6,7 @@ import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
 import com.getmoney.dto.response.CategoriaResponseDTO;
 import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoResponseDTO;
+import com.getmoney.entity.Usuario;
 import com.getmoney.service.CategoriaService;
 import com.getmoney.service.TransacaoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,13 +36,14 @@ public class TransacaoController {
 
     @GetMapping("/listar")
     @Operation(summary="Listar transacoes", description="Endpoint para listar todas as transacoes")
-    public ResponseEntity <List<TransacaoResponseDTO>> listarTransacoes(){
+    public ResponseEntity <List<TransacaoResponseDTO>> listarTransacoes( @AuthenticationPrincipal Usuario usuario){
         return ResponseEntity.ok(transacaoService.listarTransacoesAtivas());
     }
 
     // Endpoint: /api/transacao/{id}/categoria
     @GetMapping("/{transacaoId}/categoria")
-    @Operation(summary = "Obter categoria de uma transação",description = "Endpoint para recuperar a categoria associada a uma transação específica")    public ResponseEntity<CategoriaBasicaResponseDTO> getCategoriaDaTransacao(@PathVariable Integer transacaoId) {
+    @Operation(summary = "Obter categoria de uma transação",description = "Endpoint para recuperar a categoria associada a uma transação específica")
+    public ResponseEntity<CategoriaBasicaResponseDTO> getCategoriaDaTransacao(@PathVariable Integer transacaoId) {
         TransacaoResponseDTO transacao = transacaoService.obterTransacaoAtivaPorId(transacaoId);
 
         if (transacao == null || transacao.getCategoriaId() == null) {
@@ -60,9 +63,12 @@ public class TransacaoController {
     // Endpoint: /api/transacao/{id}/categoria/{categoriaId}
     @GetMapping("/{transacaoId}/categoria/{categoriaId}")
     @Operation(summary = "Buscar transação por ID e categoria por ID", description = "Retorna os dados de uma transação específica se ela pertencer à categoria informada")
-    public ResponseEntity<TransacaoResponseDTO> getTransacaoPorCategoria(@PathVariable Integer transacaoId, @PathVariable Integer categoriaId) {
+    public ResponseEntity<TransacaoBasicaResponseDTO> getTransacaoPorCategoria(
+            @PathVariable Integer transacaoId,
+            @PathVariable Integer categoriaId,
+            @AuthenticationPrincipal Usuario usuario) {
 
-        TransacaoResponseDTO transacao = transacaoService.obterTransacaoPorCategoria(transacaoId, categoriaId);
+        TransacaoBasicaResponseDTO transacao = transacaoService.obterTransacaoPorCategoria(transacaoId, categoriaId, usuario.getId());
         if (transacao == null) {
             return ResponseEntity.notFound().build();
         }

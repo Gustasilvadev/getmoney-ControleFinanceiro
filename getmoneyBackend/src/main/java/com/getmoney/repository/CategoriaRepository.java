@@ -20,7 +20,7 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     @Query("UPDATE Categoria c SET c.status = -1 WHERE c.id = :id")
     void apagarCatgoria(@Param("id")Integer categoriaId);
 
-    @Query("SELECT c FROM Categoria c WHERE c.status >= 0")
+    @Query("SELECT c FROM Categoria c WHERE c.status > 0")
     List<Categoria> listarCategoriasAtivas();
 
 
@@ -38,7 +38,7 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     /**
      * Busca categorias pelo nome, considerando apenas as com status maior ou igual a zero.
      */
-    @Query("SELECT c FROM Categoria c WHERE c.nome LIKE %:nome% AND c.status >= 0")
+    @Query("SELECT c FROM Categoria c WHERE c.nome LIKE %:nome% AND c.status > 0")
     List<Categoria> buscarPorCategoriaNome(@Param("nome") String nome);
 
 

@@ -2,6 +2,7 @@ package com.getmoney.service;
 
 import com.getmoney.dto.request.TransacaoRequestDTO;
 import com.getmoney.dto.request.TransacaoUpdateRequestDTO;
+import com.getmoney.dto.response.MetaBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Categoria;
@@ -69,19 +70,21 @@ public class TransacaoService {
 
     /**
      * Obtém uma transação específica pelo ID e ID da categoria associada
-     * Lança exceção se a transação não for encontrada para a categoria especificada.
+     * Lança exceção se a transação não for encontrada para a categoria especificada
      */
-    public TransacaoResponseDTO obterTransacaoPorCategoria(Integer id, Integer categoriaId) {
-        Transacao transacao = transacaoRepository.listarTransacaoIdECategoriaId(id, categoriaId);
+    public TransacaoBasicaResponseDTO obterTransacaoPorCategoria(Integer transacaoId, Integer categoriaId, Integer usuarioId) {
+        Transacao transacao = transacaoRepository.listarTransacaoIdECategoriaId(
+                transacaoId, categoriaId, usuarioId);
+
         if (transacao == null) {
             throw new EntityNotFoundException("Transação não encontrada para esta categoria");
         }
-        return modelMapper.map(transacao, TransacaoResponseDTO.class);
+        return modelMapper.map(transacao, TransacaoBasicaResponseDTO.class);
     }
 
     /**
      * Obtém uma transação específica pelo ID e ID da meta associada
-     * Lança exceção se a transação não for encontrada para a meta especificada.
+     * Lança exceção se a transação não for encontrada para a meta especificada
      */
     public TransacaoResponseDTO obterTransacaoPorMeta(Integer id, Integer metaId) {
         Transacao transacao = transacaoRepository.listarTransacaoIdEMetaId(id, metaId);
@@ -98,8 +101,17 @@ public class TransacaoService {
             throw new RuntimeException("Transacao não encontrada com ID: " + transacaoId);
         }
 
-        return new TransacaoResponseDTO(transacao);
+        TransacaoResponseDTO dto = modelMapper.map(transacao, TransacaoResponseDTO.class);
+
+        dto.setMetasId(transacao.getMetas() != null ?
+                transacao.getMetas().stream()
+                        .map(meta -> modelMapper.map(meta, MetaBasicaResponseDTO.class))
+                        .collect(Collectors.toList()) :
+                new ArrayList<>());
+
+        return dto;
     }
+
 
     /**
      * Cria uma nova transação com base nos dados fornecidos
@@ -135,7 +147,7 @@ public class TransacaoService {
 
     /**
      * Edita uma transação existente pelo ID, atualizando apenas os campos fornecidos
-     * Permite alterar usuário, categoria, metas
+     * Permite alterar, categoria, metas
      */
     @Transactional
     public TransacaoResponseDTO editarPorTransacaoId(Integer transacaoId, TransacaoUpdateRequestDTO transacaoUpdateRequestDTO) {

@@ -114,9 +114,10 @@ public class MetaService {
     }
     @Transactional
     public void deletarPorMetaId(Integer metaId) {
-        boolean metaExistente = metaRepository.existsById(metaId);
-        if(metaExistente){
-            metaRepository.apagarMeta(metaId);
+        if (!metaRepository.existsById(metaId)) {
+            throw new EntityNotFoundException("Meta não encontrada com ID: " + metaId);
         }
+        metaRepository.apagarMeta(metaId);
     }
 }
+
