@@ -29,4 +29,7 @@ public interface UsuarioRepository  extends JpaRepository<Usuario,Integer> {
     Usuario ObterUsuarioPeloId(@Param("id")Integer usuarioId);
 
     UserDetails findByEmail(String email);
+
+    Optional<Usuario> findUsuarioByEmail(String email);
+
 }

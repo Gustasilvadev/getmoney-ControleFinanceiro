@@ -37,6 +37,7 @@ public class TokenService {
         }
     }
 
+
     /**
      * Valida token JWT e retorna subject (email)
      * Retorna string vazia se token for inválido
@@ -60,6 +61,20 @@ public class TokenService {
      */
     private Instant genExpirationDate(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+
+    public String extrairEmailToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("autenticacao-api")
+                    .build()
+                    .verify(token)
+                    .getSubject();
+        } catch (JWTVerificationException exception) {
+            throw new RuntimeException("Token inválido ou expirado");
+        }
     }
 
 }

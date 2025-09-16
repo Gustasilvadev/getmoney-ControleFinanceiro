@@ -1,6 +1,7 @@
 package com.getmoney.controller;
 
 
+import com.getmoney.dto.request.AlterarSenhaRequestDTO;
 import com.getmoney.dto.request.UsuarioRequestDTO;
 import com.getmoney.dto.response.UsuarioResponseDTO;
 import com.getmoney.service.UsuarioService;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -59,6 +61,20 @@ public class UsuarioController {
             return ResponseEntity.ok(usuario);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/alterarSenha")
+    @Operation(summary = "Alterar senha do usuario", description = "Endpoint para alterar a senha atual por uma senha nova")
+    public ResponseEntity<?> alterarSenha(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody @Valid AlterarSenhaRequestDTO alterarSenhaRequestDTO) {
+
+        try {
+            usuarioService.alterarSenha(authHeader, alterarSenhaRequestDTO);
+            return ResponseEntity.ok().body(Map.of("message", "Senha alterada com sucesso"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 }
