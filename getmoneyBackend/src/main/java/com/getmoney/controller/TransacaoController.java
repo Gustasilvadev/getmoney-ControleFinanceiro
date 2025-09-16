@@ -113,7 +113,7 @@ public class TransacaoController {
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova transacao", description = "Endpoint para criar um novo registro de transacao")
-    public ResponseEntity<TransacaoResponseDTO> criarTransacao(@Valid @RequestBody TransacaoRequestDTO transacaoRequestDTO) {
+    public ResponseEntity<TransacaoResponseDTO> criarTransacao(@RequestBody @Valid TransacaoRequestDTO transacaoRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(transacaoService.criarTransacao(transacaoRequestDTO));
     }
 

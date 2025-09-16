@@ -56,7 +56,7 @@ public class CategoriaController {
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova categoria", description = "Endpoint para criar um novo registro de categoria")
-    public ResponseEntity<CategoriaResponseDTO> criarCategoria(@Valid @RequestBody CategoriaRequestDTO categoriaRequestDTO){
+    public ResponseEntity<CategoriaResponseDTO> criarCategoria(@RequestBody @Valid  CategoriaRequestDTO categoriaRequestDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.criarCategoria(categoriaRequestDTO));
 
     }

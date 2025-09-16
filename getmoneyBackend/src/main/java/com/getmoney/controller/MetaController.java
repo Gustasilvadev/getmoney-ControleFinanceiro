@@ -47,14 +47,14 @@ public class MetaController {
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova meta", description = "Endpoint para criar um novo registro de meta")
-    public ResponseEntity<MetaResponseDTO> criarMeta(@Valid @RequestBody MetaRequestDTO metaRequestDTO) {
+    public ResponseEntity<MetaResponseDTO> criarMeta(@RequestBody @Valid  MetaRequestDTO metaRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(metaService.criarMeta(metaRequestDTO));
     }
 
     @PutMapping("/editarPorMetaId/{metaId}")
     @Operation(summary="Editar metas pelo id da metas", description="Endpoint para editar pelo id da meta")
     public ResponseEntity<MetaResponseDTO> editarPorMetaId(@PathVariable Integer metaId,
-                                                           @Valid @RequestBody MetaRequestUpdateDTO metaRequestUpdateDTO) {
+                                                           @RequestBody @Valid  MetaRequestUpdateDTO metaRequestUpdateDTO) {
 
         return ResponseEntity.ok(metaService.editarPorMetaId(metaId,metaRequestUpdateDTO));
     }
