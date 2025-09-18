@@ -24,7 +24,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao,Integer> {
     List<Transacao> listarTransacoesAtivas();
 
     @Query("SELECT t FROM Transacao t WHERE t.id = :id AND t.status >=0")
-    Transacao ObterTransacaoPeloId(@Param("id")Integer transacaoId);
+    Transacao findByTransacaoId(@Param("id")Integer transacaoId);
 
     /**
      * Soma todos os valores das transações do tipo Receita (tipo = 1)

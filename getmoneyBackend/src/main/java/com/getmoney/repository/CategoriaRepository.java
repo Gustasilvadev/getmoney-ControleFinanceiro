@@ -31,7 +31,7 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     List<Categoria> buscarCategoriasPorUsuarioId(@Param("usuarioId") Integer usuarioId);
 
     @Query("SELECT c FROM Categoria c WHERE c.id = :id AND c.status >=0")
-    Categoria ObterCategoriaPeloId(@Param("id")Integer categoriaId);
+    Categoria findByCategoriaId(@Param("id")Integer categoriaId);
 
     List<Categoria> findByTipo(CategoriaTipo tipo);
 
@@ -39,7 +39,7 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
      * Busca categorias pelo nome, considerando apenas as com status maior ou igual a zero.
      */
     @Query("SELECT c FROM Categoria c WHERE c.nome LIKE %:nome% AND c.status > 0")
-    List<Categoria> buscarPorCategoriaNome(@Param("nome") String nome);
+    List<Categoria> findByCategoriaNome(@Param("nome") String nome);
 
 
 }

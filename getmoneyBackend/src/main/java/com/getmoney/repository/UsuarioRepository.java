@@ -26,7 +26,7 @@ public interface UsuarioRepository  extends JpaRepository<Usuario,Integer> {
     List<Usuario> listarUsuariosAtivos();
 
     @Query("SELECT u FROM Usuario u WHERE u.id = :id AND u.status >=0")
-    Usuario ObterUsuarioPeloId(@Param("id")Integer usuarioId);
+    Usuario findByUsuarioId(@Param("id")Integer usuarioId);
 
     UserDetails findByEmail(String email);
 

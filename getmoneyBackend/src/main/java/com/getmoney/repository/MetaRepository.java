@@ -22,6 +22,6 @@ public interface MetaRepository extends JpaRepository<Meta,Integer> {
     List<Meta> listarMetasAtivas();
 
     @Query("SELECT m FROM Meta m WHERE m.id = :id AND m.status >=0")
-    Meta ObterMetaPeloId(@Param("id")Integer metaId);
+    Meta findByMetaId(@Param("id")Integer metaId);
 
 }

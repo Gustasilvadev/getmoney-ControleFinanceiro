@@ -70,7 +70,7 @@ public class MetaService {
 
 
     public MetaResponseDTO listarPorMetaId(Integer metaId) {
-        Meta meta = metaRepository.ObterMetaPeloId(metaId);
+        Meta meta = metaRepository.findByMetaId(metaId);
         if (meta == null) {
             throw new RuntimeException("Meta não encontrada com ID: " + metaId);
         }
@@ -96,7 +96,7 @@ public class MetaService {
     }
     @Transactional
     public MetaResponseDTO editarPorMetaId(Integer metaId, MetaRequestUpdateDTO metaRequestUpdateDTO) {
-        Meta metaExistente = metaRepository.ObterMetaPeloId(metaId);
+        Meta metaExistente = metaRepository.findByMetaId(metaId);
         if (metaExistente == null) {
             throw new RuntimeException("Meta não encontrada com ID: " + metaId);
         }

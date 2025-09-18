@@ -51,7 +51,7 @@ public class TransacaoService {
     }
 
     public TransacaoResponseDTO obterTransacaoAtivaPorId(Integer id) {
-        Transacao transacao = transacaoRepository.ObterTransacaoPeloId(id);
+        Transacao transacao = transacaoRepository.findByTransacaoId(id);
         if (transacao == null) {
             throw new EntityNotFoundException("Transação não encontrada");
         }
@@ -96,7 +96,7 @@ public class TransacaoService {
 
 
     public TransacaoResponseDTO listarPorTransacaoId(Integer transacaoId) {
-        Transacao transacao = transacaoRepository.ObterTransacaoPeloId(transacaoId);
+        Transacao transacao = transacaoRepository.findByTransacaoId(transacaoId);
         if (transacao == null) {
             throw new RuntimeException("Transacao não encontrada com ID: " + transacaoId);
         }
@@ -130,7 +130,7 @@ public class TransacaoService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         transacao.setUsuario(usuario);
 
-        Categoria categoria = categoriaRepository.ObterCategoriaPeloId(transacaoRequestDTO.getCategoriaId());
+        Categoria categoria = categoriaRepository.findByCategoriaId(transacaoRequestDTO.getCategoriaId());
         if (categoria == null) {
             throw new RuntimeException("Categoria não encontrada");
         }
@@ -151,7 +151,7 @@ public class TransacaoService {
      */
     @Transactional
     public TransacaoResponseDTO editarPorTransacaoId(Integer transacaoId, TransacaoUpdateRequestDTO transacaoUpdateRequestDTO) {
-        Transacao transacaoExistente = transacaoRepository.ObterTransacaoPeloId(transacaoId);
+        Transacao transacaoExistente = transacaoRepository.findByTransacaoId(transacaoId);
         if (transacaoExistente == null) {
             throw new RuntimeException("Transacao não encontrada com ID: " + transacaoId);
         }

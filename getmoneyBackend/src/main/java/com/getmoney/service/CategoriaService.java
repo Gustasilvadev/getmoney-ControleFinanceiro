@@ -63,7 +63,7 @@ public class CategoriaService {
      * Busca uma categoria pelo ID
      */
     public CategoriaResponseDTO listarPorCategoriaId(Integer categoriaId) {
-        Categoria categoria = categoriaRepository.ObterCategoriaPeloId(categoriaId);
+        Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId);
         if (categoria == null) {
             throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
         }
@@ -88,7 +88,7 @@ public class CategoriaService {
      * Busca uma categoria pelo ID
      */
     public CategoriaBasicaResponseDTO listarTransacaoCategoriaId(Integer categoriaId) {
-        Categoria categoria = categoriaRepository.ObterCategoriaPeloId(categoriaId);
+        Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId);
         if (categoria == null) {
             throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
         }
@@ -135,7 +135,7 @@ public class CategoriaService {
         if (nome == null || nome.trim().isEmpty()) {
             categorias = categoriaRepository.listarCategoriasAtivas();
         } else {
-            categorias = categoriaRepository.buscarPorCategoriaNome(nome.trim());
+            categorias = categoriaRepository.findByCategoriaNome(nome.trim());
         }
 
         return categorias.stream()

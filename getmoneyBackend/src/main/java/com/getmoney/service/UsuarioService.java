@@ -5,6 +5,7 @@ import com.getmoney.dto.request.UsuarioRequestDTO;
 import com.getmoney.dto.response.UsuarioResponseDTO;
 import com.getmoney.entity.Usuario;
 import com.getmoney.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
@@ -43,7 +44,7 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDTO listarPorUsuarioId(Integer usuarioId) {
-        Usuario usuario = usuarioRepository.ObterUsuarioPeloId(usuarioId);
+        Usuario usuario = usuarioRepository.findByUsuarioId(usuarioId);
 
 
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
@@ -52,16 +53,15 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponseDTO editarPorUsuarioId(Integer usuarioId, UsuarioRequestDTO usuarioRequestDTO) {
-        Usuario usuarioExistente = usuarioRepository.ObterUsuarioPeloId(usuarioId);
-        if (usuarioExistente == null) {
-            throw new RuntimeException("Usuario não encontrada com ID: " + usuarioId);
+        Usuario usuarioExistente = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        if (usuarioRequestDTO.getNome() != null) {
+            usuarioExistente.setNome(usuarioRequestDTO.getNome());
         }
-
-        modelMapper.getConfiguration()
-                .setSkipNullEnabled(true)
-                .setPropertyCondition(Conditions.isNotNull());
-
-        modelMapper.map(usuarioRequestDTO, usuarioExistente);
+        if (usuarioRequestDTO.getEmail() != null) {
+            usuarioExistente.setEmail(usuarioRequestDTO.getEmail());
+        }
 
         Usuario usuarioAtualizado = usuarioRepository.save(usuarioExistente);
         return modelMapper.map(usuarioAtualizado, UsuarioResponseDTO.class);
