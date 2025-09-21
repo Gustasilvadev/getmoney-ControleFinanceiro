@@ -74,8 +74,30 @@ public class MetaService {
         if (meta == null) {
             throw new RuntimeException("Meta não encontrada com ID: " + metaId);
         }
-        return new MetaResponseDTO(meta);
+
+        MetaResponseDTO metaResponseDTO = modelMapper.map(meta, MetaResponseDTO.class);
+        metaResponseDTO.setUsuarioId(meta.getUsuario().getId());
+
+        if (meta.getTransacoes() != null) {
+            List<TransacaoBasicaResponseDTO> transacoesDTO = meta.getTransacoes().stream()
+                    .map(transacao -> {
+                        TransacaoBasicaResponseDTO dto = modelMapper.map(transacao, TransacaoBasicaResponseDTO.class);
+
+                        if (transacao.getCategoria() != null) {
+                            dto.setCategoriaId(transacao.getCategoria().getId());
+                            dto.setCategoriaNome(transacao.getCategoria().getNome());
+                            dto.setCategoriaTipo(transacao.getCategoria().getTipo().toString());
+                        }
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+            metaResponseDTO.setTransacoes(transacoesDTO);
+        }
+
+        return metaResponseDTO;
     }
+
+
     @Transactional
     public MetaResponseDTO criarMeta(MetaRequestDTO metaRequestDTO) {
         Meta meta = new Meta();

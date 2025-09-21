@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,32 +61,27 @@ public class CategoriaService {
     }
 
     /**
-     * Busca uma categoria pelo ID
+     * Busca uma categoria pelo ID com suas transações ativas
      */
     public CategoriaResponseDTO listarPorCategoriaId(Integer categoriaId) {
+
         Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId);
         if (categoria == null) {
             throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
         }
 
-        // Busca apenas as transações ativas desta categoria
         List<Transacao> transacoesAtivas = transacaoRepository.listarTransacoesAtivasPorCategoriaId(categoriaId);
 
-        CategoriaResponseDTO dto = new CategoriaResponseDTO();
-        dto.setId(categoria.getId());
-        dto.setNome(categoria.getNome());
-        dto.setTipo(categoria.getTipo());
-        dto.setStatus(categoria.getStatus());
-
-        dto.setTransacoes(transacoesAtivas.stream()
+        CategoriaResponseDTO categoriResponse = new CategoriaResponseDTO(categoria);
+        categoriResponse.setTransacoes(transacoesAtivas.stream()
                 .map(TransacaoPorCategoriaResponseDTO::new)
                 .collect(Collectors.toList()));
 
-        return dto;
+        return categoriResponse;
     }
 
     /**
-     * Busca uma categoria pelo ID
+     * Busca uma categoria pelo ID da transação
      */
     public CategoriaBasicaResponseDTO listarTransacaoCategoriaId(Integer categoriaId) {
         Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId);
@@ -127,18 +123,14 @@ public class CategoriaService {
 
     /**
      * Busca categorias por nome
-     * Se o nome for nulo ou vazio, retorna todas as categorias ativas.
+     * Se o nome for nulo ou vazio, retorna lista vazia.
      */
     public List<CategoriaBasicaResponseDTO> buscarPorCategoriaNome(String nome) {
-        List<Categoria> categorias;
-
         if (nome == null || nome.trim().isEmpty()) {
-            categorias = categoriaRepository.listarCategoriasAtivas();
-        } else {
-            categorias = categoriaRepository.findByCategoriaNome(nome.trim());
+            return Collections.emptyList();
         }
 
-        return categorias.stream()
+        return categoriaRepository.findByCategoriaNome(nome.trim()).stream()
                 .map(CategoriaBasicaResponseDTO::new)
                 .collect(Collectors.toList());
     }

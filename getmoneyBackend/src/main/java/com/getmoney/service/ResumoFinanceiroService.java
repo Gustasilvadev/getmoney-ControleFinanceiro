@@ -9,7 +9,6 @@ import com.getmoney.entity.Meta;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.enums.Status;
 import com.getmoney.repository.AnaliseRepository;
-import com.getmoney.repository.CategoriaRepository;
 import com.getmoney.repository.TransacaoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,12 +46,16 @@ public class ResumoFinanceiroService {
         return new ResumoFinanceiroResponseDTO(receitas, despesas, lucro);
     }
 
-
+    /**
+     * Lista categorias com total de gasto pelo usuário em despesas ativas
+     * Retorna ID, nome da categoria e valor total gasto
+     */
     public List<CategoriaValorTotalResponseDTO> getResumoCategorias(Integer usuarioId) {
+        // Consulta repositório para obter categorias com seus totais gastos
         List<Object[]> resultados = analiseRepository.listarCategoriasComTotalGastoPorUsuario(
                 usuarioId,
-                CategoriaTipo.DESPESA,  // Segundo parâmetro
-                Status.ATIVO            // Terceiro parâmetro
+                CategoriaTipo.DESPESA,
+                Status.ATIVO
         );
 
         return resultados.stream().map(result -> {
@@ -68,7 +70,12 @@ public class ResumoFinanceiroService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Calcula evolução mensal de receitas e despesas por período
+     * Retorna totais mensais para análise comparativa do fluxo financeiro
+     */
     public List<EvolucaoMensalResponseDTO> getEvolucaoMensal(Integer usuarioId, Integer meses) {
+        // Define período de análise (últimos X meses)
         LocalDate dataFim = LocalDate.now();
         LocalDate dataInicio = dataFim.minusMonths(meses != null ? meses : 6);
 
@@ -86,7 +93,7 @@ public class ResumoFinanceiroService {
             Integer mes = (Integer) result[1];
             LocalDate periodo = LocalDate.of(ano, mes, 1);
 
-            // Tratamento de nulos para evitar erros
+            // // Extrai totais de despesas e receitas
             BigDecimal totalDespesas = result[2] != null ? (BigDecimal) result[2] : BigDecimal.ZERO;
             BigDecimal totalReceitas = result[3] != null ? (BigDecimal) result[3] : BigDecimal.ZERO;
 
@@ -94,6 +101,10 @@ public class ResumoFinanceiroService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Monitora progresso das metas financeiras com percentual de conclusão
+     * Calcula valor atual x valor alvo e status de cada meta
+     */
     public List<ProgressoMetaResponseDTO> getProgressoMetas(Integer usuarioId) {
         List<Object[]> resultados = analiseRepository.ListarMetasComProgressoPorUsuario(
                 usuarioId, Status.ATIVO);  // Passa o enum como parâmetro
@@ -109,6 +120,7 @@ public class ResumoFinanceiroService {
             dto.setValorAtual(valorAtual);
             dto.setStatus(meta.getStatus());
 
+            // Calcula percentual de conclusão apenas se valor alvo for válido
             if (meta.getValorAlvo() != null && meta.getValorAlvo().compareTo(BigDecimal.ZERO) > 0) {
                 BigDecimal percentual = valorAtual
                         .divide(meta.getValorAlvo(), 4, RoundingMode.HALF_UP)

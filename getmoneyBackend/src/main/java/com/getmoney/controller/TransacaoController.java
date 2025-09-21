@@ -44,14 +44,13 @@ public class TransacaoController {
     @GetMapping("/{transacaoId}/categoria")
     @Operation(summary = "Obter categoria de uma transação",description = "Endpoint para recuperar a categoria associada a uma transação específica")
     public ResponseEntity<CategoriaBasicaResponseDTO> getCategoriaDaTransacao(@PathVariable Integer transacaoId) {
-        TransacaoResponseDTO transacao = transacaoService.obterTransacaoAtivaPorId(transacaoId);
 
+        TransacaoResponseDTO transacao = transacaoService.obterTransacaoAtivaPorId(transacaoId);
         if (transacao == null || transacao.getCategoriaId() == null) {
             return ResponseEntity.notFound().build();
         }
 
         CategoriaBasicaResponseDTO categoria = categoriaService.listarTransacaoCategoriaId(transacao.getCategoriaId());
-
         if (categoria == null) {
             return ResponseEntity.notFound().build();
         }
