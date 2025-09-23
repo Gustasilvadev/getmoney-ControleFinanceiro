@@ -27,6 +27,9 @@ public class Categoria {
     @Column(name="categoria_status")
     private Status status;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
     @OneToMany(mappedBy = "categoria")
     @JsonIgnore
     private List<Transacao> transacoes;
@@ -41,11 +44,12 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Categoria(Integer id, String nome, CategoriaTipo tipo, Status status, List<Transacao> transacoes) {
+    public Categoria(Integer id, String nome, CategoriaTipo tipo, Status status,Usuario usuario, List<Transacao> transacoes) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
         this.status = status;
+        this.usuario = usuario;
         this.transacoes = transacoes;
     }
 
@@ -87,5 +91,13 @@ public class Categoria {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

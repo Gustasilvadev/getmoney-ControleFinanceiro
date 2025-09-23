@@ -11,11 +11,14 @@ public class CategoriaBasicaResponseDTO {
     private CategoriaTipo tipo;
     private Status status;
 
+    private Integer usuarioId;
+
     public CategoriaBasicaResponseDTO(Categoria categoria) {
         this.id = categoria.getId();
         this.nome = categoria.getNome();
         this.tipo = categoria.getTipo();
         this.status = categoria.getStatus();
+        this.usuarioId = categoria.getUsuario().getId();
     }
 
     public CategoriaBasicaResponseDTO() {}
@@ -45,6 +48,14 @@ public class CategoriaBasicaResponseDTO {
         this.tipo = tipo;
     }
 
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -52,4 +63,6 @@ public class CategoriaBasicaResponseDTO {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+
 }

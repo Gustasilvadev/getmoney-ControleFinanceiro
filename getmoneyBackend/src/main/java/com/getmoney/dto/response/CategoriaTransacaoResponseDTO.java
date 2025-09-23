@@ -3,8 +3,6 @@ package com.getmoney.dto.response;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.enums.Status;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 public class CategoriaTransacaoResponseDTO {
@@ -12,15 +10,18 @@ public class CategoriaTransacaoResponseDTO {
     private String nome;
     private CategoriaTipo tipo;
     private Status status;
+
+    private Integer usuarioId;
     private List<TransacaoPorCategoriaResponseDTO> transacoes;
 
     public CategoriaTransacaoResponseDTO() {
     }
-    public CategoriaTransacaoResponseDTO(Integer id, String nome, CategoriaTipo tipo, Status status, List<TransacaoPorCategoriaResponseDTO> transacoes) {
+    public CategoriaTransacaoResponseDTO(Integer id, String nome, CategoriaTipo tipo, Status status,Integer usuarioId, List<TransacaoPorCategoriaResponseDTO> transacoes) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
         this.status = status;
+        this.usuarioId =usuarioId;
         this.transacoes = transacoes;
     }
 
@@ -54,6 +55,14 @@ public class CategoriaTransacaoResponseDTO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public List<TransacaoPorCategoriaResponseDTO> getTransacoes() {

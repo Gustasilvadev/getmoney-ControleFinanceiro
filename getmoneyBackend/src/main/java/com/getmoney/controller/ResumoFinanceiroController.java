@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/resumoFinanceiro")
-@Tag(name="Resumo Financeiro", description = "Api de gerenciamento financeiro")
+@RequestMapping("/api/estatistica")
+@Tag(name="Estatisticas", description = "Api de gerenciamento de estatisticas")
 public class ResumoFinanceiroController {
 
     private ResumoFinanceiroService resumoFinanceiro;

@@ -31,7 +31,7 @@ public class CategoriaController {
     @GetMapping("/listar")
     @Operation(summary="Listar categorias", description="Endpoint para listar todas as categorias")
     public ResponseEntity <List<CategoriaResponseDTO>> listarCategorias(@AuthenticationPrincipal Usuario usuario){
-        return ResponseEntity.ok(categoriaService.listarCategorias());
+        return ResponseEntity.ok(categoriaService.listarCategorias(usuario.getId()));
     }
 
 

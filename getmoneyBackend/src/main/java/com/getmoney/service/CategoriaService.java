@@ -4,10 +4,12 @@ import com.getmoney.dto.request.CategoriaRequestDTO;
 import com.getmoney.dto.response.*;
 import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Transacao;
+import com.getmoney.entity.Usuario;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.enums.Status;
 import com.getmoney.repository.CategoriaRepository;
 import com.getmoney.repository.TransacaoRepository;
+import com.getmoney.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -24,22 +26,24 @@ import java.util.stream.Collectors;
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
+    private final UsuarioRepository usuarioRepository;
     private TransacaoRepository transacaoRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public CategoriaService(CategoriaRepository categoriaRepository, TransacaoRepository transacaoRepository ) {
+    public CategoriaService(CategoriaRepository categoriaRepository, TransacaoRepository transacaoRepository, UsuarioRepository usuarioRepository ) {
         this.categoriaRepository = categoriaRepository;
         this.transacaoRepository = transacaoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     /**
      * Lista todas as categorias ativas, com suas transações associadas
      * Se uma categoria não possuir transações, a lista de transações será vazia.
      */
-    public List<CategoriaResponseDTO> listarCategorias() {
-        List<Categoria> categorias = categoriaRepository.listarCategoriasAtivas();
+    public List<CategoriaResponseDTO> listarCategorias(Integer usuarioId) {
+        List<Categoria> categorias = categoriaRepository.listarCategoriasAtivasPorUsuario(usuarioId);
 
         return categorias.stream()
                 .map(categoria -> {
@@ -157,7 +161,8 @@ public class CategoriaService {
                     return new CategoriaValorTotalResponseDTO(
                             categoria.getId(),
                             categoria.getNome(),
-                            valorTotal
+                            valorTotal,
+                            categoria.getUsuario().getId()
                     );
                 })
                 .collect(Collectors.toList());
@@ -170,6 +175,10 @@ public class CategoriaService {
         Categoria categoria = new Categoria();
         categoria.setNome(categoriaRequestDTO.getNome());
         categoria.setTipo(categoriaRequestDTO.getTipo());
+
+        Usuario usuario = usuarioRepository.findById(categoriaRequestDTO.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        categoria.setUsuario(usuario);
 
         if (categoriaRequestDTO.getStatus() != null) {
             try {

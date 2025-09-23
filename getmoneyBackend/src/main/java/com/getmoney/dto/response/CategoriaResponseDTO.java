@@ -1,6 +1,7 @@
 package com.getmoney.dto.response;
 
 import com.getmoney.entity.Categoria;
+import com.getmoney.entity.Usuario;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.enums.Status;
 
@@ -13,13 +14,17 @@ public class CategoriaResponseDTO {
     private String nome;
     private CategoriaTipo tipo;
     private Status status;
+
+    private Integer usuarioId;
+
     private List<TransacaoPorCategoriaResponseDTO> transacoes;
 
-    public CategoriaResponseDTO(Integer id, String nome, CategoriaTipo tipo, Status status, List<TransacaoPorCategoriaResponseDTO> transacoes) {
+    public CategoriaResponseDTO(Integer id, String nome, CategoriaTipo tipo, Status status, Integer usuarioid, List<TransacaoPorCategoriaResponseDTO> transacoes) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
         this.status = status;
+        this.usuarioId=usuarioid;
         this.transacoes = transacoes;
     }
     public CategoriaResponseDTO(Categoria categoria) {
@@ -61,6 +66,14 @@ public class CategoriaResponseDTO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public List<TransacaoPorCategoriaResponseDTO> getTransacoes() {
