@@ -26,9 +26,6 @@ public class TransacaoUpdateRequestDTO {
     @NotNull(message = "O status é obrigatório")
     private Integer status;
 
-    @NotNull(message = "O ID do usuário é obrigatório")
-    private Integer usuarioId;
-
     @NotNull(message = "O ID da categoria é obrigatório")
     private Integer categoriaId;
 
@@ -37,12 +34,11 @@ public class TransacaoUpdateRequestDTO {
     public TransacaoUpdateRequestDTO() {}
 
 
-    public TransacaoUpdateRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer usuarioId, Integer categoriaId, List<Integer> metasId) {
+    public TransacaoUpdateRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer categoriaId, List<Integer> metasId) {
         this.valor = valor;
         this.descricao = descricao;
         this.data = data;
         this.status = status;
-        this.usuarioId = usuarioId;
         this.categoriaId = categoriaId;
         this.metasId = metasId;
     }
@@ -78,14 +74,6 @@ public class TransacaoUpdateRequestDTO {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
     }
 
     public Integer getCategoriaId() {

@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,12 +39,8 @@ public class CategoriaService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    /**
-     * Lista todas as categorias ativas, com suas transações associadas
-     * Se uma categoria não possuir transações, a lista de transações será vazia.
-     */
     public List<CategoriaResponseDTO> listarCategorias(Integer usuarioId) {
-        List<Categoria> categorias = categoriaRepository.listarCategoriasAtivasPorUsuario(usuarioId);
+        List<Categoria> categorias = categoriaRepository.findByUsuarioIdAndStatus(usuarioId, Status.ATIVO);
 
         return categorias.stream()
                 .map(categoria -> {
@@ -52,6 +49,8 @@ public class CategoriaService {
                     if (categoria.getTransacoes() != null) {
                         List<TransacaoPorCategoriaResponseDTO> transacoesDTO = categoria.getTransacoes()
                                 .stream()
+                                .filter(transacao -> transacao.getStatus() == Status.ATIVO &&
+                                        transacao.getUsuario().getId().equals(usuarioId))
                                 .map(TransacaoPorCategoriaResponseDTO::new)
                                 .collect(Collectors.toList());
                         categoriaResponseDTO.setTransacoes(transacoesDTO);
@@ -67,60 +66,71 @@ public class CategoriaService {
     /**
      * Busca uma categoria pelo ID com suas transações ativas
      */
-    public CategoriaResponseDTO listarPorCategoriaId(Integer categoriaId) {
-
-        Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId);
+    public CategoriaResponseDTO listarPorCategoriaId(Integer categoriaId, Integer usuarioId) {
+        Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId, usuarioId);
         if (categoria == null) {
             throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
         }
 
-        List<Transacao> transacoesAtivas = transacaoRepository.listarTransacoesAtivasPorCategoriaId(categoriaId);
+        // Verifica se a categoria está ativa
+        if (categoria.getStatus() != Status.ATIVO) {
+            throw new RuntimeException("Categoria não está ativa");
+        }
 
-        CategoriaResponseDTO categoriResponse = new CategoriaResponseDTO(categoria);
-        categoriResponse.setTransacoes(transacoesAtivas.stream()
-                .map(TransacaoPorCategoriaResponseDTO::new)
-                .collect(Collectors.toList()));
+        CategoriaResponseDTO categoriaResponse = modelMapper.map(categoria, CategoriaResponseDTO.class);
 
-        return categoriResponse;
+        // Filtrar transações ativas do usuário
+        if (categoria.getTransacoes() != null) {
+            List<TransacaoPorCategoriaResponseDTO> transacoesDTO = categoria.getTransacoes()
+                    .stream()
+                    .filter(transacao -> transacao.getStatus() == Status.ATIVO &&
+                            transacao.getUsuario().getId().equals(usuarioId))
+                    .map(TransacaoPorCategoriaResponseDTO::new)
+                    .collect(Collectors.toList());
+            categoriaResponse.setTransacoes(transacoesDTO);
+        }
+
+        return categoriaResponse;
     }
 
     /**
      * Busca uma categoria pelo ID da transação
      */
-    public CategoriaBasicaResponseDTO listarTransacaoCategoriaId(Integer categoriaId) {
-        Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId);
+    public CategoriaBasicaResponseDTO listarTransacaoCategoriaId(Integer categoriaId, Integer usuarioId) {
+        Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId, usuarioId);
         if (categoria == null) {
             throw new RuntimeException("Categoria não encontrada com ID: " + categoriaId);
         }
+
+        if (!categoria.getUsuario().getId().equals(usuarioId)) {
+            throw new RuntimeException("Categoria não pertence ao usuário autenticado");
+        }
+
         return new CategoriaBasicaResponseDTO(categoria);
     }
 
     /**
      * Lista categorias por tipo
      */
-    public List<CategoriaResponseDTO> listarPorCategoriaTipo(Integer categoriaTipo) {
+    public List<CategoriaResponseDTO> listarPorCategoriaTipo(Integer categoriaTipo, Integer usuarioId) {
         CategoriaTipo tipo = CategoriaTipo.fromCodigo(categoriaTipo);
-        List<Categoria> categorias = categoriaRepository.findByTipo(tipo);
-
-        // Busca todas as transações ativas uma única vez
-        List<Transacao> transacoesAtivas = transacaoRepository.listarTransacoesAtivas();
+        List<Categoria> categorias = categoriaRepository.findByTipo(tipo, usuarioId);
 
         return categorias.stream()
                 .map(categoria -> {
-                    CategoriaResponseDTO dto = new CategoriaResponseDTO();
-                    dto.setId(categoria.getId());
-                    dto.setNome(categoria.getNome());
-                    dto.setTipo(categoria.getTipo());
-                    dto.setStatus(categoria.getStatus());
+                    CategoriaResponseDTO categoriaResponseDTO = modelMapper.map(categoria, CategoriaResponseDTO.class);
 
-                    // Filtra as transações ativas que pertencem a esta categoria
-                    dto.setTransacoes(transacoesAtivas.stream()
-                            .filter(transacao -> transacao.getCategoria() != null &&
-                                    transacao.getCategoria().getId().equals(categoria.getId()))
-                            .map(TransacaoPorCategoriaResponseDTO::new)
-                            .collect(Collectors.toList()));
+                    if (categoria.getTransacoes() != null) {
+                        List<TransacaoPorCategoriaResponseDTO> transacoesDTO = categoria.getTransacoes()
+                                .stream()
+                                .filter(transacao -> transacao.getStatus() == Status.ATIVO &&
+                                        transacao.getUsuario().getId().equals(usuarioId))
+                                .map(TransacaoPorCategoriaResponseDTO::new)
+                                .collect(Collectors.toList());
+                        categoriaResponseDTO.setTransacoes(transacoesDTO);
+                    }
 
-                    return dto;
+                    return categoriaResponseDTO;
                 })
                 .collect(Collectors.toList());
     }
@@ -129,76 +139,41 @@ public class CategoriaService {
      * Busca categorias por nome
      * Se o nome for nulo ou vazio, retorna lista vazia.
      */
-    public List<CategoriaBasicaResponseDTO> buscarPorCategoriaNome(String nome) {
+    public List<CategoriaBasicaResponseDTO> buscarPorCategoriaNome(String nome, Integer usuarioId) {
         if (nome == null || nome.trim().isEmpty()) {
-            return Collections.emptyList();
+            // Retorna todas as categorias ativas do usuário
+            return categoriaRepository.findByUsuarioIdAndStatus(usuarioId, Status.ATIVO)
+                    .stream()
+                    .map(CategoriaBasicaResponseDTO::new)
+                    .collect(Collectors.toList());
         }
 
-        return categoriaRepository.findByCategoriaNome(nome.trim()).stream()
+        return categoriaRepository.findByCategoriaNome(nome.trim(), usuarioId)
+                .stream()
                 .map(CategoriaBasicaResponseDTO::new)
                 .collect(Collectors.toList());
     }
 
-
-    /**
-     * Lista categorias utilizadas por um usuário específico, calculando o valor total
-     * das transações ativas do usuário em cada categoria
-     */
-    public List<CategoriaValorTotalResponseDTO> listarCategoriasComValorTotal(Integer usuarioId) {
-
-        // Busca categorias usadas pelo usuário
-        List<Categoria> categorias = categoriaRepository.buscarCategoriasPorUsuarioId(usuarioId);
-
-        return categorias.stream()
-                .map(categoria -> {
-
-                    BigDecimal valorTotal = categoria.getTransacoes().stream()
-                            .filter(transacao -> transacao.getStatus() == Status.ATIVO &&
-                                    transacao.getUsuario().getId().equals(usuarioId))
-                            .map(Transacao::getValor)
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-                    return new CategoriaValorTotalResponseDTO(
-                            categoria.getId(),
-                            categoria.getNome(),
-                            valorTotal,
-                            categoria.getUsuario().getId()
-                    );
-                })
-                .collect(Collectors.toList());
-    }
-
-
     @Transactional
-    public CategoriaResponseDTO criarCategoria(CategoriaRequestDTO categoriaRequestDTO) {
+    public CategoriaResponseDTO criarCategoria(CategoriaRequestDTO categoriaRequestDTO, Integer usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         Categoria categoria = new Categoria();
         categoria.setNome(categoriaRequestDTO.getNome());
         categoria.setTipo(categoriaRequestDTO.getTipo());
-
-        Usuario usuario = usuarioRepository.findById(categoriaRequestDTO.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         categoria.setUsuario(usuario);
 
-        if (categoriaRequestDTO.getStatus() != null) {
-            try {
-                Status status = Status.fromCodigo(categoriaRequestDTO.getStatus());
-                categoria.setStatus(status);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Status inválido: " + categoriaRequestDTO.getStatus());
-            }
-        }
-
         Categoria categoriaSalva = this.categoriaRepository.save(categoria);
-        CategoriaResponseDTO categoriaResponseDTO = modelMapper.map(categoriaSalva, CategoriaResponseDTO.class);
-
-        return categoriaResponseDTO;
+        return modelMapper.map(categoriaSalva, CategoriaResponseDTO.class);
     }
 
     @Transactional
-    public CategoriaResponseDTO editarPorCategoriaId(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO) {
-        Categoria categoriaExistente = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com ID: " + categoriaId));
+    public CategoriaResponseDTO editarPorCategoriaId(Integer categoriaId, CategoriaRequestDTO categoriaRequestDTO, Integer usuarioId) {
+        Categoria categoriaExistente = categoriaRepository.findByCategoriaId(categoriaId, usuarioId);
+        if (categoriaExistente == null) {
+            throw new EntityNotFoundException("Categoria não encontrada com ID: " + categoriaId);
+        }
 
         if (categoriaRequestDTO.getNome() != null) {
             categoriaExistente.setNome(categoriaRequestDTO.getNome());
@@ -208,25 +183,18 @@ public class CategoriaService {
             categoriaExistente.setTipo(categoriaRequestDTO.getTipo());
         }
 
-        if (categoriaRequestDTO.getStatus() != null) {
-            try {
-                Status status = Status.fromCodigo(categoriaRequestDTO.getStatus());
-                categoriaExistente.setStatus(status);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Status inválido: " + categoriaRequestDTO.getStatus());
-            }
-        }
-
         Categoria categoriaAtualizada = categoriaRepository.save(categoriaExistente);
-
         return modelMapper.map(categoriaAtualizada, CategoriaResponseDTO.class);
     }
+
     @Transactional
-    public void deletarPorCategoriaId(Integer categoriaId){
-        if (!categoriaRepository.existsById(categoriaId)) {
+    public void deletarPorCategoriaId(Integer categoriaId, Integer usuarioId) {
+        Categoria categoria = categoriaRepository.findByCategoriaId(categoriaId, usuarioId);
+        if (categoria == null) {
             throw new EntityNotFoundException("Categoria não encontrada com ID: " + categoriaId);
         }
-        categoriaRepository.apagarCatgoria(categoriaId);
+
+        categoriaRepository.apagarCatgoria(categoriaId, usuarioId);
     }
 }
 

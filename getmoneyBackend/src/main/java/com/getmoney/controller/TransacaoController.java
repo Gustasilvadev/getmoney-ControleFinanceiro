@@ -37,20 +37,23 @@ public class TransacaoController {
     @GetMapping("/listar")
     @Operation(summary="Listar transacoes", description="Endpoint para listar todas as transacoes")
     public ResponseEntity <List<TransacaoResponseDTO>> listarTransacoes( @AuthenticationPrincipal Usuario usuario){
-        return ResponseEntity.ok(transacaoService.listarTransacoesAtivas());
+        return ResponseEntity.ok(transacaoService.listarTransacoesAtivas(usuario.getId()));
     }
 
     // Endpoint: /api/transacao/{id}/categoria
     @GetMapping("/{transacaoId}/categoria")
-    @Operation(summary = "Obter categoria de uma transação",description = "Endpoint para recuperar a categoria associada a uma transação específica")
-    public ResponseEntity<CategoriaBasicaResponseDTO> getCategoriaDaTransacao(@PathVariable Integer transacaoId) {
+    @Operation(summary = "Obter categoria de uma transação",
+            description = "Endpoint para recuperar a categoria associada a uma transação específica do usuário autenticado")
+    public ResponseEntity<CategoriaBasicaResponseDTO> getCategoriaDaTransacao(
+            @PathVariable Integer transacaoId,
+            @AuthenticationPrincipal Usuario usuario) {
 
-        TransacaoResponseDTO transacao = transacaoService.obterTransacaoAtivaPorId(transacaoId);
+        TransacaoResponseDTO transacao = transacaoService.listarPorTransacaoId(transacaoId, usuario.getId());
         if (transacao == null || transacao.getCategoriaId() == null) {
             return ResponseEntity.notFound().build();
         }
 
-        CategoriaBasicaResponseDTO categoria = categoriaService.listarTransacaoCategoriaId(transacao.getCategoriaId());
+        CategoriaBasicaResponseDTO categoria = categoriaService.listarTransacaoCategoriaId(transacao.getCategoriaId(), usuario.getId());
         if (categoria == null) {
             return ResponseEntity.notFound().build();
         }
@@ -77,8 +80,9 @@ public class TransacaoController {
     // Endpoint: /api/meta/{id}/transacao
     @GetMapping("/meta/{metaId}/transacao")
     @Operation(summary = "Listar transações da meta", description = "Retorna todas as transações associadas a uma meta")
-    public ResponseEntity<List<TransacaoBasicaResponseDTO>> getTransacoesPorMeta(@PathVariable Integer metaId) {
-        List<TransacaoBasicaResponseDTO> transacoes = transacaoService.listarTransacoesPorMeta(metaId);
+    public ResponseEntity<List<TransacaoBasicaResponseDTO>> getTransacoesPorMeta(@PathVariable Integer metaId,
+                                                                                 @AuthenticationPrincipal Usuario usuario) {
+        List<TransacaoBasicaResponseDTO> transacoes = transacaoService.listarTransacoesPorMeta(metaId, usuario.getId());
 
         if (transacoes == null || transacoes.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -89,8 +93,9 @@ public class TransacaoController {
     // Endpoint: /api/meta/{id}/transacao/{transacaoId}
     @GetMapping("/meta/{metaId}/transacao/{transacaoId}")
     @Operation(summary = "Obter transação filtrada por meta", description = "Retorna os dados de uma transação específica se ela pertencer à meta informada")
-    public ResponseEntity<TransacaoResponseDTO> getTransacaoPorMeta(@PathVariable Integer metaId, @PathVariable Integer transacaoId) {
-        TransacaoResponseDTO transacao = transacaoService.obterTransacaoPorMeta(transacaoId, metaId);
+    public ResponseEntity<TransacaoResponseDTO> getTransacaoPorMeta(@PathVariable Integer metaId, @PathVariable Integer transacaoId,
+                                                                    @AuthenticationPrincipal Usuario usuario) {
+        TransacaoResponseDTO transacao = transacaoService.obterTransacaoPorMeta(transacaoId, metaId, usuario.getId());
 
         if (transacao == null) {
             return ResponseEntity.notFound().build();
@@ -101,9 +106,10 @@ public class TransacaoController {
 
     @GetMapping("/listarPorTransacaoId/{transacaoId}")
     @Operation(summary = "Listar transacao pelo id de transacao", description = "Endpoint para obter transacao pelo id de transacao")
-    public ResponseEntity<TransacaoResponseDTO>listarPorTransacaoId(@PathVariable Integer transacaoId){
+    public ResponseEntity<TransacaoResponseDTO>listarPorTransacaoId(@PathVariable Integer transacaoId,
+                                                                    @AuthenticationPrincipal Usuario usuario) {
         try {
-            TransacaoResponseDTO transacao = transacaoService.listarPorTransacaoId(transacaoId);
+            TransacaoResponseDTO transacao = transacaoService.listarPorTransacaoId(transacaoId, usuario.getId());
             return ResponseEntity.ok(transacao);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build(); // 404 Not Found
@@ -112,22 +118,25 @@ public class TransacaoController {
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova transacao", description = "Endpoint para criar um novo registro de transacao")
-    public ResponseEntity<TransacaoResponseDTO> criarTransacao(@RequestBody @Valid TransacaoRequestDTO transacaoRequestDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(transacaoService.criarTransacao(transacaoRequestDTO));
+    public ResponseEntity<TransacaoResponseDTO> criarTransacao(@RequestBody @Valid TransacaoRequestDTO transacaoRequestDTO,
+                                                               @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(transacaoService.criarTransacao(transacaoRequestDTO, usuario.getId()));
     }
 
     @PutMapping("/editarPorTransacaoId/{transacaoId}")
     @Operation(summary="Editar transacoes pelo id da transacao", description="Endpoint para editar pelo id da transacao")
     public ResponseEntity<TransacaoResponseDTO> editarPorTransacaoId(@PathVariable Integer transacaoId,
-                                                                     @Valid @RequestBody TransacaoUpdateRequestDTO transacaoUpdateRequestDTO) {
+                                                                     @Valid @RequestBody TransacaoUpdateRequestDTO transacaoUpdateRequestDTO,
+                                                                     @AuthenticationPrincipal Usuario usuario) {
 
-        return ResponseEntity.ok(transacaoService.editarPorTransacaoId(transacaoId,transacaoUpdateRequestDTO));
+        return ResponseEntity.ok(transacaoService.editarPorTransacaoId(transacaoId,transacaoUpdateRequestDTO, usuario.getId()));
     }
 
     @DeleteMapping("/deletarPorTransacaoId/{transacaoId}")
     @Operation(summary = "Deletar transacao", description = "Endpoint para deletar um novo registro de transacao")
-    public ResponseEntity<Void> deletarPorTransacaoId(@PathVariable Integer transacaoId) {
-        transacaoService.deletarPorTransacaoId(transacaoId);
+    public ResponseEntity<Void> deletarPorTransacaoId(@PathVariable Integer transacaoId,
+                                                      @AuthenticationPrincipal Usuario usuario) {
+        transacaoService.deletarPorTransacaoId(transacaoId, usuario.getId());
         return ResponseEntity.noContent().build();
     }
 

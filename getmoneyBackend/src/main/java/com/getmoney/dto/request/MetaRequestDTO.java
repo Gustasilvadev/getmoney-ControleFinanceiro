@@ -1,6 +1,5 @@
 package com.getmoney.dto.request;
 
-import com.getmoney.enums.Status;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -23,18 +22,15 @@ public class MetaRequestDTO {
     @FutureOrPresent(message = "A data deve ser hoje ou uma data futura")
     private LocalDate data;
 
-    @NotNull(message = "O ID do usuário é obrigatório")
-    private Integer usuarioId;
 
     public MetaRequestDTO() {
     }
 
-    public MetaRequestDTO(String nome, BigDecimal valorAlvo, Integer status, LocalDate data, Integer usuarioId) {
+    public MetaRequestDTO(String nome, BigDecimal valorAlvo, Integer status, LocalDate data) {
         this.nome = nome;
         this.valorAlvo = valorAlvo;
         this.status = status;
         this.data = data;
-        this.usuarioId = usuarioId;
     }
 
     public String getNome() {
@@ -69,11 +65,4 @@ public class MetaRequestDTO {
         this.data = data;
     }
 
-    public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
-    }
 }

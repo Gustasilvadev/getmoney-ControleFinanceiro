@@ -37,7 +37,7 @@ public class Categoria {
     @PrePersist
     public void prePersist() {
         if (this.status == null) {
-            this.status = status.ATIVO;
+            this.status = Status.ATIVO;
         }
     }
 

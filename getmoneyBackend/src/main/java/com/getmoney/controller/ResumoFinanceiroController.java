@@ -23,11 +23,11 @@ import java.util.List;
 @Tag(name="Estatisticas", description = "Api de gerenciamento de estatisticas")
 public class ResumoFinanceiroController {
 
-    private ResumoFinanceiroService resumoFinanceiro;
+    private ResumoFinanceiroService resumoFinanceiroService;
     private CategoriaService categoriaService;
 
-    public ResumoFinanceiroController(ResumoFinanceiroService resumoFinanceiro, CategoriaService categoriaService) {
-        this.resumoFinanceiro = resumoFinanceiro;
+    public ResumoFinanceiroController(ResumoFinanceiroService resumoFinanceiroService, CategoriaService categoriaService) {
+        this.resumoFinanceiroService = resumoFinanceiroService;
         this.categoriaService = categoriaService;
     }
 
@@ -39,7 +39,7 @@ public class ResumoFinanceiroController {
     @Operation(summary = "Listar resumo financeiro", description = "Endpoint para obter o resumo financeiro do usuário autenticado")
     public ResponseEntity<ResumoFinanceiroResponseDTO> getResumoFinanceiro(@AuthenticationPrincipal Usuario usuario) {
 
-        ResumoFinanceiroResponseDTO resumo = resumoFinanceiro.getResumoFinanceiro(usuario.getId());
+        ResumoFinanceiroResponseDTO resumo = resumoFinanceiroService.getResumoFinanceiro(usuario.getId());
         return ResponseEntity.ok(resumo);
     }
 
@@ -51,7 +51,7 @@ public class ResumoFinanceiroController {
     public ResponseEntity<List<CategoriaValorTotalResponseDTO>> getCategoriasComValorTotal(@AuthenticationPrincipal Usuario usuario) {
 
         List<CategoriaValorTotalResponseDTO> resultado =
-                categoriaService.listarCategoriasComValorTotal(usuario.getId());
+                resumoFinanceiroService.listarCategoriasComValorTotal(usuario.getId());
 
         return ResponseEntity.ok(resultado);
     }
@@ -66,7 +66,7 @@ public class ResumoFinanceiroController {
             @AuthenticationPrincipal Usuario usuario) {
 
         try {
-            List<CategoriaValorTotalResponseDTO> resumo = resumoFinanceiro.getResumoCategorias(usuario.getId());
+            List<CategoriaValorTotalResponseDTO> resumo = resumoFinanceiroService.getResumoCategorias(usuario.getId());
             return ResponseEntity.ok(resumo);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
@@ -84,7 +84,7 @@ public class ResumoFinanceiroController {
             @RequestParam(value = "meses", required = false) Integer meses) {
 
         try {
-            List<EvolucaoMensalResponseDTO> evolucao = resumoFinanceiro.getEvolucaoMensal(usuario.getId(), meses);
+            List<EvolucaoMensalResponseDTO> evolucao = resumoFinanceiroService.getEvolucaoMensal(usuario.getId(), meses);
             return ResponseEntity.ok(evolucao);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
@@ -100,7 +100,7 @@ public class ResumoFinanceiroController {
             @AuthenticationPrincipal Usuario usuario) {
 
         try {
-            List<ProgressoMetaResponseDTO> progresso = resumoFinanceiro.getProgressoMetas(usuario.getId());
+            List<ProgressoMetaResponseDTO> progresso = resumoFinanceiroService.getProgressoMetas(usuario.getId());
             return ResponseEntity.ok(progresso);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

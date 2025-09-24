@@ -37,41 +37,48 @@ public class CategoriaController {
 
     @GetMapping("/listarPorCategoriaId/{categoriaId}")
     @Operation(summary = "Listar categoria pelo id de categoria", description = "Endpoint para obter categoria pelo id de categoria")
-    public ResponseEntity<CategoriaResponseDTO>listarPorCategoriaId(@PathVariable Integer categoriaId){
-        return ResponseEntity.ok(categoriaService.listarPorCategoriaId(categoriaId));
+    public ResponseEntity<CategoriaResponseDTO>listarPorCategoriaId(@PathVariable Integer categoriaId,
+                                                                    @AuthenticationPrincipal Usuario usuario){
+        return ResponseEntity.ok(categoriaService.listarPorCategoriaId(categoriaId,usuario.getId()));
     }
 
-    @GetMapping("/listarPorCategoriaTipo/{CategoriaTipo}")
+    @GetMapping("/listarPorCategoriaTipo/{categoriaTipo}")
     @Operation(summary = "Listar categoria pelo tipo de categoria", description = "Endpoint para obter categoria pelo tipo de categoria")
-    public ResponseEntity<List<CategoriaResponseDTO >> listarPorTipo(@PathVariable("CategoriaTipo") Integer categoriaTipo) {
-        return ResponseEntity.ok(categoriaService.listarPorCategoriaTipo(categoriaTipo));
+    public ResponseEntity<List<CategoriaResponseDTO >> listarPorCategoriaTipo(
+            @PathVariable("categoriaTipo") Integer categoriaTipo,
+            @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(categoriaService.listarPorCategoriaTipo(categoriaTipo, usuario.getId()));
     }
 
     @GetMapping("/listarPorCategoriaNome")
     @Operation(summary = "Listar categorias por nome", description = "Endpoint para listar categorias filtrando por nome. Se nenhum nome for informado, retorna todas as categorias ativas.")
-    public ResponseEntity<List<CategoriaBasicaResponseDTO>> listarPorCategoriaNome(@RequestParam(required = false) String nome) {
-        List<CategoriaBasicaResponseDTO> categorias = categoriaService.buscarPorCategoriaNome(nome);
+    public ResponseEntity<List<CategoriaBasicaResponseDTO>> listarPorCategoriaNome(@RequestParam(required = false) String nome,
+                                                                                   @AuthenticationPrincipal Usuario usuario) {
+        List<CategoriaBasicaResponseDTO> categorias = categoriaService.buscarPorCategoriaNome(nome, usuario.getId());
         return ResponseEntity.ok(categorias);
     }
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova categoria", description = "Endpoint para criar um novo registro de categoria")
-    public ResponseEntity<CategoriaResponseDTO> criarCategoria(@RequestBody @Valid  CategoriaRequestDTO categoriaRequestDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.criarCategoria(categoriaRequestDTO));
+    public ResponseEntity<CategoriaResponseDTO> criarCategoria(@RequestBody @Valid  CategoriaRequestDTO categoriaRequestDTO,
+                                                               @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.criarCategoria(categoriaRequestDTO, usuario.getId()));
 
     }
 
     @PutMapping("/editarCategoria/{categoriaId}")
     @Operation(summary="Editar categorias pelo id da categoria", description="Endpoint para editar pelo id da categoria")
     public ResponseEntity<CategoriaResponseDTO> editarCategoria(@PathVariable Integer categoriaId,
-                                                                @RequestBody CategoriaRequestDTO categoriaRequestDTO) {
-        return ResponseEntity.ok(categoriaService.editarPorCategoriaId(categoriaId, categoriaRequestDTO));
+                                                                @RequestBody CategoriaRequestDTO categoriaRequestDTO,
+                                                                @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(categoriaService.editarPorCategoriaId(categoriaId, categoriaRequestDTO, usuario.getId()));
     }
 
     @DeleteMapping("/deletarPorCategoriaId/{categoriaId}")
     @Operation(summary = "Deletar categoria", description = "Endpoint para deletar um novo registro de categoria")
-    public ResponseEntity<Void> deletarPorCategoriaId(@PathVariable Integer categoriaId) {
-        categoriaService.deletarPorCategoriaId(categoriaId);
+    public ResponseEntity<Void> deletarPorCategoriaId(@PathVariable Integer categoriaId,
+                                                      @AuthenticationPrincipal Usuario usuario) {
+        categoriaService.deletarPorCategoriaId(categoriaId, usuario.getId());
         return ResponseEntity.noContent().build();
     }
 

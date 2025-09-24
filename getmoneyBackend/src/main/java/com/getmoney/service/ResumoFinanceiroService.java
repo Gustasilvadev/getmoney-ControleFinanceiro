@@ -6,6 +6,7 @@ import com.getmoney.dto.response.ProgressoMetaResponseDTO;
 import com.getmoney.dto.response.ResumoFinanceiroResponseDTO;
 import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Meta;
+import com.getmoney.entity.Transacao;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.enums.Status;
 import com.getmoney.repository.AnaliseRepository;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,23 +54,52 @@ public class ResumoFinanceiroService {
      * Retorna ID, nome da categoria e valor total gasto
      */
     public List<CategoriaValorTotalResponseDTO> getResumoCategorias(Integer usuarioId) {
-        // Consulta repositório para obter categorias com seus totais gastos
-        List<Object[]> resultados = analiseRepository.listarCategoriasComTotalGastoPorUsuario(
-                usuarioId,
-                CategoriaTipo.DESPESA,
-                Status.ATIVO
-        );
+        List<Object[]> resultados = analiseRepository.listarCategoriasComTotalGastoPorUsuario(usuarioId);
 
         return resultados.stream().map(result -> {
             Categoria categoria = (Categoria) result[0];
             BigDecimal totalGasto = result[1] != null ? (BigDecimal) result[1] : BigDecimal.ZERO;
 
-            CategoriaValorTotalResponseDTO dto = new CategoriaValorTotalResponseDTO();
-            dto.setCategoriaId(categoria.getId());
-            dto.setCategoriaNome(categoria.getNome());
-            dto.setValorTotal(totalGasto);
-            return dto;
+            BigDecimal valorNegativo = totalGasto.negate();
+
+            return new CategoriaValorTotalResponseDTO(
+                    categoria.getId(),
+                    categoria.getNome(),
+                    valorNegativo,
+                    usuarioId
+            );
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * Lista categorias utilizadas por um usuário específico, calculando o valor total
+     * das transações ativas do usuário em cada categoria
+     */
+    public List<CategoriaValorTotalResponseDTO> listarCategoriasComValorTotal(Integer usuarioId) {
+        List<Categoria> categorias = analiseRepository.findByUsuarioIdAndStatus(usuarioId, Status.ATIVO);
+
+        return categorias.stream()
+                .map(categoria -> {
+                    BigDecimal valorTotal = Optional.ofNullable(categoria.getTransacoes())
+                            .orElse(Collections.emptyList())
+                            .stream()
+                            .filter(transacao -> transacao.getStatus() == Status.ATIVO &&
+                                    transacao.getUsuario().getId().equals(usuarioId))
+                            .map(Transacao::getValor)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    BigDecimal valorFinal = categoria.getTipo() == CategoriaTipo.DESPESA ?
+                            valorTotal.negate() :
+                            valorTotal;
+
+                    return new CategoriaValorTotalResponseDTO(
+                            categoria.getId(),
+                            categoria.getNome(),
+                            valorFinal,
+                            usuarioId
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -75,25 +107,17 @@ public class ResumoFinanceiroService {
      * Retorna totais mensais para análise comparativa do fluxo financeiro
      */
     public List<EvolucaoMensalResponseDTO> getEvolucaoMensal(Integer usuarioId, Integer meses) {
-        // Define período de análise (últimos X meses)
         LocalDate dataFim = LocalDate.now();
         LocalDate dataInicio = dataFim.minusMonths(meses != null ? meses : 6);
 
         List<Object[]> resultados = analiseRepository.listarEvolucaoMensalPorUsuario(
-                usuarioId,
-                dataInicio,
-                dataFim,
-                CategoriaTipo.DESPESA,
-                CategoriaTipo.RECEITA,
-                Status.ATIVO
-        );
+                usuarioId, dataInicio, dataFim);
 
         return resultados.stream().map(result -> {
             Integer ano = (Integer) result[0];
             Integer mes = (Integer) result[1];
             LocalDate periodo = LocalDate.of(ano, mes, 1);
 
-            // // Extrai totais de despesas e receitas
             BigDecimal totalDespesas = result[2] != null ? (BigDecimal) result[2] : BigDecimal.ZERO;
             BigDecimal totalReceitas = result[3] != null ? (BigDecimal) result[3] : BigDecimal.ZERO;
 
@@ -106,8 +130,7 @@ public class ResumoFinanceiroService {
      * Calcula valor atual x valor alvo e status de cada meta
      */
     public List<ProgressoMetaResponseDTO> getProgressoMetas(Integer usuarioId) {
-        List<Object[]> resultados = analiseRepository.ListarMetasComProgressoPorUsuario(
-                usuarioId, Status.ATIVO);  // Passa o enum como parâmetro
+        List<Object[]> resultados = analiseRepository.ListarMetasComProgressoPorUsuario(usuarioId);
 
         return resultados.stream().map(result -> {
             Meta meta = (Meta) result[0];
@@ -120,7 +143,6 @@ public class ResumoFinanceiroService {
             dto.setValorAtual(valorAtual);
             dto.setStatus(meta.getStatus());
 
-            // Calcula percentual de conclusão apenas se valor alvo for válido
             if (meta.getValorAlvo() != null && meta.getValorAlvo().compareTo(BigDecimal.ZERO) > 0) {
                 BigDecimal percentual = valorAtual
                         .divide(meta.getValorAlvo(), 4, RoundingMode.HALF_UP)

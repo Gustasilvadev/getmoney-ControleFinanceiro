@@ -15,19 +15,12 @@ public class CategoriaRequestDTO {
     @NotNull(message = "O tipo é obrigatório")
     private CategoriaTipo tipo;
 
-    @NotNull(message = "O status é obrigatório")
-    private Integer  status;
-
-    @NotNull(message = "O ID do usuário é obrigatório")
-    private Integer usuarioId;
 
     public CategoriaRequestDTO() {}
 
-    public CategoriaRequestDTO(String nome, CategoriaTipo tipo, Integer status, Integer usuarioId) {
+    public CategoriaRequestDTO(String nome, CategoriaTipo tipo) {
         this.nome = nome;
         this.tipo = tipo;
-        this.status = status;
-        this.usuarioId = usuarioId;
     }
 
     public String getNome() {
@@ -46,20 +39,5 @@ public class CategoriaRequestDTO {
         this.tipo = tipo;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
-    }
 }
 

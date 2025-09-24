@@ -39,8 +39,8 @@ public class MetaService {
      * Lista todas as metas ativas, com informações do usuário e transações associadas
      * Se uma meta não possuir transações, a lista de transações será vazia.
      */
-    public List<MetaResponseDTO> listarMetas() {
-        List<Meta> metas = metaRepository.listarMetasAtivas();
+    public List<MetaResponseDTO> listarMetas(Integer usuarioId) {
+        List<Meta> metas = metaRepository.listarMetasAtivas(usuarioId);
 
         return metas.stream()
                 .map(meta -> {
@@ -69,8 +69,8 @@ public class MetaService {
     }
 
 
-    public MetaResponseDTO listarPorMetaId(Integer metaId) {
-        Meta meta = metaRepository.findByMetaId(metaId);
+    public MetaResponseDTO listarPorMetaId(Integer metaId, Integer usuarioId) {
+        Meta meta = metaRepository.findByMetaIdAndUsuarioId(metaId, usuarioId);
         if (meta == null) {
             throw new RuntimeException("Meta não encontrada com ID: " + metaId);
         }
@@ -99,7 +99,7 @@ public class MetaService {
 
 
     @Transactional
-    public MetaResponseDTO criarMeta(MetaRequestDTO metaRequestDTO) {
+    public MetaResponseDTO criarMeta(MetaRequestDTO metaRequestDTO, Integer usuarioId) {
         Meta meta = new Meta();
         meta.setNome(metaRequestDTO.getNome());
         meta.setValorAlvo(metaRequestDTO.getValorAlvo());
@@ -107,18 +107,18 @@ public class MetaService {
         meta.setStatus(status);
         meta.setData(metaRequestDTO.getData());
 
-
-        Usuario usuario = usuarioRepository.findById(metaRequestDTO.getUsuarioId())
+        Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         meta.setUsuario(usuario);
-
 
         Meta metaSalva = metaRepository.save(meta);
         return new MetaResponseDTO(metaSalva);
     }
+
+
     @Transactional
-    public MetaResponseDTO editarPorMetaId(Integer metaId, MetaRequestUpdateDTO metaRequestUpdateDTO) {
-        Meta metaExistente = metaRepository.findByMetaId(metaId);
+    public MetaResponseDTO editarPorMetaId(Integer metaId, MetaRequestUpdateDTO metaRequestUpdateDTO, Integer usuarioId) {
+        Meta metaExistente = metaRepository.findByMetaIdAndUsuarioId(metaId, usuarioId);
         if (metaExistente == null) {
             throw new RuntimeException("Meta não encontrada com ID: " + metaId);
         }
@@ -131,15 +131,15 @@ public class MetaService {
         modelMapper.map(metaRequestUpdateDTO, metaExistente);
 
         Meta metaAtualizada = metaRepository.save(metaExistente);
-
         return modelMapper.map(metaAtualizada, MetaResponseDTO.class);
     }
+
     @Transactional
-    public void deletarPorMetaId(Integer metaId) {
-        if (!metaRepository.existsById(metaId)) {
+    public void deletarPorMetaId(Integer metaId, Integer usuarioId) {
+        if (!metaRepository.existsByIdAndUsuarioId(metaId, usuarioId)) {
             throw new EntityNotFoundException("Meta não encontrada com ID: " + metaId);
         }
-        metaRepository.apagarMeta(metaId);
+        metaRepository.apagarMeta(metaId, usuarioId);
     }
 }
 

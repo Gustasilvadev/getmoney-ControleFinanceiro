@@ -43,26 +43,30 @@ public class TransacaoService {
         this.metaRepository = metaRepository;
     }
 
-    public List<TransacaoResponseDTO> listarTransacoesAtivas(){
-        List<Transacao> transacoes = transacaoRepository.listarTransacoesAtivas();
-        return transacoes.stream()
-                .map(transacao -> modelMapper.map(transacao, TransacaoResponseDTO.class))
-                .collect(Collectors.toList());
-    }
+    public List<TransacaoResponseDTO> listarTransacoesAtivas(Integer usuarioId) {
+        List<Transacao> transacoes = transacaoRepository.listarTransacoesAtivas(usuarioId);
 
-    public TransacaoResponseDTO obterTransacaoAtivaPorId(Integer id) {
-        Transacao transacao = transacaoRepository.findByTransacaoId(id);
-        if (transacao == null) {
-            throw new EntityNotFoundException("Transação não encontrada");
-        }
-        return modelMapper.map(transacao, TransacaoResponseDTO.class);
+        return transacoes.stream()
+                .map(transacao -> {
+                    TransacaoResponseDTO dto = modelMapper.map(transacao, TransacaoResponseDTO.class);
+
+                    // Mapear as metas igual você fez no listarPorTransacaoId
+                    dto.setMetasId(transacao.getMetas() != null ?
+                            transacao.getMetas().stream()
+                                    .map(meta -> modelMapper.map(meta, MetaBasicaResponseDTO.class))
+                                    .collect(Collectors.toList()) :
+                            new ArrayList<>());
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
      * Lista todas as transações associadas a uma meta específica
      */
-    public List<TransacaoBasicaResponseDTO> listarTransacoesPorMeta(Integer metaId) {
-        List<Transacao> transacoes = transacaoRepository.ListarTransacaoPorMetaId(metaId);
+    public List<TransacaoBasicaResponseDTO> listarTransacoesPorMeta(Integer metaId, Integer usuarioId) {
+        List<Transacao> transacoes = transacaoRepository.ListarTransacaoPorMetaId(metaId, usuarioId);
         return transacoes.stream()
                 .map(transacao -> modelMapper.map(transacao, TransacaoBasicaResponseDTO.class))
                 .collect(Collectors.toList());
@@ -73,9 +77,7 @@ public class TransacaoService {
      * Lança exceção se a transação não for encontrada para a categoria especificada
      */
     public TransacaoBasicaResponseDTO obterTransacaoPorCategoria(Integer transacaoId, Integer categoriaId, Integer usuarioId) {
-        Transacao transacao = transacaoRepository.listarTransacaoIdECategoriaId(
-                transacaoId, categoriaId, usuarioId);
-
+        Transacao transacao = transacaoRepository.listarTransacaoIdECategoriaId(transacaoId, categoriaId, usuarioId);
         if (transacao == null) {
             throw new EntityNotFoundException("Transação não encontrada para esta categoria");
         }
@@ -86,23 +88,31 @@ public class TransacaoService {
      * Obtém uma transação específica pelo ID e ID da meta associada
      * Lança exceção se a transação não for encontrada para a meta especificada
      */
-    public TransacaoResponseDTO obterTransacaoPorMeta(Integer id, Integer metaId) {
-        Transacao transacao = transacaoRepository.listarTransacaoIdEMetaId(id, metaId);
+    public TransacaoResponseDTO obterTransacaoPorMeta(Integer id, Integer metaId, Integer usuarioId) {
+        Transacao transacao = transacaoRepository.listarTransacaoIdEMetaId(id, metaId, usuarioId);
         if (transacao == null) {
             throw new EntityNotFoundException("Transação não encontrada para esta meta");
         }
-        return modelMapper.map(transacao, TransacaoResponseDTO.class);
+
+        TransacaoResponseDTO dto = modelMapper.map(transacao, TransacaoResponseDTO.class);
+
+        dto.setMetasId(transacao.getMetas() != null ?
+                transacao.getMetas().stream()
+                        .map(meta -> modelMapper.map(meta, MetaBasicaResponseDTO.class))
+                        .collect(Collectors.toList()) :
+                new ArrayList<>());
+
+        return dto;
     }
 
 
-    public TransacaoResponseDTO listarPorTransacaoId(Integer transacaoId) {
-        Transacao transacao = transacaoRepository.findByTransacaoId(transacaoId);
+    public TransacaoResponseDTO listarPorTransacaoId(Integer transacaoId, Integer usuarioId) {
+        Transacao transacao = transacaoRepository.findByTransacaoId(transacaoId, usuarioId);
         if (transacao == null) {
             throw new RuntimeException("Transacao não encontrada com ID: " + transacaoId);
         }
 
         TransacaoResponseDTO dto = modelMapper.map(transacao, TransacaoResponseDTO.class);
-
         dto.setMetasId(transacao.getMetas() != null ?
                 transacao.getMetas().stream()
                         .map(meta -> modelMapper.map(meta, MetaBasicaResponseDTO.class))
@@ -118,26 +128,25 @@ public class TransacaoService {
      * Associando-a a um usuário, categoria e metas (se especificadas)
      */
     @Transactional
-    public TransacaoResponseDTO criarTransacao(TransacaoRequestDTO transacaoRequestDTO) {
+    public TransacaoResponseDTO criarTransacao(TransacaoRequestDTO transacaoRequestDTO, Integer usuarioId) {
         Transacao transacao = new Transacao();
         transacao.setValor(transacaoRequestDTO.getValor());
         transacao.setDescricao(transacaoRequestDTO.getDescricao());
         transacao.setData(transacaoRequestDTO.getData());
-        Status status = Status.fromCodigo(transacaoRequestDTO.getStatus());
-        transacao.setStatus(status);
 
-        Usuario usuario = usuarioRepository.findById(transacaoRequestDTO.getUsuarioId())
+        Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         transacao.setUsuario(usuario);
 
-        Categoria categoria = categoriaRepository.findByCategoriaId(transacaoRequestDTO.getCategoriaId());
+        Categoria categoria = categoriaRepository.findByCategoriaId(transacaoRequestDTO.getCategoriaId(), usuarioId);
         if (categoria == null) {
-            throw new RuntimeException("Categoria não encontrada");
+            throw new RuntimeException("Categoria não encontrada ou não pertence ao usuário");
         }
         transacao.setCategoria(categoria);
 
         if (transacaoRequestDTO.getMetasId() != null && !transacaoRequestDTO.getMetasId().isEmpty()) {
-            List<Meta> metas = metaRepository.findAllById(transacaoRequestDTO.getMetasId());
+
+            List<Meta> metas = metaRepository.findByIdInAndUsuarioId(transacaoRequestDTO.getMetasId(), usuarioId);
             transacao.setMetas(metas);
         }
 
@@ -150,8 +159,8 @@ public class TransacaoService {
      * Permite alterar, categoria, metas
      */
     @Transactional
-    public TransacaoResponseDTO editarPorTransacaoId(Integer transacaoId, TransacaoUpdateRequestDTO transacaoUpdateRequestDTO) {
-        Transacao transacaoExistente = transacaoRepository.findByTransacaoId(transacaoId);
+    public TransacaoResponseDTO editarPorTransacaoId(Integer transacaoId, TransacaoUpdateRequestDTO transacaoUpdateRequestDTO, Integer usuarioId) {
+        Transacao transacaoExistente = transacaoRepository.findByTransacaoId(transacaoId, usuarioId);
         if (transacaoExistente == null) {
             throw new RuntimeException("Transacao não encontrada com ID: " + transacaoId);
         }
@@ -165,13 +174,14 @@ public class TransacaoService {
         if (transacaoUpdateRequestDTO.getData() != null) {
             transacaoExistente.setData(transacaoUpdateRequestDTO.getData());
         }
-        if (transacaoUpdateRequestDTO.getStatus() != null) {
-            transacaoExistente.setStatus(Status.fromCodigo(transacaoUpdateRequestDTO.getStatus()));
-        }
+
 
         if (transacaoUpdateRequestDTO.getCategoriaId() != null) {
-            Categoria categoria = categoriaRepository.findById(transacaoUpdateRequestDTO.getCategoriaId())
-                    .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+            Categoria categoria = categoriaRepository.findByCategoriaId(transacaoUpdateRequestDTO.getCategoriaId(), usuarioId);
+            if (categoria == null) {
+                throw new RuntimeException("Categoria não encontrada ou não pertence ao usuário");
+            }
             transacaoExistente.setCategoria(categoria);
         }
 
@@ -179,7 +189,8 @@ public class TransacaoService {
             if (transacaoUpdateRequestDTO.getMetasId().isEmpty()) {
                 transacaoExistente.setMetas(new ArrayList<>());
             } else {
-                List<Meta> metas = metaRepository.findAllById(transacaoUpdateRequestDTO.getMetasId());
+
+                List<Meta> metas = metaRepository.findByIdInAndUsuarioId(transacaoUpdateRequestDTO.getMetasId(), usuarioId);
                 transacaoExistente.setMetas(metas);
             }
         }
@@ -188,11 +199,14 @@ public class TransacaoService {
         return modelMapper.map(transacaoAtualizada, TransacaoResponseDTO.class);
     }
 
+
     @Transactional
-    public void deletarPorTransacaoId(Integer transacaoId) {
-        boolean transacaoExistente = transacaoRepository.existsById(transacaoId);
-        if(transacaoExistente){
-            transacaoRepository.apagarTransacao(transacaoId);
+    public void deletarPorTransacaoId(Integer transacaoId, Integer usuarioId) {
+        Transacao transacao = transacaoRepository.findByTransacaoId(transacaoId, usuarioId);
+        if (transacao == null) {
+            throw new EntityNotFoundException("Transação não encontrada com ID: " + transacaoId);
         }
+        transacaoRepository.apagarTransacao(transacaoId, usuarioId);
     }
+
 }

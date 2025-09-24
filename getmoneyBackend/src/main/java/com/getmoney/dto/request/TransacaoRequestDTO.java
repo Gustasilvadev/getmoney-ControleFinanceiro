@@ -24,11 +24,6 @@ public class TransacaoRequestDTO {
     @PastOrPresent(message = "A data não pode ser futura")
     private LocalDate data;
 
-    @NotNull(message = "O status é obrigatório")
-    private Integer status;
-
-    @NotNull(message = "O ID do usuário é obrigatório")
-    private Integer usuarioId;
 
     @NotNull(message = "O ID da categoria é obrigatório")
     private Integer categoriaId;
@@ -37,12 +32,10 @@ public class TransacaoRequestDTO {
 
     public TransacaoRequestDTO() {}
 
-    public TransacaoRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer usuarioId, Integer categoriaId) {
+    public TransacaoRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer categoriaId) {
         this.valor = valor;
         this.descricao = descricao;
         this.data = data;
-        this.status = status;
-        this.usuarioId = usuarioId;
         this.categoriaId = categoriaId;
         this.metasId = new ArrayList<>();
     }
@@ -78,22 +71,6 @@ public class TransacaoRequestDTO {
 
     public void setData(LocalDate data) {
         this.data = data;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
     }
 
     public List<Integer> getMetasId() {
