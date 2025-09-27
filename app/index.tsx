@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export default function Index (){
 
     const [Loading,setLoading] = useState(true);
-    const [fontsLoaded] = useFonts({Montserrat_700Bold,});
+    const [fontsLoaded] = useFonts({Montserrat_700Bold});
 
     useEffect(() => {
       if (fontsLoaded) {

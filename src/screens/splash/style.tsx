@@ -10,9 +10,8 @@ export const styles = StyleSheet.create({
 
     },
     titulo:{
-        
         fontSize:48,
-        fontWeight:"900",
+        fontFamily:"Montserrat_700Bold",
         color:'#FFF'
     },
 });
