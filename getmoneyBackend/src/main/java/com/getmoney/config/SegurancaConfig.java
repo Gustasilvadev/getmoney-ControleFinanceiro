@@ -21,6 +21,19 @@ public class SegurancaConfig {
     @Autowired
     SecurityFilter securityFilter;
 
+    public static final String[] SWAGGER_ENDPOINTS = {
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-ui",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+    };
+
+    public static final String[] ENDPOINTS_SEM_AUTENTICACAO = {
+            "/api/autenticacao/registrarUsuario",
+            "/api/autenticacao/autenticarUsuario"
+    };
+
     /**
      * Cria e configura um bean do tipo PasswordEncoder para criptografia de senhas.
      */
@@ -40,9 +53,8 @@ public class SegurancaConfig {
                 .csrf(csrf -> csrf.disable())
                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                .authorizeHttpRequests(authorize -> authorize
-                       .requestMatchers(HttpMethod.POST, "/api/autenticacao/registrarUsuario").permitAll()
-                       .requestMatchers(HttpMethod.POST, "/api/autenticacao/autenticarUsuario").permitAll()
-                       .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                       .requestMatchers(ENDPOINTS_SEM_AUTENTICACAO).permitAll()
+                       .requestMatchers(SWAGGER_ENDPOINTS).permitAll()
                        .anyRequest().authenticated()
                )
                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
