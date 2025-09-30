@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
     input:{
         backgroundColor:'#FFFFFF',
         borderRadius:40,
-        height:"15%",
+        height:"12%",
         padding:10,
         fontFamily: FONTS.openSans.regular,
         fontSize:16,
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
     options:{
         justifyContent:"center",
         alignItems:"center",
-        gap:20,
+        gap:15,
     },
 
     textOptions:{
