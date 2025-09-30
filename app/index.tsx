@@ -1,26 +1,24 @@
 import { SplashScreen } from "@/src/screens/splash/index";
-import { Montserrat_700Bold, useFonts } from '@expo-google-fonts/montserrat';
+import { useAppFonts } from "@/src/hooks/fonts/use-fonts";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 
 
 export default function Index (){
 
-    const [Loading,setLoading] = useState(true);
-    const [fontsLoaded] = useFonts({Montserrat_700Bold});
+    const [isLoading, setIsLoading] = useState(true);
+    const fontsLoaded = useAppFonts();
 
-    useEffect(() => {
-      if (fontsLoaded) {
-          setTimeout(() => setLoading(false), 3000);
-      }
-    }, [fontsLoaded]);
-
-    if (Loading || !fontsLoaded) {
-        return <SplashScreen />;
+  useEffect(() => {
+    if (fontsLoaded) {
+      setTimeout(() => setIsLoading(false), 3000);
     }
+  }, [fontsLoaded]);
 
-   
-    //   Login
-     return <Redirect href="/auth/login" />;
+  if (isLoading || !fontsLoaded) {
+    return <SplashScreen />;
+  }
+
+  return <Redirect href="/auth/login" />;
 
 };

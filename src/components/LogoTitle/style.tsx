@@ -1,3 +1,4 @@
+import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -7,7 +8,7 @@ export const styles = StyleSheet.create({
         justifyContent:"center"
     },
     text:{
-        fontFamily:"Montserrat_700Bold",
+        fontFamily: FONTS.montserrat.bold,
         fontSize:32,
         marginTop:30,
         color:'#FFFFFF'
