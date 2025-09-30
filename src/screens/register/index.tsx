@@ -1,14 +1,14 @@
 import { LogoTitle } from "@/src/components/LogoTitle";
-import { View,Text,TextInput,TouchableOpacity } from "react-native";
+import { View,Text,TextInput,TouchableOpacity,Keyboard, Pressable } from "react-native";
 import {styles} from "./style"
 import { useNavigation } from "@/src/constants/router";
 
 
 export const RegisterScreen = () =>{
-     const { login } = useNavigation();
+    const navigation = useNavigation();
 
     return(
-        <View style={styles.container}>
+        <Pressable style={styles.container} onPress={Keyboard.dismiss}>
             <LogoTitle/>
         
             <View style={styles.form}>
@@ -35,7 +35,7 @@ export const RegisterScreen = () =>{
 
                     <View style={styles.options}>
 
-                        <Text style={styles.textOptions} onPress={login}>Ja tenho conta</Text>
+                        <Text style={styles.textOptions} onPress={navigation.login}>Ja tenho conta</Text>
                     
                         <TouchableOpacity style={styles.button}>
                             <Text style={styles.buttonText}>Criar</Text>
@@ -44,6 +44,6 @@ export const RegisterScreen = () =>{
                     </View>
                 </View>
             </View>
-        </View>
+        </Pressable>
     );
 };

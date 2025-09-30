@@ -9,20 +9,19 @@ export const styles = StyleSheet.create({
     },
 
     form:{
-        flex:1,
         backgroundColor:'#F7EFEFD9',
         borderTopStartRadius:50,
         borderTopEndRadius:50,
-        paddingHorizontal: 25,
+        paddingHorizontal: 20,
         paddingVertical: 35,
         width: '100%',
-        shadowColor: '#000',
+        shadowColor: '#000000',
         shadowOffset: { width: 0, height:4 },
         shadowOpacity: 5,
         shadowRadius: 20,
         elevation: 3,
         alignItems:"center",
-        gap:70,
+        justifyContent:"space-around",
     },
 
     title:{

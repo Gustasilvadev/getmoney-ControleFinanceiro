@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
         shadowRadius: 20,
         elevation: 3,
         alignItems:"center",
-        gap:70,
+        justifyContent:"space-around",
     },
 
     title:{
