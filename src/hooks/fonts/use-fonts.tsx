@@ -23,8 +23,6 @@ export const useAppFonts = () => {
     OpenSans_400Regular,
     OpenSans_600SemiBold,
     OpenSans_700Bold,
-    
-
   });
 
   return fontsLoaded;
