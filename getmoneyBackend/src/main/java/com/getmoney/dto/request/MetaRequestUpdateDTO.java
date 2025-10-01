@@ -1,8 +1,6 @@
 package com.getmoney.dto.request;
 
-import com.getmoney.enums.Status;
 import jakarta.validation.constraints.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

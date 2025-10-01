@@ -1,6 +1,5 @@
 package com.getmoney.dto.request;
 
-import com.getmoney.enums.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
