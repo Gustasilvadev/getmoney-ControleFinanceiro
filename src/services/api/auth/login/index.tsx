@@ -1,6 +1,6 @@
 import {api} from "../../index";
-import { LoginResponse } from "@/src/interfaces/response/loginResponse";
-import { LoginRequest } from "@/src/interfaces/request/loginRequest";
+import { LoginResponse } from "@/src/interfaces/auth/response";
+import { LoginRequest } from "@/src/interfaces/auth/request";
 
 export const loginService ={
     login: async (email: string, senha: string): Promise<LoginResponse> =>{

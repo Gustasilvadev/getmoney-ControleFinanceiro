@@ -1,5 +1,5 @@
 import { api } from "../../index";
-import { RegisterRequest } from "@/src/interfaces/request/registerRequest";
+import { RegisterRequest } from "@/src/interfaces/auth/request";
 
 
 export const registerService = {
