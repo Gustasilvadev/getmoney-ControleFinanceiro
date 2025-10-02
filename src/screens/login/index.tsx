@@ -15,7 +15,7 @@ export const LoginScreen = () => {
 
     const handleLogin = async () => {
         if (!email || !senha) {
-            Alert.alert('Atenção', 'Preencha email e senha');
+            Alert.alert('Atenção', 'Preencha email e/ou senha');
         return;
         }
 
@@ -23,7 +23,7 @@ export const LoginScreen = () => {
             const response = await loginService.login(email, senha);
             Alert.alert('Sucesso', `Bem-vindo ${response.usuario.nome}!`);
             // Navega para a tela principal após login
-            // navigation.home();
+            navigation.home();
 
         } catch (error: any) {
             alert(error.message || 'Erro no login');
