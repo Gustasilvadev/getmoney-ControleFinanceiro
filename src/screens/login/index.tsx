@@ -14,9 +14,14 @@ export const LoginScreen = () => {
 
 
     const handleLogin = async () => {
+        if (!email || !senha) {
+            Alert.alert('Atenção', 'Preencha email e senha');
+        return;
+        }
+
         try {
             const response = await loginService.login(email, senha);
-            Alert.alert('Sucesso', `Bem-vindo ${response.token}!`);
+            Alert.alert('Sucesso', `Bem-vindo ${response.usuario.nome}!`);
             // Navega para a tela principal após login
             // navigation.home();
 
@@ -26,7 +31,6 @@ export const LoginScreen = () => {
     };
 
     return(
-
 
         <Pressable style={styles.container} onPress={Keyboard.dismiss}>
             <LogoTitle/>

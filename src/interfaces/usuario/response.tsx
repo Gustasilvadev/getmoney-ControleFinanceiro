@@ -11,3 +11,11 @@ export interface UsuarioResponse {
   transacoes: TransacaoBasicaResponse[];
   metas: MetaBasicaResponse[];
 }
+
+export interface UsuarioLoginResponse {
+  id: number;
+  nome: string;
+  email: string;
+  dataCriacao: string;
+  status: Status;
+}
