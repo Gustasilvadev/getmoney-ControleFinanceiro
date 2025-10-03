@@ -1,3 +1,4 @@
+import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native"
 
 export const styles = StyleSheet.create({
@@ -11,7 +12,7 @@ export const styles = StyleSheet.create({
     },
     titulo:{
         fontSize:48,
-        fontFamily:"Montserrat_700Bold",
+        fontFamily:FONTS.montserrat.bold,
         color:'#FFF'
     },
 });

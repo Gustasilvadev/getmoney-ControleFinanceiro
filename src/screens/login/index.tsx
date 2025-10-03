@@ -4,6 +4,7 @@ import { LogoTitle } from "@/src/components/LogoTitle";
 import {styles} from "./style"
 import { useNavigation } from "@/src/constants/router";
 import { loginService } from "@/src/services/api/auth/login";
+import { useFormLogin } from '@/src/hooks/formLogin';
 
 
 export const LoginScreen = () => {
@@ -11,18 +12,14 @@ export const LoginScreen = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const { errors, validate, clearError } = useFormLogin();
 
 
     const handleLogin = async () => {
-        if (!email || !senha) {
-            Alert.alert('Atenção', 'Preencha email e/ou senha');
-        return;
-        }
+         if (!validate(email, senha)) return;
 
         try {
-            const response = await loginService.login(email, senha);
-            Alert.alert('Sucesso', `Bem-vindo ${response.usuario.nome}!`);
-            // Navega para a tela principal após login
+            await loginService.login(email, senha);
             navigation.home();
 
         } catch (error: any) {
@@ -41,21 +38,35 @@ export const LoginScreen = () => {
 
                 <View style={styles.formInput}>
 
-                    <TextInput style={styles.input}
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholderTextColor='#858587'
-                    keyboardType="email-address"
-                    autoCapitalize="none"></TextInput>
-
-                    <TextInput style={styles.input}
-                    placeholder="Senha"
-                    value={senha}
-                    onChangeText={setSenha}
-                    placeholderTextColor='#858587'
-                    keyboardType="default"
-                    secureTextEntry></TextInput>
+                    <View style={styles.inputContainer}>
+                        {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+                        <TextInput 
+                        style={[styles.input, errors.email && styles.inputError]}
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={(text) => {
+                                    setEmail(text);
+                                    clearError('email');
+                                }}
+                        placeholderTextColor='#858587'
+                        keyboardType="email-address"
+                        autoCapitalize="none"></TextInput>
+                    </View>
+                    
+                    <View style={styles.inputContainer}>
+                        {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
+                        <TextInput style={[styles.input, errors.senha && styles.inputError]}
+                        placeholder="Senha"
+                        value={senha}
+                        onChangeText={(text) => {
+                                    setSenha(text);
+                                    clearError('senha');
+                                }}
+                        placeholderTextColor='#858587'
+                        keyboardType="default"
+                        secureTextEntry></TextInput>
+                    </View>
+                    
 
                     <View style={styles.options}>
 
