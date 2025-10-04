@@ -3,7 +3,8 @@ import { LoginResponse } from "@/src/interfaces/auth/response";
 import { LoginRequest } from "@/src/interfaces/auth/request";
 import { AuthService } from "../../storage";
 
-export const loginService ={
+export const LoginService ={
+    
     login: async (email: string, senha: string): Promise<LoginResponse> =>{
         try{
             const credentials: LoginRequest = { email, senha };

@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
 
     },
     titulo:{
-        fontSize:48,
+        fontSize:44,
         fontFamily:FONTS.montserrat.bold,
         color:'#FFF'
     },

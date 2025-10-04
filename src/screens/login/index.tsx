@@ -3,7 +3,7 @@ import { View,Text, TextInput,TouchableOpacity,Keyboard, Pressable, Alert} from 
 import { LogoTitle } from "@/src/components/LogoTitle";
 import {styles} from "./style"
 import { useNavigation } from "@/src/constants/router";
-import { loginService } from "@/src/services/api/auth/login";
+import { LoginService } from "@/src/services/api/auth/login";
 import { useFormLogin } from '@/src/hooks/formLogin';
 
 
@@ -19,7 +19,7 @@ export const LoginScreen = () => {
          if (!validate(email, senha)) return;
 
         try {
-            await loginService.login(email, senha);
+            await LoginService.login(email, senha);
             navigation.home();
 
         } catch (error: any) {

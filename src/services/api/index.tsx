@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { AuthService } from './storage';
 
 export const api = axios.create({
   baseURL: 'http://192.168.0.2:8080/api',
@@ -10,24 +11,33 @@ export const api = axios.create({
 });
 
 
-api.interceptors.request.use(
-  (config) => {
-    console.log('Fazendo request para:', config.url);
-    return config;
-  },
-  (error) => {
-    console.error('Erro no request:', error);
-    return Promise.reject(error);
+const ENDPOINTS_PUBLICOS = [
+  '/autenticacao/autenticarUsuario',
+  '/autenticacao/registrarUsuario'
+];
+
+api.interceptors.request.use(async (config) => {
+  const isEndpointPublico = ENDPOINTS_PUBLICOS.some(endpoint => 
+    config.url?.includes(endpoint)
+  );
+
+  if (!isEndpointPublico) {
+    const token = await AuthService.getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
-);
+
+  return config;
+});
 
 api.interceptors.response.use(
-  (response) => {
-    console.log('Response recebido:', response.status);
-    return response;
-  },
-  (error) => {
-    console.error('Erro na response:', error.message);
-    return Promise.reject(error);
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      await AuthService.logout();
+      throw new Error('Sessão expirada');
+    }
+    throw error;
   }
 );
