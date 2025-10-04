@@ -36,20 +36,15 @@ public class UsuarioService {
     }
 
 
-    public List<UsuarioResponseDTO> listarUsuarios() {
-        List<Usuario> usuarios = usuarioRepository.listarUsuariosAtivos();
-        return usuarios.stream()
-                .map(usuario -> modelMapper.map(usuario, UsuarioResponseDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    public UsuarioResponseDTO listarPorUsuarioId(Integer usuarioId) {
-        Usuario usuario = usuarioRepository.findByUsuarioId(usuarioId);
-
-
+    /**
+     * Busca o usuario logado
+     * Lança uma exceção se o usuário não for encontrado.
+     */
+    public UsuarioResponseDTO listarUsuarioLogado(Integer usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         return modelMapper.map(usuario, UsuarioResponseDTO.class);
     }
-
 
     @Transactional
     public UsuarioResponseDTO editarPorUsuarioId(Integer usuarioId, UsuarioRequestDTO usuarioRequestDTO) {

@@ -10,11 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -30,11 +29,15 @@ public class UsuarioController {
     }
 
 
-
-    @GetMapping("/listar")
-    @Operation(summary="Listar usuários", description="Endpoint para listar todos os usuários")
-    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
-        return ResponseEntity.ok(usuarioService.listarUsuarios());
+    @GetMapping("/listarUsuarioLogado")
+    @Operation(summary = "Buscar usuário logado", description = "Endpoint para buscar dados do usuário logado atual")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioLogado(@AuthenticationPrincipal Usuario usuario) {
+        try {
+            UsuarioResponseDTO usuarioDTO = usuarioService.listarUsuarioLogado(usuario.getId());
+            return ResponseEntity.ok(usuarioDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
 
@@ -49,21 +52,6 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
 
-    }
-
-    /**
-     * Busca um usuário pelo ID
-     * Lança uma exceção se o usuário não for encontrado.
-     */
-    @GetMapping("/listarPorUsuarioId/{usuarioId}")
-    @Operation(summary = "Buscar usuário pelo ID", description = "Endpoint para obter um usuário pelo seu Id")
-    public ResponseEntity<UsuarioResponseDTO> listarPorUsuarioId(@PathVariable Integer usuarioId) {
-        try {
-            UsuarioResponseDTO usuario = usuarioService.listarPorUsuarioId(usuarioId);
-            return ResponseEntity.ok(usuario);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @PatchMapping("/alterarSenha")
