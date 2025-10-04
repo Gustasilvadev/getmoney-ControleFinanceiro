@@ -7,7 +7,7 @@ export interface EvolucaoMensalResponse{
     saldo:number,
 }
 
-export interface ProgressoMeta{
+export interface ProgressoMetaResponse{
     metaId:number,
     metaNome:string,
     valorAlvo:number,
@@ -16,7 +16,14 @@ export interface ProgressoMeta{
     status:Status,
 }
 
-export interface ResumoFinanceiro{
+export interface ValorTotalResponse{
+    categoriaId:number,
+    categoriaNome:string,
+    valorTotal:number,
+    usuarioId:number,
+}
+
+export interface ResumoFinanceiroResponse{
     receitas:number,
     despesas:number,
     lucro:number,

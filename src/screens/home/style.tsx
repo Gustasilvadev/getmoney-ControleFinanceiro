@@ -16,5 +16,17 @@ export const styles = StyleSheet.create({
     },
 
     cardTop:{
+        backgroundColor:'#1EB3AE',
+        margin:50,
+        borderRadius:10,
+        height:85,
+        alignItems:"center",
+        justifyContent:"center",
+    },
+
+    cardText:{
+        color:'#FFFFFF',
+        fontFamily:FONTS.montserrat.bold,
+        fontSize:16,
     },
 });

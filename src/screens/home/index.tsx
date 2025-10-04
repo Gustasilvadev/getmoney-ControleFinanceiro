@@ -1,31 +1,30 @@
-import { useEffect, useState } from "react";
 import { View,Text } from "react-native"
 import { styles } from "./style";
-import { UsuarioLoginResponse } from "@/src/interfaces/usuario/response";
-import { HomeService } from "@/src/services/api/home";
+import { UsuarioService } from "@/src/services/api/usuario";
+import { useApi } from "@/src/hooks/useApi";
+import { resumoService } from "@/src/services/api/resumo";
 
 
 export const HomeScreen = () =>{
 
-    const [usuario, setUsuario] = useState<UsuarioLoginResponse | null>(null);
-
-    useEffect(() => {
-        const carregarUsuario = async () => {
-            try {
-                const usuarioData = await HomeService.listarUsuario();
-                setUsuario(usuarioData);
-            
-            } catch (error) {
-                console.error('Erro ao carregar usuário:', error);
-        }
-    };
-
-    carregarUsuario();
-  }, []);
+    const { data: usuario, loading:carregandoUsuario  } = useApi(UsuarioService.listarUsuarioLogado);
+    const { data: resumo, loading:carregandoresumo  } = useApi(resumoService.listarLucro);
 
     return(
-        <View style={styles.container}>
-            <Text style={styles.text}>Bem vindo, {usuario?.nome || 'Carregando...'}! </Text>
+        <View>
+
+            <View style={styles.container}>
+                <Text style={styles.text}>Bem vindo, {usuario?.nome || carregandoUsuario}! </Text>
+            </View>
+
+            <View style={styles.cardTop}>
+                <Text style={styles.cardText}>Seu Saldo</Text>
+                <Text style={styles.cardText}>R${resumo?.lucro || 0}</Text>
+            </View>
+
         </View>
+            
+
+            
     );
 };

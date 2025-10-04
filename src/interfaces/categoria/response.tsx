@@ -28,10 +28,3 @@ export interface CategoriaTransacaoResponse{
     usuarioId:number,
     transacoes: TransacaoPorCategoriaResponse[];
 }
-
-export interface CategoriaValorTotalResponse{
-    categoriaId:number,
-    categoriaNome:string,
-    valorTotal:number,
-    usuarioId:number,
-}
