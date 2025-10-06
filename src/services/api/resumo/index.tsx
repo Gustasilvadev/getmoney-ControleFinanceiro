@@ -2,7 +2,7 @@ import { api } from "../index";
 import { ProgressoMetaResponse, ResumoFinanceiroResponse, ValorTotalResponse } from "@/src/interfaces/resumo/response";
 
 
-export const resumoService = {
+export const ResumoService = {
 
     listarProgressoDaMeta: async(): Promise<ProgressoMetaResponse> =>{
         try{
