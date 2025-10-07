@@ -2,7 +2,8 @@ import axios from 'axios';
 import { AuthService } from './storage';
 
 export const api = axios.create({
-  baseURL: 'http://10.136.36.128:8080/api',
+  baseURL: 'http://192.168.0.2:8080/api',
+  // baseURL: 'http://10.136.36.128:8080/api',
   timeout: 10000,
 
   headers:{

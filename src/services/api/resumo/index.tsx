@@ -4,9 +4,9 @@ import { ProgressoMetaResponse, ResumoFinanceiroResponse, ValorTotalResponse } f
 
 export const ResumoService = {
 
-    listarProgressoDaMeta: async(): Promise<ProgressoMetaResponse> =>{
+    listarProgressoDaMeta: async(): Promise<ProgressoMetaResponse[]> =>{
         try{
-            const response = await api.get<ProgressoMetaResponse>('/estatistica/progressoDaMeta');
+            const response = await api.get<ProgressoMetaResponse[]>('/estatistica/progressoDaMeta');
             return response.data;
         }catch (error){
             throw error;        
