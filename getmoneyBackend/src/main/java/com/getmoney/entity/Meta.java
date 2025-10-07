@@ -45,7 +45,7 @@ public class Meta {
     public void prePersist() {
         this.data = LocalDate.now();
         if (this.status == null) {
-            this.status = status.ATIVO;
+            this.status = Status.ATIVO;
         }
     }
 

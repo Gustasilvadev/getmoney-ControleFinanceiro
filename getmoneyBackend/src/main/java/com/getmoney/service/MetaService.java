@@ -103,8 +103,6 @@ public class MetaService {
         Meta meta = new Meta();
         meta.setNome(metaRequestDTO.getNome());
         meta.setValorAlvo(metaRequestDTO.getValorAlvo());
-        Status status = Status.fromCodigo(metaRequestDTO.getStatus());
-        meta.setStatus(status);
         meta.setData(metaRequestDTO.getData());
 
         Usuario usuario = usuarioRepository.findById(usuarioId)

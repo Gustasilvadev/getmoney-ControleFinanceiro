@@ -15,9 +15,6 @@ public class MetaRequestDTO {
     @Positive(message = "O valor alvo deve ser maior que zero")
     private BigDecimal valorAlvo;
 
-    @NotNull(message = "O status é obrigatório")
-    private Integer status;
-
     @NotNull(message = "A data é obrigatória")
     @FutureOrPresent(message = "A data deve ser hoje ou uma data futura")
     private LocalDate data;
@@ -26,10 +23,9 @@ public class MetaRequestDTO {
     public MetaRequestDTO() {
     }
 
-    public MetaRequestDTO(String nome, BigDecimal valorAlvo, Integer status, LocalDate data) {
+    public MetaRequestDTO(String nome, BigDecimal valorAlvo, LocalDate data) {
         this.nome = nome;
         this.valorAlvo = valorAlvo;
-        this.status = status;
         this.data = data;
     }
 
@@ -47,14 +43,6 @@ public class MetaRequestDTO {
 
     public void setValorAlvo(BigDecimal valorAlvo) {
         this.valorAlvo = valorAlvo;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public LocalDate getData() {
