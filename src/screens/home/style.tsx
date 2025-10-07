@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
 
     subtitle:{
         fontFamily:FONTS.montserrat.bold,
-        fontSize:14,
+        fontSize:18,
         color:'#535652',
         marginLeft:20,
     },
@@ -51,9 +51,9 @@ export const styles = StyleSheet.create({
 
     cardTitleMeta:{
         fontFamily:FONTS.montserrat.bold,
+        fontSize:15,
         color:'#535652',
         marginLeft:10,
-
     },
 
     progressBar: {
@@ -62,6 +62,7 @@ export const styles = StyleSheet.create({
         borderRadius: 3,
         margin: 10,
     },
+
     progressFill: {
         height: '100%',
         backgroundColor: '#136F6C',

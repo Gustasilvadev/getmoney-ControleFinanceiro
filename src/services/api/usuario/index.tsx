@@ -1,6 +1,6 @@
 import { api } from "../index";
 import { UsuarioLoginResponse } from "@/src/interfaces/usuario/response";
-import { AlterarSenhaRequest } from "@/src/interfaces/usuario/request";
+import { AlterarSenhaRequest, UsuarioRequest } from "@/src/interfaces/usuario/request";
 
 export const UsuarioService ={
 
@@ -23,6 +23,16 @@ export const UsuarioService ={
         }catch(error){
             throw error;
 
+        }
+    },
+
+    editarUsuarioPorId: async(usuarioId:number,nome:string, email:string): Promise<UsuarioRequest> =>{
+        try{
+            const dados: UsuarioRequest = { nome, email };
+            const response = await api.put<UsuarioRequest>(`/usuario/editarPorUsuarioId/${usuarioId}`, dados);
+            return response.data;
+        }catch(error){
+            throw error;
         }
     }
 
