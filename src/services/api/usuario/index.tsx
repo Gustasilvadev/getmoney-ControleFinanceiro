@@ -26,7 +26,7 @@ export const UsuarioService ={
         }
     },
 
-    editarUsuarioPorId: async(usuarioId:number,nome:string, email:string): Promise<UsuarioRequest> =>{
+    editarPorUsuarioId: async(usuarioId:number,nome:string, email:string): Promise<UsuarioRequest> =>{
         try{
             const dados: UsuarioRequest = { nome, email };
             const response = await api.put<UsuarioRequest>(`/usuario/editarPorUsuarioId/${usuarioId}`, dados);

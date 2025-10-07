@@ -1,8 +1,8 @@
 import { api } from "../index";
-import { ProgressoMetaResponse, ResumoFinanceiroResponse, ValorTotalResponse } from "@/src/interfaces/resumo/response";
+import { EvolucaoMensalResponse, ProgressoMetaResponse, ResumoFinanceiroResponse, ValorTotalResponse } from "@/src/interfaces/estatistica/response";
 
 
-export const ResumoService = {
+export const EstatisticaService = {
 
     listarProgressoDaMeta: async(): Promise<ProgressoMetaResponse[]> =>{
         try{
@@ -28,6 +28,24 @@ export const ResumoService = {
             const response = await api.get<ResumoFinanceiroResponse>('/estatistica/listarLucro');
             return response.data;
         } catch(error){
+            throw error;
+        }
+    },
+
+    listarGastosPorCategoria: async(): Promise<ValorTotalResponse> =>{
+        try{
+            const response = await api.get<ValorTotalResponse>('/estatistica/analisePorCategoria');
+            return response.data;
+        }catch(error){
+            throw error;
+        }
+    },
+
+    listarAnaliseEvolucaoMensal: async(): Promise<EvolucaoMensalResponse> =>{
+        try{
+            const response = await api.get<EvolucaoMensalResponse>('/estatistica/analiseEvolucaoMensal');
+            return response.data;
+        }catch(error){
             throw error;
         }
     }
