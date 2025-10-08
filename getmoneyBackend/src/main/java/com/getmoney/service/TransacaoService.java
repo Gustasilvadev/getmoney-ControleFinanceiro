@@ -2,6 +2,7 @@ package com.getmoney.service;
 
 import com.getmoney.dto.request.TransacaoRequestDTO;
 import com.getmoney.dto.request.TransacaoUpdateRequestDTO;
+import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
 import com.getmoney.dto.response.MetaBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoResponseDTO;
@@ -9,14 +10,12 @@ import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Meta;
 import com.getmoney.entity.Transacao;
 import com.getmoney.entity.Usuario;
-import com.getmoney.enums.Status;
 import com.getmoney.repository.CategoriaRepository;
 import com.getmoney.repository.MetaRepository;
 import com.getmoney.repository.TransacaoRepository;
 import com.getmoney.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,11 +84,18 @@ public class TransacaoService {
 
         TransacaoResponseDTO dto = modelMapper.map(transacao, TransacaoResponseDTO.class);
 
-        dto.setMetasId(transacao.getMetas() != null ?
+        dto.setMetas(transacao.getMetas() != null ?
                 transacao.getMetas().stream()
                         .map(meta -> modelMapper.map(meta, MetaBasicaResponseDTO.class))
                         .collect(Collectors.toList()) :
                 new ArrayList<>());
+
+        if (transacao.getCategoria() != null) {
+            CategoriaBasicaResponseDTO categoriaDTO = modelMapper.map(transacao.getCategoria(), CategoriaBasicaResponseDTO.class);
+            dto.setCategorias(List.of(categoriaDTO));
+        } else {
+            dto.setCategorias(new ArrayList<>());
+        }
 
         return dto;
     }
@@ -125,9 +131,9 @@ public class TransacaoService {
         }
         transacao.setCategoria(categoria);
 
-        if (transacaoRequestDTO.getMetasId() != null && !transacaoRequestDTO.getMetasId().isEmpty()) {
+        if (transacaoRequestDTO.getMetaId() != null && !transacaoRequestDTO.getMetaId().isEmpty()) {
 
-            List<Meta> metas = metaRepository.findByIdInAndUsuarioId(transacaoRequestDTO.getMetasId(), usuarioId);
+            List<Meta> metas = metaRepository.findByIdInAndUsuarioId(transacaoRequestDTO.getMetaId(), usuarioId);
             transacao.setMetas(metas);
         }
 
@@ -166,12 +172,12 @@ public class TransacaoService {
             transacaoExistente.setCategoria(categoria);
         }
 
-        if (transacaoUpdateRequestDTO.getMetasId() != null) {
-            if (transacaoUpdateRequestDTO.getMetasId().isEmpty()) {
+        if (transacaoUpdateRequestDTO.getMetaId() != null) {
+            if (transacaoUpdateRequestDTO.getMetaId().isEmpty()) {
                 transacaoExistente.setMetas(new ArrayList<>());
             } else {
 
-                List<Meta> metas = metaRepository.findByIdInAndUsuarioId(transacaoUpdateRequestDTO.getMetasId(), usuarioId);
+                List<Meta> metas = metaRepository.findByIdInAndUsuarioId(transacaoUpdateRequestDTO.getMetaId(), usuarioId);
                 transacaoExistente.setMetas(metas);
             }
         }

@@ -27,7 +27,7 @@ public class TransacaoRequestDTO {
     @NotNull(message = "O ID da categoria é obrigatório")
     private Integer categoriaId;
 
-    private List<Integer> metasId = new ArrayList<>();
+    private List<Integer> metaId = new ArrayList<>();
 
     public TransacaoRequestDTO() {}
 
@@ -36,7 +36,7 @@ public class TransacaoRequestDTO {
         this.descricao = descricao;
         this.data = data;
         this.categoriaId = categoriaId;
-        this.metasId = new ArrayList<>();
+        this.metaId = new ArrayList<>();
     }
 
 
@@ -72,11 +72,11 @@ public class TransacaoRequestDTO {
         this.data = data;
     }
 
-    public List<Integer> getMetasId() {
-        return metasId;
+    public List<Integer> getMetaId() {
+        return metaId;
     }
 
-    public void setMetasId(List<Integer> metasId) {
-        this.metasId = metasId;
+    public void setMetaId(List<Integer> metaId) {
+        this.metaId = metaId;
     }
 }

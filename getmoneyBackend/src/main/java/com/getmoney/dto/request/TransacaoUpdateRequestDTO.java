@@ -28,18 +28,18 @@ public class TransacaoUpdateRequestDTO {
     @NotNull(message = "O ID da categoria é obrigatório")
     private Integer categoriaId;
 
-    private List<Integer> metasId;
+    private List<Integer> metaId;
 
     public TransacaoUpdateRequestDTO() {}
 
 
-    public TransacaoUpdateRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer categoriaId, List<Integer> metasId) {
+    public TransacaoUpdateRequestDTO(BigDecimal valor, String descricao, LocalDate data, Integer status, Integer categoriaId, List<Integer> metaId) {
         this.valor = valor;
         this.descricao = descricao;
         this.data = data;
         this.status = status;
         this.categoriaId = categoriaId;
-        this.metasId = metasId;
+        this.metaId = metaId;
     }
 
     public BigDecimal getValor() {
@@ -83,11 +83,11 @@ public class TransacaoUpdateRequestDTO {
         this.categoriaId = categoriaId;
     }
 
-    public List<Integer> getMetasId() {
-        return metasId;
+    public List<Integer> getMetaId() {
+        return metaId;
     }
 
-    public void setMetasId(List<Integer> metasId) {
-        this.metasId = metasId;
+    public void setMetaId(List<Integer> metaId) {
+        this.metaId = metaId;
     }
 }

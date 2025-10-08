@@ -18,11 +18,11 @@ public class TransacaoResponseDTO {
     private Status status;
     private Integer usuarioId;
     private List<CategoriaBasicaResponseDTO> categorias;
-    private List<MetaBasicaResponseDTO> metasId;
+    private List<MetaBasicaResponseDTO> metas;
 
     public TransacaoResponseDTO() {
         this.categorias = new ArrayList<>();
-        this.metasId = new ArrayList<>();
+        this.metas = new ArrayList<>();
     }
 
     public TransacaoResponseDTO(Transacao transacao) {
@@ -33,14 +33,12 @@ public class TransacaoResponseDTO {
         this.status = transacao.getStatus();
         this.usuarioId = transacao.getUsuario().getId();
 
-        // Para categorias - converte a categoria única em uma lista
         this.categorias = new ArrayList<>();
         if (transacao.getCategoria() != null) {
             this.categorias.add(new CategoriaBasicaResponseDTO(transacao.getCategoria()));
         }
 
-        // Para metas - já é uma lista
-        this.metasId = transacao.getMetas() != null ?
+        this.metas = transacao.getMetas() != null ?
                 transacao.getMetas().stream()
                         .map(MetaBasicaResponseDTO::new)
                         .collect(Collectors.toList()) :
@@ -104,13 +102,11 @@ public class TransacaoResponseDTO {
         this.categorias = categorias;
     }
 
-    public List<MetaBasicaResponseDTO> getMetasId() {
-        return metasId;
+    public List<MetaBasicaResponseDTO> getMetas() {
+        return metas;
     }
 
-    public void setMetasId(List<MetaBasicaResponseDTO> metasId) {
-        this.metasId = metasId;
+    public void setMetas(List<MetaBasicaResponseDTO> metas) {
+        this.metas = metas;
     }
-
-
 }
