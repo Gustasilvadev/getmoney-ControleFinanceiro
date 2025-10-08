@@ -2,10 +2,7 @@ package com.getmoney.controller;
 
 import com.getmoney.dto.request.MetaRequestDTO;
 import com.getmoney.dto.request.MetaRequestUpdateDTO;
-import com.getmoney.dto.request.TransacaoRequestDTO;
-import com.getmoney.dto.request.TransacaoUpdateRequestDTO;
 import com.getmoney.dto.response.MetaResponseDTO;
-import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Usuario;
 import com.getmoney.service.MetaService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -40,29 +40,22 @@ public class TransacaoController {
         return ResponseEntity.ok(transacaoService.listarTransacoesAtivas(usuario.getId()));
     }
 
-    // Endpoint: /api/transacao/{id}/categoria
     @GetMapping("/{transacaoId}/categoria")
-    @Operation(summary = "Obter categoria de uma transação",
-            description = "Endpoint para recuperar a categoria associada a uma transação específica do usuário autenticado")
-    public ResponseEntity<CategoriaBasicaResponseDTO> getCategoriaDaTransacao(
+    @Operation(summary = "Obter categorias de uma transação",
+            description = "Endpoint para recuperar as categorias associadas a uma transação específica do usuário autenticado")
+    public ResponseEntity<List<CategoriaBasicaResponseDTO>> getCategoriasDaTransacao(
             @PathVariable Integer transacaoId,
             @AuthenticationPrincipal Usuario usuario) {
 
         TransacaoResponseDTO transacao = transacaoService.listarPorTransacaoId(transacaoId, usuario.getId());
-        if (transacao == null || transacao.getCategoriaId() == null) {
+        if (transacao == null || transacao.getCategorias() == null || transacao.getCategorias().isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        CategoriaBasicaResponseDTO categoria = categoriaService.listarTransacaoCategoriaId(transacao.getCategoriaId(), usuario.getId());
-        if (categoria == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(categoria);
+        return ResponseEntity.ok(transacao.getCategorias());
     }
 
 
-    // Endpoint: /api/transacao/{id}/categoria/{categoriaId}
     @GetMapping("/{transacaoId}/categoria/{categoriaId}")
     @Operation(summary = "Buscar transação por ID e categoria por ID", description = "Retorna os dados de uma transação específica se ela pertencer à categoria informada")
     public ResponseEntity<TransacaoBasicaResponseDTO> getTransacaoPorCategoria(
@@ -77,7 +70,6 @@ public class TransacaoController {
         return ResponseEntity.ok(transacao);
     }
 
-    // Endpoint: /api/meta/{id}/transacao
     @GetMapping("/meta/{metaId}/transacao")
     @Operation(summary = "Listar transações da meta", description = "Retorna todas as transações associadas a uma meta")
     public ResponseEntity<List<TransacaoBasicaResponseDTO>> getTransacoesPorMeta(@PathVariable Integer metaId,
@@ -90,7 +82,7 @@ public class TransacaoController {
         return ResponseEntity.ok(transacoes);
     }
 
-    // Endpoint: /api/meta/{id}/transacao/{transacaoId}
+
     @GetMapping("/meta/{metaId}/transacao/{transacaoId}")
     @Operation(summary = "Obter transação filtrada por meta", description = "Retorna os dados de uma transação específica se ela pertencer à meta informada")
     public ResponseEntity<TransacaoResponseDTO> getTransacaoPorMeta(@PathVariable Integer metaId, @PathVariable Integer transacaoId,

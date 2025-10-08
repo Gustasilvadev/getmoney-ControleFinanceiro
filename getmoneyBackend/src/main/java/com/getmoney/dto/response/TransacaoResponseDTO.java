@@ -16,11 +16,14 @@ public class TransacaoResponseDTO {
     private String descricao;
     private LocalDate data;
     private Status status;
-
     private Integer usuarioId;
-    private Integer categoriaId;
+    private List<CategoriaBasicaResponseDTO> categorias;
     private List<MetaBasicaResponseDTO> metasId;
 
+    public TransacaoResponseDTO() {
+        this.categorias = new ArrayList<>();
+        this.metasId = new ArrayList<>();
+    }
 
     public TransacaoResponseDTO(Transacao transacao) {
         this.id = transacao.getId();
@@ -29,12 +32,19 @@ public class TransacaoResponseDTO {
         this.data = transacao.getData();
         this.status = transacao.getStatus();
         this.usuarioId = transacao.getUsuario().getId();
-        this.categoriaId = transacao.getCategoria().getId();
-        this.metasId = metasId != null ? metasId : new ArrayList<>();
-    }
 
-    public TransacaoResponseDTO() {
-        this.metasId = new ArrayList<>();
+        // Para categorias - converte a categoria única em uma lista
+        this.categorias = new ArrayList<>();
+        if (transacao.getCategoria() != null) {
+            this.categorias.add(new CategoriaBasicaResponseDTO(transacao.getCategoria()));
+        }
+
+        // Para metas - já é uma lista
+        this.metasId = transacao.getMetas() != null ?
+                transacao.getMetas().stream()
+                        .map(MetaBasicaResponseDTO::new)
+                        .collect(Collectors.toList()) :
+                new ArrayList<>();
     }
 
 
@@ -86,12 +96,12 @@ public class TransacaoResponseDTO {
         this.usuarioId = usuarioId;
     }
 
-    public Integer getCategoriaId() {
-        return categoriaId;
+    public List<CategoriaBasicaResponseDTO> getCategorias() {
+        return categorias;
     }
 
-    public void setCategoriaId(Integer categoriaId) {
-        this.categoriaId = categoriaId;
+    public void setCategorias(List<CategoriaBasicaResponseDTO> categorias) {
+        this.categorias = categorias;
     }
 
     public List<MetaBasicaResponseDTO> getMetasId() {
@@ -101,4 +111,6 @@ public class TransacaoResponseDTO {
     public void setMetasId(List<MetaBasicaResponseDTO> metasId) {
         this.metasId = metasId;
     }
+
+
 }

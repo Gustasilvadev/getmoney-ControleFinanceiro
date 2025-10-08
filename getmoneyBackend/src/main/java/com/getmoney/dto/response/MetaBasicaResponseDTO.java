@@ -1,5 +1,7 @@
 package com.getmoney.dto.response;
 
+import com.getmoney.entity.Meta;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -12,13 +14,19 @@ public class MetaBasicaResponseDTO {
     public MetaBasicaResponseDTO() {
     }
 
+    public MetaBasicaResponseDTO(Meta meta) {
+        this.id = meta.getId();
+        this.nome = meta.getNome();
+        this.valorAlvo = meta.getValorAlvo();
+        this.data = meta.getData();
+    }
+
     public MetaBasicaResponseDTO(Integer id, String nome, BigDecimal valorAlvo, LocalDate data) {
         this.id = id;
         this.nome = nome;
         this.valorAlvo = valorAlvo;
         this.data = data;
     }
-
 
     public Integer getId() {
         return id;

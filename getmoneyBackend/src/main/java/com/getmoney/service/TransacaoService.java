@@ -47,18 +47,7 @@ public class TransacaoService {
         List<Transacao> transacoes = transacaoRepository.listarTransacoesAtivas(usuarioId);
 
         return transacoes.stream()
-                .map(transacao -> {
-                    TransacaoResponseDTO dto = modelMapper.map(transacao, TransacaoResponseDTO.class);
-
-                    // Mapear as metas igual você fez no listarPorTransacaoId
-                    dto.setMetasId(transacao.getMetas() != null ?
-                            transacao.getMetas().stream()
-                                    .map(meta -> modelMapper.map(meta, MetaBasicaResponseDTO.class))
-                                    .collect(Collectors.toList()) :
-                            new ArrayList<>());
-
-                    return dto;
-                })
+                .map(transacao -> new TransacaoResponseDTO(transacao))
                 .collect(Collectors.toList());
     }
 
@@ -111,15 +100,7 @@ public class TransacaoService {
         if (transacao == null) {
             throw new RuntimeException("Transacao não encontrada com ID: " + transacaoId);
         }
-
-        TransacaoResponseDTO dto = modelMapper.map(transacao, TransacaoResponseDTO.class);
-        dto.setMetasId(transacao.getMetas() != null ?
-                transacao.getMetas().stream()
-                        .map(meta -> modelMapper.map(meta, MetaBasicaResponseDTO.class))
-                        .collect(Collectors.toList()) :
-                new ArrayList<>());
-
-        return dto;
+        return new TransacaoResponseDTO(transacao);
     }
 
 
