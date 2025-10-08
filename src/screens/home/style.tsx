@@ -2,6 +2,11 @@ import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native"
 
 export const styles = StyleSheet.create({
+    scrollContainer:{
+        flexGrow:1,
+        paddingBottom:20,
+    },
+
     container:{
         height:150,
         backgroundColor:'#009490',

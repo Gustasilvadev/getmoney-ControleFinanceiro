@@ -1,22 +1,22 @@
 import { TransacaoRequest } from "@/src/interfaces/transacao/request";
 import { api } from "../index";
-import { TransacaoBasicaResponse, TransacaoCategoriaMetaResponse, TransacaoResponse } from "@/src/interfaces/transacao/response";
+import { TransacaoResponse } from "@/src/interfaces/transacao/response";
 
 
 export const TransacaoService ={
 
-    listarTransacao: async(): Promise<TransacaoBasicaResponse[]> =>{
+    listarTransacao: async(): Promise<TransacaoResponse[]> =>{
         try{
-            const response = await api.get<TransacaoBasicaResponse[]>('/transacao/listar');
+            const response = await api.get<TransacaoResponse[]>('/transacao/listar');
             return response.data;
         }catch(error){
             throw error;
         }
     },
 
-    listarPorTransacaoId: async(transacaoId:number): Promise<TransacaoCategoriaMetaResponse> =>{
+    listarPorTransacaoId: async(transacaoId:number): Promise<TransacaoResponse> =>{
         try{
-            const response = await api.get<TransacaoCategoriaMetaResponse>(`/transacao/listarPorTransacaoId/${transacaoId}`);
+            const response = await api.get<TransacaoResponse>(`/transacao/listarPorTransacaoId/${transacaoId}`);
             return response.data;
         }catch(error){
             throw error;
