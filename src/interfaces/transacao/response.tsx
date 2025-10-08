@@ -1,25 +1,26 @@
 import { Status } from "@/src/enums/status";
 import { MetaBasicaResponse } from "../meta/response";
+import { CategoriaTipo } from "@/src/enums/categoriaTipo";
 
 export interface TransacaoResponse{
-    id: number;
-    valor: number;
-    descricao: string;
-    data: string;
-    status: Status;
-    usuarioId: number;
-    categoriaId: number;
-    metasId: MetaBasicaResponse[];
+    id: number,
+    valor: number,
+    descricao: string,
+    data: string,
+    status: Status,
+    usuarioId: number,
+    categoriaId: number,
+    metasId: MetaBasicaResponse[],
 }
 
 export interface TransacaoBasicaResponse{
-    id: number;
-    valor: number;
-    descricao: string;
-    data: string;
+    id: number,
+    valor: number,
+    descricao: string,
+    data: string,
     categoriaId:number,
     categoriaNome:string,
-    categoriaTipo:string,
+    categoriaTipo:CategoriaTipo,
 }
 
 export interface TransacaoPorCategoriaResponse{
@@ -31,3 +32,7 @@ export interface TransacaoPorCategoriaResponse{
     usuarioId:number,
 }
 
+export interface TransacaoCategoriaMetaResponse{
+    transacoes:TransacaoBasicaResponse,
+    metas:MetaBasicaResponse,
+}
