@@ -17,11 +17,10 @@ public class TransacaoResponseDTO {
     private LocalDate data;
     private Status status;
     private Integer usuarioId;
-    private List<CategoriaBasicaResponseDTO> categorias;
+    private CategoriaBasicaResponseDTO categoria;
     private List<MetaBasicaResponseDTO> metas;
 
     public TransacaoResponseDTO() {
-        this.categorias = new ArrayList<>();
         this.metas = new ArrayList<>();
     }
 
@@ -33,10 +32,9 @@ public class TransacaoResponseDTO {
         this.status = transacao.getStatus();
         this.usuarioId = transacao.getUsuario().getId();
 
-        this.categorias = new ArrayList<>();
-        if (transacao.getCategoria() != null) {
-            this.categorias.add(new CategoriaBasicaResponseDTO(transacao.getCategoria()));
-        }
+        this.categoria = transacao.getCategoria() != null
+                ? new CategoriaBasicaResponseDTO(transacao.getCategoria())
+                : null;
 
         this.metas = transacao.getMetas() != null ?
                 transacao.getMetas().stream()
@@ -94,12 +92,12 @@ public class TransacaoResponseDTO {
         this.usuarioId = usuarioId;
     }
 
-    public List<CategoriaBasicaResponseDTO> getCategorias() {
-        return categorias;
+    public CategoriaBasicaResponseDTO getCategoria() {
+        return categoria;
     }
 
-    public void setCategorias(List<CategoriaBasicaResponseDTO> categorias) {
-        this.categorias = categorias;
+    public void setCategoria(CategoriaBasicaResponseDTO categoria) {
+        this.categoria = categoria;
     }
 
     public List<MetaBasicaResponseDTO> getMetas() {

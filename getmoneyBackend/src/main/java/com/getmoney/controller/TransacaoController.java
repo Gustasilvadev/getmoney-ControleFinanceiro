@@ -43,16 +43,17 @@ public class TransacaoController {
     @GetMapping("/{transacaoId}/categoria")
     @Operation(summary = "Obter categorias de uma transação",
             description = "Endpoint para recuperar as categorias associadas a uma transação específica do usuário autenticado")
-    public ResponseEntity<List<CategoriaBasicaResponseDTO>> getCategoriasDaTransacao(
+    public ResponseEntity<CategoriaBasicaResponseDTO> getCategoriasDaTransacao(
             @PathVariable Integer transacaoId,
             @AuthenticationPrincipal Usuario usuario) {
 
         TransacaoResponseDTO transacao = transacaoService.listarPorTransacaoId(transacaoId, usuario.getId());
-        if (transacao == null || transacao.getCategorias() == null || transacao.getCategorias().isEmpty()) {
+
+        if (transacao == null || transacao.getCategoria() == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(transacao.getCategorias());
+        return ResponseEntity.ok(transacao.getCategoria());
     }
 
 

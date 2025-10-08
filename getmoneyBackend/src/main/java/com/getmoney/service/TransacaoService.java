@@ -82,22 +82,7 @@ public class TransacaoService {
             throw new EntityNotFoundException("Transação não encontrada para esta meta");
         }
 
-        TransacaoResponseDTO dto = modelMapper.map(transacao, TransacaoResponseDTO.class);
-
-        dto.setMetas(transacao.getMetas() != null ?
-                transacao.getMetas().stream()
-                        .map(meta -> modelMapper.map(meta, MetaBasicaResponseDTO.class))
-                        .collect(Collectors.toList()) :
-                new ArrayList<>());
-
-        if (transacao.getCategoria() != null) {
-            CategoriaBasicaResponseDTO categoriaDTO = modelMapper.map(transacao.getCategoria(), CategoriaBasicaResponseDTO.class);
-            dto.setCategorias(List.of(categoriaDTO));
-        } else {
-            dto.setCategorias(new ArrayList<>());
-        }
-
-        return dto;
+        return new TransacaoResponseDTO(transacao);
     }
 
 
