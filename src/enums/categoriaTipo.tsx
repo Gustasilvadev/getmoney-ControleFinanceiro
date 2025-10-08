@@ -1,4 +1,4 @@
-export enum CategoriaTipo{
-    DESPESA = 0,
-    RECEITA = 1,
+export enum CategoriaTipo {
+    DESPESA = "DESPESA",
+    RECEITA = "RECEITA"
 }

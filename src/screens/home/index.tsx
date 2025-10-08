@@ -6,12 +6,14 @@ import { FlatList, ScrollView, Text, View } from "react-native";
 import { styles } from "./style";
 import { TransacaoService } from "@/src/services/api/transacao";
 import { TransacaoResponse } from "@/src/interfaces/transacao/response";
+import { CategoriaTipo } from "@/src/enums/categoriaTipo";
 
 export const HomeScreen = () => {
   const { data: usuario, loading: carregandoUsuario } = useApi(UsuarioService.listarUsuarioLogado);
   const { data: resumo, loading: carregandoresumo } = useApi(EstatisticaService.listarLucro);
   const { data: progressoDaMeta = [], loading: carregandoProgresso } = useApi<ProgressoMetaResponse[]>(EstatisticaService.listarProgressoDaMeta);
-  const { data:transacoes = [], loading:carregandoTransacoes} = useApi<TransacaoResponse[]>(TransacaoService.listarTransacao);
+  const { data: transacoes, loading: carregandoTransacoes } = useApi<TransacaoResponse[]>(TransacaoService.listarTransacao);
+
 
   return (
     
@@ -59,49 +61,76 @@ export const HomeScreen = () => {
                     </Text>
 
                   </View>
+
                 </View>
               </View>
             )}
             ListEmptyComponent={
-              <Text style={styles.emptyTextMeta}>Nenhuma meta cadastrada</Text>
+              <Text style={styles.emptyText}>Nenhuma meta cadastrada</Text>
             }
             scrollEnabled={false}
-
           />
 
           <Text style={styles.subtitle}>Transações recentes</Text>
-            <FlatList
-            data={transacoes}
+
+          {!carregandoTransacoes && transacoes && transacoes.length > 0 ? (
+          <FlatList
+            data={transacoes.slice(-4)}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
+          
+              <View style={styles.transacaoContainer}>
 
-              <View>
-                <Text></Text>
+                <View style={styles.transacaoCard}>
+
+                  <View style={styles.contentLeft}>
+
+                      <View style={styles.descricaoLinha}>
+                        <Text style={styles.descricao}>{item.descricao}</Text>
+                        <Text style={styles.data}>{item.data}</Text>
+                      </View>
+
+                    {item.categoria && (
+                      <Text style={styles.categoriaNome}>{item.categoria.nome}</Text>
+                    )}
+
+                    {item.metas && item.metas.length > 0 && (
+                      <View>
+                        {item.metas.map(meta => (
+                          <Text key={meta.id} style={styles.metaNome}>
+                            Meta: {meta.nome}
+                          </Text>
+                        ))}
+                      </View>
+                    )}
+
+                  </View>
+
+                  <View style={styles.contentRight}>
+
+                    <Text style={[styles.valor,
+                      item.categoria?.tipo === CategoriaTipo.RECEITA ? styles.valorReceita : 
+                      item.categoria?.tipo === CategoriaTipo.DESPESA ? styles.valorDespesa : 
+                      styles.valorNeutro
+                    ]}>
+                      R${item.valor.toFixed(2)}
+                    </Text>
+
+                  </View>
+                </View>
               </View>
-              // <View style={styles.}>
-              //   
-
-              //   <View style={styles.}>
-
-              //     <View style={styles.}>
-
-              //       <Text style={styles.}>
-              //         R${item.transacoes.valor.toFixed(2)}
-                     
-              //       </Text>
-
-              //     </View>
-              //   </View>
-              // </View>
             )}
             ListEmptyComponent={
-              <Text style={styles.emptyTextMeta}>Nenhuma transação cadastrada</Text>
+              <Text style={styles.emptyText}>Nenhuma transação cadastrada</Text>
             }
             scrollEnabled={false}
-
           />
-
-
+        ) : carregandoTransacoes ? (
+          <Text>Carregando...</Text>
+        ) : (
+          <Text style={styles.emptyText}>Nenhuma transação cadastrada</Text>
+        )}
+          
         </View>
       </ScrollView>
   );

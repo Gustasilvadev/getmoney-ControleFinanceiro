@@ -48,10 +48,18 @@ export const styles = StyleSheet.create({
     cardMeta:{
         backgroundColor:'#FFFFFF',
         margin:20,
-        borderRadius:10,
+        borderRadius:12,
         height:100,
         padding:15,
-
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
+        borderLeftWidth: 0,
     },
 
     cardTitleMeta:{
@@ -100,7 +108,98 @@ export const styles = StyleSheet.create({
         zIndex: 1,
     },
 
-    emptyTextMeta:{
+    transacaoContainer:{
+        margin:20,
+    },
+
+    transacaoCard:{
+        backgroundColor: '#FFFFFF',
+        borderRadius: 12,
+        minHeight: 120,
+        padding: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
+        borderLeftWidth: 6,
+        borderLeftColor: '#136F6C',
+    },
+
+    contentLeft:{
+        flex: 1,
+        marginRight: 12,
+        flexShrink: 1,
+    },
+
+    contentRight:{
+        marginRight: 12,
+        flexShrink: 0,
+        alignItems: 'flex-end',
+        minWidth:80,
+    },
+
+    descricaoLinha: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: 8,
+    },
+
+    descricao:{
+        fontSize: 16,
+        fontFamily: FONTS.openSans.bold,
+        flex:1,
+        marginRight: 12,
+        color: '#1A202C',
+        marginBottom: 4,
+    },
+
+    data: {
+        fontFamily:FONTS.openSans.semiBold,
+        fontSize: 14,
+        color: '#718096',
+        marginBottom: 8,
+    },
+
+    categoriaNome: {
+        fontSize: 14,
+        fontFamily:FONTS.openSans.semiBold,
+        color: '#2D3748',
+    },
+
+    metaNome: {
+        fontSize: 14,
+        fontFamily:FONTS.openSans.semiBold,
+        color: '#2D3748',
+        marginBottom: 2,
+    },
+
+    valor: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+
+    valorReceita: {
+        color: '#009490',
+    
+    },
+
+    valorDespesa: {
+        color: '#CC0102',
+    },
+
+    valorNeutro: {
+        color: '#2D3748',
+    },
+
+    emptyText:{
         fontFamily:FONTS.montserrat.bold,
         color: '#535652',
         textAlign:"center",

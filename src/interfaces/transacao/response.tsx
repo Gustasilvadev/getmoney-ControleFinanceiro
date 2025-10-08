@@ -10,8 +10,8 @@ export interface TransacaoResponse{
     data: string,
     status: Status,
     usuarioId: number,
-    categorias:CategoriaBasicaResponse[],
-    metasId: MetaBasicaResponse[],
+    categoria:CategoriaBasicaResponse,
+    metas: MetaBasicaResponse[],
 }
 
 export interface TransacaoBasicaResponse{
