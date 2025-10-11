@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { styles } from "./style";
@@ -8,7 +7,6 @@ type MenuItem = {
   id: string;
   route: any;
   icon: any;
-  label: string;
   isCenter?: boolean;
 };
 
@@ -20,33 +18,28 @@ export const Footer = () => {
     { 
       id: 'home', 
       route: '/home',
-      icon: require('@/assets/images/iconHome.png'),
-      label: 'Home' 
+      icon: require('@/assets/images/iconHome.png')
     },
     { 
       id: 'transactions', 
-      route: '/transactions',
-      icon: require('@/assets/images/iconTransaction.png'),
-      label: 'Transações' 
+      route: '/historyTransactions',
+      icon: require('@/assets/images/iconTransaction.png')
     },
     { 
       id: 'add', 
       route: '/add',
       icon: require('@/assets/images/iconAdd.png'),
-      label: 'Adicionar', 
       isCenter: true 
     },
     { 
       id: 'charts', 
       route: '/charts',
-      icon: require('@/assets/images/iconChart.png'),
-      label: 'Gráficos' 
+      icon: require('@/assets/images/iconChart.png')
     },
     { 
       id: 'settings', 
       route: '/settings', 
-      icon: require('@/assets/images/iconConfig.png'),
-      label: 'Configurações' 
+      icon: require('@/assets/images/iconConfig.png')
     },
   ];
 
@@ -56,39 +49,35 @@ export const Footer = () => {
   };
 
   return (
-    <View style={styles.footer}>
+    <View style={styles.footerContainer}>
+    
+      <View style={styles.footer}>
+      
+        <View style={styles.topCurve} />
+        
+        {menuItems.map((item: MenuItem) => (
+          <TouchableOpacity
+            key={item.id}
+            style={[
+              styles.tab,
+              item.isCenter && styles.centerTab,
+              activeTab === item.id && styles.activeTab
+            ]}
+            onPress={() => handlePress(item)}
+          >
+            <Image 
+              source={item.icon}
+              style={[
+                styles.icon,
+                item.isCenter && styles.centerIcon,
+                activeTab === item.id && styles.activeIcon
+              ]}
+              resizeMode="contain"
+            />
 
-      {menuItems.map((item: MenuItem) => (
-        <TouchableOpacity
-          key={item.id}
-          style={[
-            styles.tab,
-            item.isCenter && styles.centerTab,
-            activeTab === item.id && styles.activeTab
-          ]}
-          onPress={() => handlePress(item)}
-        >
-
-        <Image 
-          source={item.icon}
-          style={[
-            styles.icon,
-            item.isCenter && styles.centerIcon,
-            activeTab === item.id && styles.activeIcon
-          ]}
-          resizeMode="contain"
-        />
-
-        <Text style={[
-          styles.label,
-          item.isCenter && styles.centerLabel,
-          activeTab === item.id && styles.activeLabel
-        ]}>
-          {item.label}
-        </Text>
-
-        </TouchableOpacity>
-      ))}
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 }

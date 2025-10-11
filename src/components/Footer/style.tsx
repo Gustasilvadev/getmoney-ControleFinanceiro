@@ -1,90 +1,84 @@
-import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
+footerContainer: {
+    position: 'relative',
   },
-
-  content: {
-    flex: 1,
-  },
-
+  
   footer: {
     flexDirection: "row",
     backgroundColor: "#FFFFFF",
     borderTopWidth: 1,
     borderTopColor: "#E0E0E0",
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 85,
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
+    height: 70,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 5,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  topCurve: {
+    backgroundColor:'#FFFFFF',
+    position: 'absolute',
+    top: -25,
+    left: '50%',
+    marginLeft: -26,
+    width: 60,
+    height: 25,
+    borderTopWidth: 1,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    borderTopColor: "#E0E0E0", 
+    borderLeftWidth: 1,
+    borderLeftColor: "#E0E0E0",
+    borderRightWidth: 1,
+    borderRightColor: "#E0E0E0",
   },
 
   tab: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 12,
+    flex: 1,
+    marginHorizontal: 2,
   },
 
   centerTab: {
-    transform: [{ translateY: -25 }],
-    borderRadius: 40,
-    marginHorizontal: 4,
-    width: 60,
-    height: 60, 
+    position: 'absolute',
+    top: -30,
+    left: '50%',
+    marginLeft: -25,
     alignItems: "center",
     justifyContent: "center",
   },
 
   activeTab: {
-    backgroundColor: "#F0F8FF",
+    backgroundColor: "#00948f27",
   },
 
   icon: {
-    width: 26,
-    height: 26,
-    marginBottom: 4,
+    width: 32,
+    height: 32,
     tintColor: "#666666",
   },
 
   centerIcon: {
-    tintColor: "#666666",
-    width: 48,
-    height: 48,
+    tintColor: "#136F6C",
+    width: 35,
+    height: 35,
   },
 
   activeIcon: {
-    tintColor: "#1991BD",
+    tintColor: "#009490",
   },
-
-  label: {
-    fontSize: 12,
-    color: "#666666",
-    fontFamily:FONTS.openSans.semiBold,
-    textAlign: "center",
-  },
-
-  centerLabel: {
-    color: "#666666",
-    fontFamily:FONTS.openSans.semiBold,
-    textAlign: "center",
-  },
-
-  activeLabel: {
-    color: "#1991BD",
-    fontFamily:FONTS.openSans.bold,
-  },
-
+  
 });

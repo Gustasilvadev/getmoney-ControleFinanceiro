@@ -9,7 +9,7 @@ export default function TabLayout() {
             screenOptions={{ headerShown: false }}
         >
             <Tabs.Screen name="home" />
-            <Tabs.Screen name="transactions" />
+            <Tabs.Screen name="historyTransactions" />
             <Tabs.Screen name="add" />
             <Tabs.Screen name="charts" />
             <Tabs.Screen name="settings" />
