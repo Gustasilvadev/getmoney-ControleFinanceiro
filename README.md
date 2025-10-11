@@ -1,6 +1,45 @@
-# Welcome to your Expo app 👋
+# GetMoney - Aplicativo de Controle Financeiro Pessoal
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+
+## 📋 Visão Geral do Projeto
+
+O GetMoney é um aplicativo mobile multiplataforma para controle financeiro pessoal, permitindo ao usuário registrar manualmente suas receitas e despesas, categorizá-las e visualizar um resumo de suas finanças por meio de relatórios e gráficos interativos.
+
+O aplicativo não realiza transações financeiras reais, apenas simula registros com base em acontecimentos do dia a dia, ajudando no planejamento e acompanhamento financeiro pessoal.
+
+## ⭐ Diferenciais
+
+### 📊 Visualização Interativa de Gráficos
+
+- Gráficos de pizza (gastos por categoria)
+
+- Gráficos de linha (evolução de receitas e despesas) de fácil interpretação
+
+- Permite análises rápidas do comportamento financeiro sem depender de relatórios complexos
+
+- Dashboard intuitivo com métricas financeiras essenciais
+
+## 🏗️ Arquitetura do Projeto
+
+### Backend (API REST - Java Spring Boot)
+
+- Java 21
+
+- Spring Boot 3.5.4
+
+- Spring Security + JWT
+
+- Swagger/OpenAPI
+
+## Frontend
+
+- React Native
+
+- TypeScript
+
+- Axios para consumo de API
+
+- AsyncStorage para persistência local
 
 ## Get started
 
@@ -22,29 +61,3 @@ In the output, you'll find options to open the app in a
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
