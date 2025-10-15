@@ -19,12 +19,3 @@ export interface CategoriaBasicaResponse{
     status:Status,
     usuarioId:number,
 }
-
-export interface CategoriaTransacaoResponse{
-    id:number,
-    nome:string,
-    tipo:CategoriaTipo,
-    status:Status,
-    usuarioId:number,
-    transacoes: TransacaoPorCategoriaResponse[];
-}
