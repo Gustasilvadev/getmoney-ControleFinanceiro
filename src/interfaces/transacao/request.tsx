@@ -5,7 +5,7 @@ export interface TransacaoRequest {
   descricao: string;
   data: string;
   categoriaId: number;
-  metasId: number[];
+  metaId: number[];
 }
 
 export interface TransacaoUpdateRequest{
@@ -14,5 +14,5 @@ export interface TransacaoUpdateRequest{
     data:string,
     status:Status,
     categoriaId:number,
-    metasId:number[],
+    metaId:number[],
 }
