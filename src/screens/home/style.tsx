@@ -52,10 +52,7 @@ export const styles = StyleSheet.create({
         height:100,
         padding:15,
         shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
+        shadowOffset: {width: 0,height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 3,
@@ -84,9 +81,9 @@ export const styles = StyleSheet.create({
     },
 
     progressInfo:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         marginTop: 25,
     },
 
@@ -117,14 +114,11 @@ export const styles = StyleSheet.create({
         borderRadius: 12,
         minHeight: 120,
         padding: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
         shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
+        shadowOffset: {width: 0,height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 3,
@@ -141,14 +135,14 @@ export const styles = StyleSheet.create({
     contentRight:{
         marginRight: 12,
         flexShrink: 0,
-        alignItems: 'flex-end',
+        alignItems: "flex-end",
         minWidth:80,
     },
 
     descricaoLinha: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
         marginBottom: 8,
     },
 
@@ -183,7 +177,7 @@ export const styles = StyleSheet.create({
 
     valor: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily:FONTS.montserrat.semiBold,
     },
 
     valorReceita: {

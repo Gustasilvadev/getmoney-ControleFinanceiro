@@ -9,7 +9,7 @@ export const useTransactionHistory = () => {
   
   const { data: transacoes, loading } = useApi(TransacaoService.listarTransacao);
 
-  const obterMeses = () => ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const obterMeses = () => ['Todos','Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
     // Calcula anos disponíveis baseado nas transações
     const obterAnosDisponiveis = (transacoes: any[]) => {
@@ -32,42 +32,30 @@ export const useTransactionHistory = () => {
     };
 
     // Filtra transações por mês e ano específicos
-    const filtrarTransacoesPorMes = (transacoes: any[], mes: number, ano: number) => {
+     const filtrarTransacoes = (transacoes: any[], mes: string | number, ano: number) => {
         if (!transacoes) return [];
         
         return transacoes.filter(transacao => {
-            const data = new Date(transacao.data);
-            return data.getMonth() + 1 === mes && data.getFullYear() === ano;
+        const data = new Date(transacao.data);
+        const anoTransacao = data.getFullYear();
+        
+        // Se mes for 'todos', retorna todas as transações do ano selecionado
+        if (mes === 'todos') {
+            return anoTransacao === ano;
+        }
+        
+        // Caso contrário, filtra por mês e ano específicos
+        return data.getMonth() + 1 === mes && anoTransacao === ano;
         });
     };
 
-    // Soma todos os valores positivos (receitas)
-    const calcularReceitas = (transacoes: any[]) => {
-        return transacoes
-            .filter(transacao => transacao.valor > 0)
-            .reduce((total, transacao) => total + transacao.valor, 0);
-    };
-
-    // Soma todos os valores negativos (despesas)
-    const calcularDespesas = (transacoes: any[]) => {
-        return transacoes
-            .filter(transacao => transacao.valor < 0)
-            .reduce((total, transacao) => total + Math.abs(transacao.valor), 0);
-    };
-
-    // Calcula saldo (receitas - despesas)
-    const calcularSaldo = (receitas: number, despesas: number) => {
-        return receitas - despesas;
-    };
 
 
     // Usando as funções separadas
     const meses = obterMeses();
     const anos = obterAnosDisponiveis(transacoes || []);
-    const transacoesFiltradas = filtrarTransacoesPorMes(transacoes || [], mes, ano);
-    const receitas = calcularReceitas(transacoesFiltradas);
-    const despesas = calcularDespesas(transacoesFiltradas);
-    const saldo = calcularSaldo(receitas, despesas);
+    const transacoesFiltradas = filtrarTransacoes(transacoes || [], mes, ano);
+
 
     return {
         mes, 
@@ -77,9 +65,6 @@ export const useTransactionHistory = () => {
         meses,
         anos,
         transacoesFiltradas,
-        receitas,
-        despesas,
-        saldo,
         carregando: loading,
     };
 

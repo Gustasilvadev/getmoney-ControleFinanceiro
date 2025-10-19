@@ -72,6 +72,8 @@ export const HomeScreen = () => {
             scrollEnabled={false}
           />
 
+        <View>
+            
           <Text style={styles.subtitle}>Transações recentes</Text>
           {!carregandoTransacoes && transacoes && transacoes.length > 0 ? (
             <FlatList
@@ -109,13 +111,10 @@ export const HomeScreen = () => {
                     <View style={styles.contentRight}>
 
                       <Text
-                        style={[
-                          styles.valor,
-                          item.categoria?.tipo === CategoriaTipo.RECEITA
-                            ? styles.valorReceita
-                            : item.categoria?.tipo === CategoriaTipo.DESPESA
-                            ? styles.valorDespesa
-                            : styles.valorNeutro,
+                        style={[styles.valor,
+                          item.categoria?.tipo === CategoriaTipo.RECEITA ? styles.valorReceita : 
+                          item.categoria?.tipo === CategoriaTipo.DESPESA? styles.valorDespesa : 
+                          styles.valorNeutro,
                         ]}
                       >
                         R${item.valor.toFixed(2)}
@@ -126,18 +125,14 @@ export const HomeScreen = () => {
                 </View>
               )}
 
-              ListEmptyComponent={
-                <Text style={styles.emptyText}>Nenhuma transação cadastrada</Text>
-              }
               scrollEnabled={false}
             />
-          ) : carregandoTransacoes ? (
-            <Text>Carregando...</Text>
           ) : (
             <Text style={styles.emptyText}>Nenhuma transação cadastrada</Text>
           )}
           
         </View>
+      </View> 
       </ScrollView>
     );
 };

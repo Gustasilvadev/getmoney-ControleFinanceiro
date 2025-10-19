@@ -1,12 +1,19 @@
 import React from 'react';
-import { View,Text, ScrollView } from "react-native";
+import { View,Text, ScrollView, FlatList } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { styles } from "./style";
 import { useTransactionHistory } from "@/src/hooks/historyTransaction/useHistoryTransaction";
+import { EstatisticaService } from '@/src/services/api/estatisticas';
+import { useApi } from '@/src/hooks/useApi';
+import { TransacaoResponse } from '@/src/interfaces/transacao/response';
+import { TransacaoService } from '@/src/services/api/transacao';
+import { CategoriaTipo } from '@/src/enums/categoriaTipo';
   
 
 export const HistoryTransactionsScreen = ()=>{
 
+    const { data: valor, loading:carregandoValor } = useApi(EstatisticaService.listarLucro);    
+    
     const {
         mes, 
         setMes,
@@ -15,10 +22,7 @@ export const HistoryTransactionsScreen = ()=>{
         meses,
         anos,
         transacoesFiltradas,
-        receitas,
-        despesas,
-        saldo,
-        carregando: loading,
+        carregando: carregandoTransacoes,
   } = useTransactionHistory();
 
 
@@ -35,7 +39,40 @@ export const HistoryTransactionsScreen = ()=>{
                     Histórico de Transações
                 </Text>
             </View>
+        </View>
 
+        <View style={styles.container}>
+
+            <View style={styles.containerCard}>
+                <View style={styles.card}>
+                    <View style={styles.cardText}>
+                        <Text style={styles.text}>Receitas Totais</Text>
+                        <Text style={styles.textValueReceita}>R${valor?.receitas.toFixed(2)}</Text>
+                    </View>
+                </View>
+            </View>
+
+            <View style={styles.containerCard}>
+                <View style={styles.card}>
+                    <View style={styles.cardText}>
+                        <Text style={styles.text}>Despesas Totais</Text>
+                        <Text style={styles.textValueDespesa}>R${valor?.despesas.toFixed(2)}</Text>
+                    </View>
+                </View>
+            </View>
+
+            <View style={styles.containerCard}>
+                <View style={styles.card}>
+                    <View style={styles.cardText}>
+                        <Text style={styles.text}>Saldo Total</Text>
+                        <Text style={styles.textValueSaldo}>R${valor?.lucro.toFixed(2)}</Text>
+                    </View>
+                </View>
+            </View>
+
+            <View style={styles.transacoesHeader}>
+                <Text style={styles.transacoesTitle}>Minhas Transações</Text>
+            </View>
 
             <View style={styles.periodContainer}>
                 <Text style={styles.periodLabel}>Período:</Text>
@@ -43,7 +80,7 @@ export const HistoryTransactionsScreen = ()=>{
                 <View style={styles.selectorsContainer}>
                     <View style={styles.pickerWrapperMes}>
                         <Picker
-                             selectedValue={mes}
+                            selectedValue={mes}
                             onValueChange={setMes}
                             style={styles.pickerMes}
                             dropdownIconColor="#FFFFFF"
@@ -52,7 +89,7 @@ export const HistoryTransactionsScreen = ()=>{
                             <Picker.Item 
                                 key={index} 
                                 label={monthName} 
-                                value={index + 1} 
+                                 value={index === 0 ? 'todos' : index}
                             />
                             ))}
                         </Picker>
@@ -76,6 +113,63 @@ export const HistoryTransactionsScreen = ()=>{
                     </View>
                 </View>
             </View>
+
+
+            {!carregandoTransacoes && transacoesFiltradas && transacoesFiltradas.length > 0 ? (
+            <View style={styles.transacoesListContainer}>
+                <FlatList
+                    data={transacoesFiltradas}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.transacaoContainer}>
+                            <View style={styles.transacaoCard}>
+
+                                <View style={styles.contentLeft}>
+
+                                    <View style={styles.descricaoLinha}>
+                                        <Text style={styles.descricao}>{item.descricao}</Text>
+                                        <Text style={styles.data}>{item.data}</Text>
+                                    </View>
+
+                                    {item.categoria && (
+                                        <Text style={styles.categoriaNome}>
+                                        {item.categoria.nome}
+                                        </Text>
+                                    )}
+
+                                    {item.metas && item.metas.length > 0 && (
+                                        <View>
+                                        {item.metas.map((meta: any) => (
+                                            <Text key={meta.id} style={styles.metaNome}>
+                                            Meta: {meta.nome}
+                                            </Text>
+                                        ))}
+                                        </View>
+                                    )}
+                                </View>
+
+                                <View style={styles.contentRight}>
+
+                                    <Text
+                                        style={[styles.valor,
+                                        item.categoria?.tipo === CategoriaTipo.RECEITA ? styles.valorReceita :
+                                        item.categoria?.tipo === CategoriaTipo.DESPESA ? styles.valorDespesa :
+                                        styles.valorNeutro,
+                                        ]}
+                                    >
+                                        R${item.valor.toFixed(2)}
+                                    </Text>
+
+                                </View>
+                            </View>
+                        </View>
+                    )}
+                scrollEnabled={false}
+                />
+            </View>
+            ) : (
+                <Text style={styles.emptyText}>Nenhuma transação cadastrada</Text>
+            )}
         </View>
     </ScrollView>
   );
