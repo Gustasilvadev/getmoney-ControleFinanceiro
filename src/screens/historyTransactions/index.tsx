@@ -1,18 +1,18 @@
-import React from 'react';
-import { View,Text, ScrollView, FlatList } from "react-native";
+import { useState } from 'react';
+import { useApi } from '@/src/hooks/useApi';
+import { View,Text, ScrollView, FlatList, TextInput } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { styles } from "./style";
+
 import { useTransactionHistory } from "@/src/hooks/historyTransaction/useHistoryTransaction";
 import { EstatisticaService } from '@/src/services/api/estatisticas';
-import { useApi } from '@/src/hooks/useApi';
-import { TransacaoResponse } from '@/src/interfaces/transacao/response';
-import { TransacaoService } from '@/src/services/api/transacao';
 import { CategoriaTipo } from '@/src/enums/categoriaTipo';
   
 
 export const HistoryTransactionsScreen = ()=>{
 
-    const { data: valor, loading:carregandoValor } = useApi(EstatisticaService.listarLucro);    
+    const { data: valor, loading:carregandoValor } = useApi(EstatisticaService.listarLucro);
+    const [pesquisa, setPesquisa] = useState('');
     
     const {
         mes, 
@@ -23,7 +23,9 @@ export const HistoryTransactionsScreen = ()=>{
         anos,
         transacoesFiltradas,
         carregando: carregandoTransacoes,
-  } = useTransactionHistory();
+    } = useTransactionHistory();
+
+    const transacoesFiltradasPorCategoria = transacoesFiltradas.filter(transacao => transacao.categoria?.nome.toLowerCase().includes(pesquisa.toLowerCase()));
 
 
     return(
@@ -71,7 +73,7 @@ export const HistoryTransactionsScreen = ()=>{
             </View>
 
             <View style={styles.transacoesHeader}>
-                <Text style={styles.transacoesTitle}>Minhas Transações</Text>
+                <Text style={styles.transacoesTitle}>Histórico de Transações</Text>
             </View>
 
             <View style={styles.periodContainer}>
@@ -114,11 +116,21 @@ export const HistoryTransactionsScreen = ()=>{
                 </View>
             </View>
 
+            <View style={styles.pesquisaContainer}>
+                <TextInput
+                    style={styles.pesquisaInput}
+                    placeholder="Pesquisar por categoria..."
+                    placeholderTextColor="#999"
+                    value={pesquisa}
+                    onChangeText={setPesquisa}
+                />
+            </View>
 
-            {!carregandoTransacoes && transacoesFiltradas && transacoesFiltradas.length > 0 ? (
+
+            {!carregandoTransacoes && transacoesFiltradasPorCategoria  && transacoesFiltradasPorCategoria.length > 0 ? (
             <View style={styles.transacoesListContainer}>
                 <FlatList
-                    data={transacoesFiltradas}
+                    data={transacoesFiltradasPorCategoria }
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.transacaoContainer}>

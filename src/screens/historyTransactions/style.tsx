@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
 
     header: {
         justifyContent:"center",
-        height: 180,
+        height:150,
         backgroundColor: '#009490',
         paddingHorizontal: 20,
         paddingVertical: 25,
@@ -32,7 +32,6 @@ export const styles = StyleSheet.create({
     container:{
         marginTop:20,
         justifyContent: "flex-start",
-        alignItems: "center",
         gap: 25,
         paddingHorizontal: 16,
         width: '100%',
@@ -156,6 +155,21 @@ export const styles = StyleSheet.create({
         width:130,
         color: '#000000',
         fontFamily: FONTS.openSans.semiBold,
+    },
+
+    pesquisaContainer: {
+        marginHorizontal: 16,
+        marginBottom: 20,
+    },
+
+    pesquisaInput: {
+        backgroundColor: '#00948f2c',
+        borderRadius: 8,
+        padding: 12,
+        color: '#000000',
+        fontSize: 18,
+        borderWidth: 2,
+        borderColor: '#535652',
     },
 
     transacaoContainer:{
