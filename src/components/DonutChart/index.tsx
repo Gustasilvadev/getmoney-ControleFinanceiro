@@ -1,4 +1,5 @@
-import { VictoryPie } from "victory-pie";
+import { Pie, PolarChart } from "victory-native";
+
 import { useEffect } from "react";
 import { View, Text } from "react-native";
 import {styles} from "./style";
@@ -10,8 +11,8 @@ import { EstatisticaService } from "@/src/services/api/estatisticas";
 
 export const DonutChart = ()=>{
 
-    // Hook para a API
-    const { data: apiData, loading: apiLoading } = useApi(() => EstatisticaService.listarGastosPorCategoria());
+     // Hook para a API
+     const { data: apiData, loading: apiLoading } = useApi(() => EstatisticaService.listarGastosPorCategoria());
 
     // Hook para transformar dados do gráfico
     const { data: chartData, total, transformData } = useChartData();
@@ -30,45 +31,49 @@ export const DonutChart = ()=>{
         '#A29BFE', '#FD79A8', '#00CEC9', '#FDCB6E'
     ];
 
+    // Debug logs
+    console.log("API Loading:", apiLoading);
+    console.log("API Data:", apiData);
+    console.log("Chart Data:", chartData);
+    console.log("Total:", total);
+
+    // Converter os dados do hook para o formato do Victory Native
+    const victoryData = chartData.map((item, index) => ({
+        value: item.y, // valor numérico (valorTotal)
+        label: item.x, // categoria (categoriaNome)
+        color: colorScale[index % colorScale.length] // cor correspondente
+    }));
+
     if (chartData.length === 0) {
         return (
-        <View style={styles.container}>
-            <Text style={styles.emptyText}>Nenhum gasto encontrado</Text>
-        </View>
+            <View style={styles.container}>
+                <Text style={styles.emptyText}>Nenhum gasto encontrado</Text>
+            </View>
         );
     }
 
     return(
 
-        <View style={styles.container}>
+         <View style={styles.container}>
             <Text style={styles.title}>Gastos por Categoria</Text>
       
             <Text style={styles.totalText}>
                 Total: R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </Text>
       
-                    {/* 👇 AGORA USA VictoryPie (funciona!) */}
-            <VictoryPie
-                data={chartData}
-                innerRadius={80}
-                colorScale={colorScale}
-                height={300}
-                width={300}
-                style={{
-                    labels: { 
-                        fill: "white", 
-                        fontSize: 11, 
-                        fontWeight: "bold",
-                    }
-                }}
-                labelRadius={({ innerRadius }) => {
-                    const radius = typeof innerRadius === 'number' ? innerRadius : 80;
-                    return radius + 50;
-                }}
-                labels={({ datum }) => `R$ ${datum.y.toLocaleString('pt-BR')}`}
-            />
+              {/* Nova API do Victory Native */}
+            <View style={{ height: 300, width:80 }}>
+                <PolarChart
+                    data={victoryData}
+                    colorKey="color"
+                    valueKey="value"
+                    labelKey="label"
+                >
+                    <Pie.Chart innerRadius={80} />
+                </PolarChart>
+            </View>
 
-            {/* Legenda das categorias */}
+            {/* Legenda */}
             <View style={styles.legend}>
                 {chartData.map((item, index) => (
                     <View key={index} style={styles.legendItem}>
