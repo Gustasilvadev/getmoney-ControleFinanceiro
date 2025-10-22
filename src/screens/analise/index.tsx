@@ -1,6 +1,7 @@
 import { View,Text, ScrollView } from "react-native";
 import {DonutChart} from "../../components/DonutChart"
 import { styles } from "./style";
+import { LineChart } from "@/src/components/LineChart";
 
 
 export const ChartsScreen = () => {
@@ -19,8 +20,10 @@ export const ChartsScreen = () => {
                 </View>
             </View>
 
-            <View>
+            <View style={styles.containerCharts}>
                 <DonutChart/>
+
+                <LineChart/>
             </View>
 
         </ScrollView>

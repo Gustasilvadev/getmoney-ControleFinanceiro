@@ -23,6 +23,7 @@ export const useChartData = () => {
       return;
     }
 
+    // Transforma dados da API para formato do gráfico
     const transformedData = dataArray.map(item => ({
       x: item.categoriaNome,
       y: item.valorTotal

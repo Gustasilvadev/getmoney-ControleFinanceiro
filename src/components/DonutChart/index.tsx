@@ -11,8 +11,7 @@ import { EstatisticaService } from "@/src/services/api/estatisticas";
 
 export const DonutChart = ()=>{
 
-     // Hook para a API
-     const { data: apiData, loading: apiLoading } = useApi(() => EstatisticaService.listarGastosPorCategoria());
+    const { data: apiData, loading: apiLoading } = useApi(() => EstatisticaService.listarGastosPorCategoria());
 
     // Hook para transformar dados do gráfico
     const { data: chartData, total, transformData } = useChartData();
@@ -20,8 +19,8 @@ export const DonutChart = ()=>{
     // Transforma os dados quando a API retornar
     useEffect(() => {
         if (apiData) {
-            const dataArray = Array.isArray(apiData) ? apiData : [apiData];
-            transformData(dataArray);
+            const arrayData = Array.isArray(apiData) ? apiData : [apiData];
+            transformData(arrayData);
         }
     }, [apiData, transformData]);
 
@@ -31,16 +30,10 @@ export const DonutChart = ()=>{
         '#A29BFE', '#FD79A8', '#00CEC9', '#FDCB6E'
     ];
 
-    // Debug logs
-    console.log("API Loading:", apiLoading);
-    console.log("API Data:", apiData);
-    console.log("Chart Data:", chartData);
-    console.log("Total:", total);
-
     // Converter os dados do hook para o formato do Victory Native
     const victoryData = chartData.map((item, index) => ({
-        value: item.y, // valor numérico (valorTotal)
-        label: item.x, // categoria (categoriaNome)
+        value: item.y, // categoria valor 
+        label: item.x, // categoria nome
         color: colorScale[index % colorScale.length] // cor correspondente
     }));
 
@@ -61,8 +54,7 @@ export const DonutChart = ()=>{
                 Total: R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </Text>
       
-              {/* Nova API do Victory Native */}
-            <View style={{ height: 300, width:80 }}>
+            <View style={{ height: 250, width:250 }}>
                 <PolarChart
                     data={victoryData}
                     colorKey="color"
@@ -73,7 +65,6 @@ export const DonutChart = ()=>{
                 </PolarChart>
             </View>
 
-            {/* Legenda */}
             <View style={styles.legend}>
                 {chartData.map((item, index) => (
                     <View key={index} style={styles.legendItem}>

@@ -28,5 +28,9 @@ export const styles = StyleSheet.create({
         color: '#FFFFFF',
         textAlign:"center",
     },
+
+    containerCharts:{
+        margin:20,
+    },
     
 });
