@@ -51,7 +51,6 @@ public class Transacao {
     //Inicializa os dados no momento da criacao
     @PrePersist
     public void prePersist() {
-        this.data = LocalDate.now();
         if (this.status == null) {
             this.status = Status.ATIVO;
         }
