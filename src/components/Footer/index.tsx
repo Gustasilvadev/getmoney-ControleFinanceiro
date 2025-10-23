@@ -27,7 +27,7 @@ export const Footer = () => {
     },
     { 
       id: 'add', 
-      route: '/add',
+      route: '/addTransaction',
       icon: require('@/assets/images/iconAdd.png'),
       isCenter: true 
     },

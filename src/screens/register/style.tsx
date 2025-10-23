@@ -28,17 +28,16 @@ export const styles = StyleSheet.create({
         color:'#009490',
         fontFamily: FONTS.montserrat.bold,
         fontSize:32,
-        marginTop:20,
+        marginTop:15,
     },
 
     inputContainer: {
         width: '100%',
-        marginBottom: 8,
     },
 
     formInput:{
         gap:30,
-        marginTop:40,
+        marginTop:25,
         width:"100%",
     },
 
@@ -69,8 +68,7 @@ export const styles = StyleSheet.create({
     options:{
         justifyContent:"center",
         alignItems:"center",
-        gap:20,
-        marginTop: 20,
+        gap:15,
     },
 
     textOptions:{

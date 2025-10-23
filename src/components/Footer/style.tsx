@@ -27,11 +27,11 @@ footerContainer: {
   topCurve: {
     backgroundColor:'#FFFFFF',
     position: 'absolute',
-    top: -25,
+    top: -50,
     left: '50%',
-    marginLeft: -26,
-    width: 60,
-    height: 25,
+    marginLeft: -40,
+    width: 100,
+    height: 51,
     borderTopWidth: 1,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
@@ -54,9 +54,9 @@ footerContainer: {
 
   centerTab: {
     position: 'absolute',
-    top: -30,
+    top: -40,
     left: '50%',
-    marginLeft: -25,
+    marginLeft: -20,
     alignItems: "center",
     justifyContent: "center",
   },
