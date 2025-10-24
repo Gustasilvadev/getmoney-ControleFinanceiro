@@ -26,4 +26,22 @@ export const styles = StyleSheet.create({
         textAlign:"center",
     },
 
+    containerForm:{
+        flex:1,
+
+    },
+
+    form:{
+        justifyContent:"center",
+        alignContent:"center",
+    },
+
+    input:{
+        backgroundColor:'#FFFFFF',
+        borderRadius:10,
+
+    },
+
+
+
 })

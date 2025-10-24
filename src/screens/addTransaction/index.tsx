@@ -1,9 +1,10 @@
-import { Pressable, View,Text, Keyboard } from "react-native"
+import { Pressable, View,Text, Keyboard, TextInput } from "react-native"
 import { styles } from "./style"
 
 
 export const AddTransaction = () =>{
     return(
+
         <Pressable style={styles.container} onPress={Keyboard.dismiss}>
 
             <View style={styles.header}>
@@ -12,6 +13,18 @@ export const AddTransaction = () =>{
                         Nova Transação
                     </Text>
                 </View>
+            </View>
+
+            <View style={styles.containerForm}>
+                <View style={styles.form}>
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Teste"
+                    />
+
+                </View>
+
             </View>
 
 
