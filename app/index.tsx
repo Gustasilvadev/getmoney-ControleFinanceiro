@@ -11,7 +11,7 @@ export default function Index (){
 
   useEffect(() => {
     if (fontsLoaded) {
-      setTimeout(() => setIsLoading(false), 3000);
+      setTimeout(() => setIsLoading(false), 4000);
     }
   }, [fontsLoaded]);
 
