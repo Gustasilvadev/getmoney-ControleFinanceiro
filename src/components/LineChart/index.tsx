@@ -22,6 +22,7 @@ export const LineChart = () => {
     }
   }, [apiData, transformData]);
 
+
   // Estados de carregamento
   if (apiLoading) {
     return (
@@ -51,11 +52,8 @@ export const LineChart = () => {
   const totalReceitas = chartData.reduce((sum, item) => sum + item.receitas, 0);
   const totalDespesas = chartData.reduce((sum, item) => sum + item.despesas, 0);
 
-  // Valor do saldo mais recente
-  const saldoFinal = chartData[chartData.length - 1]?.saldo || 0;
-
     return (
-    <View style={styles.container}>
+      <View style={styles.container}>
       <Text style={styles.title}>Evolução Mensal - Receitas vs Despesas</Text>
       
       {/* Gráfico */}
@@ -68,15 +66,12 @@ export const LineChart = () => {
         >
           {({ points }) => (
             <>
-              {/* Linha das Receitas */}
               <Line 
                 points={points.receitas} 
                 color={colorScale.receitas}
                 strokeWidth={3}
                 curveType="linear"
               />
-              
-              {/* Linha das Despesas */}
               <Line 
                 points={points.despesas} 
                 color={colorScale.despesas}
@@ -92,30 +87,19 @@ export const LineChart = () => {
       <View style={styles.legend}>
         <View style={styles.legendItem}>
           <View style={[styles.legendColor, { backgroundColor: '#4ECDC4' }]} />
-          <View>
-            <Text style={styles.legendText}>Receitas</Text>
-            <Text style={styles.legendValue}>
-              R$ {totalReceitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-            </Text>
-          </View>
+          <Text style={styles.legendText}>Receitas: R$ {totalReceitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Text>
         </View>
         
         <View style={styles.legendItem}>
           <View style={[styles.legendColor, { backgroundColor: '#FF6B6B' }]} />
-          <View>
-            <Text style={styles.legendText}>Despesas</Text>
-            <Text style={styles.legendValue}>
-              R$ {totalDespesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-            </Text>
-          </View>
+          <Text style={styles.legendText}>Despesas: R$ {totalDespesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Text>
         </View>
       </View>
 
-      {/* Tabela de Valores por Mês */}
+      {/* Tabela */}
       <View style={styles.table}>
         <Text style={styles.tableTitle}>Detalhamento por Mês</Text>
         
-        {/* Cabeçalho da Tabela */}
         <View style={styles.tableHeader}>
           <Text style={styles.headerCell}>Mês</Text>
           <Text style={styles.headerCell}>Receitas</Text>
@@ -123,7 +107,6 @@ export const LineChart = () => {
           <Text style={styles.headerCell}>Saldo</Text>
         </View>
 
-        {/* Linhas da Tabela */}
         {chartData.map((item, index) => (
           <View key={index} style={[
             styles.tableRow,
@@ -144,24 +127,7 @@ export const LineChart = () => {
             </Text>
           </View>
         ))}
-
-        {/* Linha de Totais */}
-        <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>TOTAL</Text>
-          <Text style={styles.totalReceita}>
-            R$ {totalReceitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-          </Text>
-          <Text style={styles.totalDespesa}>
-            R$ {totalDespesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-          </Text>
-          <Text style={[
-            styles.totalSaldo,
-            saldoFinal >= 0 ? styles.saldoPositivo : styles.saldoNegativo
-          ]}>
-            R$ {saldoFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-          </Text>
-        </View>
       </View>
     </View>
   );
-};
+}

@@ -1,8 +1,7 @@
+import { StyleSheet } from "react-native";
 import { FONTS } from "@/src/constants/fonts";
-import { StyleSheet } from "react-native"
 
 export const styles = StyleSheet.create({
-
     inputContainer: {
         height:75,
         backgroundColor: '#FFFFFF',
@@ -23,14 +22,8 @@ export const styles = StyleSheet.create({
         fontSize: 16,
     },
 
-    inputWrapper: {
-        flex: 1,
-        flexDirection: "row",
-        alignItems: "center",
-    },
-
     input: {
-         borderWidth: 0,
+        borderWidth: 0,
         fontSize: 14,
         padding: 0, 
         margin: 0,
@@ -39,10 +32,6 @@ export const styles = StyleSheet.create({
         flex: 1,
         textAlignVertical: 'center',
         includeFontPadding: false,
-        
-        
-        
-        
     },
 
     iconRight: {
@@ -64,5 +53,4 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         flex: 1,
     },
-
 });

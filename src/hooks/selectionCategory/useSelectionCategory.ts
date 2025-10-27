@@ -23,17 +23,14 @@ export const useSelectionCategory = (tipoTransacao: CategoriaTipo) => {
         try {
             setLoading(true);
             const categorias = await CategoriaService.listarCategoria();
-            console.log('Categorias da API:', categorias);
             
             // Filtrar por tipo
             const categoriasFiltradas = categorias.filter(
                 cat => cat.tipo === tipoTransacao
             );
-            console.log('Categorias filtradas:', categoriasFiltradas);
             setCategorias(categoriasFiltradas);
 
         } catch (error) {
-            console.error('Erro ao buscar categorias:', error);
             setCategorias([]); // Garantir que seja array vazio em caso de erro
         } finally {
             setLoading(false);
