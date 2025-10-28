@@ -1,3 +1,4 @@
+import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -16,16 +17,16 @@ export const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
+        fontSize: 16,
+        fontFamily:FONTS.montserrat.bold,
+        textAlign: "center",
         marginBottom: 8,
         color: '#333',
     },
 
     totalText: {
         fontSize: 18,
-        fontWeight: '600',
+        fontFamily:FONTS.openSans.semiBold,
         color: '#007AFF',
         marginBottom: 16,
     },
@@ -42,8 +43,7 @@ export const styles = StyleSheet.create({
 
     emptyText: {
         color: '#999',
-        fontStyle: 'italic',
-        textAlign: 'center',
+        textAlign: "center",
     },
 
     legend: {
@@ -52,8 +52,8 @@ export const styles = StyleSheet.create({
     },
 
     legendItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         marginBottom: 8,
     },
 
@@ -65,7 +65,8 @@ export const styles = StyleSheet.create({
     },
 
     legendText: {
-        fontSize: 12,
+        fontSize: 14,
+        fontFamily:FONTS.openSans.semiBold,
         color: '#666',
         flex: 1,
     },

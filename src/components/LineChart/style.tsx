@@ -1,3 +1,4 @@
+import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -12,72 +13,81 @@ export const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
+
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontFamily:FONTS.montserrat.bold,
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
     color: '#333',
   },
+
   loadingText: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 12,
     color: '#666',
     fontSize: 14,
   },
+
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
     color: '#666',
     fontSize: 16,
     paddingVertical: 40,
   },
+
   errorText: {
-    textAlign: 'center',
+    textAlign: "center",
     color: '#FF6B6B',
     fontSize: 16,
     paddingVertical: 40,
-    fontWeight: '500',
   },
+
   legend: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
     padding: 12,
     backgroundColor: '#f8f9fa',
     borderRadius: 8,
+    gap:10,
   },
+
   legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginLeft:20,
   },
+
   legendColor: {
     width: 16,
     height: 16,
     borderRadius: 8,
   },
+
   legendText: {
-    fontSize: 14,
+    fontSize: 16,
+    fontFamily:FONTS.openSans.bold,
     color: '#333',
-    fontWeight: '600',
   },
+
   legendValue: {
-    fontSize: 12,
+    fontSize: 1,
     color: '#666',
-    fontWeight: '500',
   },
+
   table: {
     marginTop: 16,
   },
+
   tableTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:FONTS.montserrat.bold,
     marginBottom: 12,
     color: '#333',
     textAlign: 'center',
   },
+
   tableHeader: {
     flexDirection: 'row',
     backgroundColor: '#4ECDC4',
@@ -86,6 +96,7 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
   },
+
   headerCell: {
     flex: 1,
     fontSize: 12,
@@ -93,6 +104,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
+
   tableRow: {
     flexDirection: 'row',
     paddingVertical: 8,
@@ -100,12 +112,15 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
+
   evenRow: {
     backgroundColor: '#fafafa',
   },
+
   oddRow: {
     backgroundColor: 'white',
   },
+
   cellMonth: {
     flex: 1,
     fontSize: 12,
@@ -113,6 +128,7 @@ export const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
   },
+
   cellReceita: {
     flex: 1,
     fontSize: 12,
@@ -127,12 +143,14 @@ export const styles = StyleSheet.create({
     color: '#FF6B6B',
     textAlign: 'center',
   },
+
   cellSaldo: {
     flex: 1,
     fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
   },
+
   totalRow: {
     flexDirection: 'row',
     backgroundColor: '#2c3e50',
@@ -142,6 +160,7 @@ export const styles = StyleSheet.create({
     borderBottomRightRadius: 6,
     marginTop: 4,
   },
+
   totalLabel: {
     flex: 1,
     fontSize: 12,
@@ -149,6 +168,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
+
   totalReceita: {
     flex: 1,
     fontSize: 12,
@@ -156,6 +176,7 @@ export const styles = StyleSheet.create({
     color: '#4ECDC4',
     textAlign: 'center',
   },
+
   totalDespesa: {
     flex: 1,
     fontSize: 12,
@@ -163,16 +184,20 @@ export const styles = StyleSheet.create({
     color: '#FF6B6B',
     textAlign: 'center',
   },
+
   totalSaldo: {
     flex: 1,
     fontSize: 12,
     fontWeight: 'bold',
     textAlign: 'center',
   },
+
   saldoPositivo: {
     color: '#4ECDC4',
   },
+
   saldoNegativo: {
     color: '#FF6B6B',
   },
+
 });
