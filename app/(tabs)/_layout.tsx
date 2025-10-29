@@ -13,6 +13,8 @@ export default function TabLayout() {
             <Tabs.Screen name="AdicionarTRansacao" />
             <Tabs.Screen name="Graficos" />
             <Tabs.Screen name="Configuracao" />
+            <Tabs.Screen name="Perfil" />
+            <Tabs.Screen name="Metas" />
         </Tabs>
         </>
     );

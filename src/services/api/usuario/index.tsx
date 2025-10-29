@@ -18,7 +18,7 @@ export const UsuarioService ={
     alterarSenhaUsuario: async(senhaAtual:string,novaSenha:string): Promise<void> =>{
         try{
             const senha: AlterarSenhaRequest = { senhaAtual, novaSenha };
-            const response = await api.post<void>('/usuario/alterarSenha', senha);
+            const response = await api.patch<void>('/usuario/alterarSenha', senha);
             return response.data;
         }catch(error){
             throw error;
