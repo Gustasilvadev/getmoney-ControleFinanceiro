@@ -94,4 +94,4 @@ export const RegisterScreen = () =>{
             </View>
         </Pressable>
     );
-};
+}

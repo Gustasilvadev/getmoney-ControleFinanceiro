@@ -16,29 +16,29 @@ export const Footer = () => {
 
   const menuItems: MenuItem[] = [
     { 
-      id: 'home', 
-      route: '/home',
+      id: 'Home', 
+      route: '/Home',
       icon: require('@/assets/images/iconHome.png')
     },
     { 
-      id: 'transactions', 
-      route: '/historyTransactions',
+      id: 'HistoricoTransacoes', 
+      route: '/HistoricoTransacoes',
       icon: require('@/assets/images/iconTransaction.png')
     },
     { 
-      id: 'add', 
-      route: '/addTransaction',
+      id: 'AdicionarTransacao', 
+      route: '/AdicionarTransacao',
       icon: require('@/assets/images/iconAdd.png'),
       isCenter: true 
     },
     { 
-      id: 'charts', 
-      route: '/charts',
+      id: 'Graficos', 
+      route: '/Graficos',
       icon: require('@/assets/images/iconChart.png')
     },
     { 
-      id: 'settings', 
-      route: '/settings', 
+      id: 'Configuracao', 
+      route: '/Configuracao', 
       icon: require('@/assets/images/iconConfig.png')
     },
   ];

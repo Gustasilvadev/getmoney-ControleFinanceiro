@@ -7,7 +7,7 @@ export const useNavigation = () => {
   const navigateTo = {
     login: () => router.push('/auth/login'),
     register: () => router.push('/auth/register'),
-    home:() => router.push('/home'),
+    home:() => router.push('/Home'),
     back: () => router.back(),
   };
 

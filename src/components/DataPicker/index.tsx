@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './style';
 
 
-interface DatePickerFieldProps {
+interface DatePickerProps {
   label: string;
   placeholder: string;
   value: string;
@@ -13,12 +13,12 @@ interface DatePickerFieldProps {
 }
 
 
-export function DatePickerField({
+export function DataPicker({
   label,
   placeholder,
   value,
   onChangeText
-}: DatePickerFieldProps) {
+}: DatePickerProps) {
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(value ? new Date(value) : new Date());
 

@@ -9,5 +9,5 @@ export const SplashScreen = () =>{
         </View>
 
     );
-};
+}
 
