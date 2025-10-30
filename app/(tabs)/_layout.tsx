@@ -10,11 +10,12 @@ export default function TabLayout() {
         >
             <Tabs.Screen name="home" />
             <Tabs.Screen name="HistoricoTransacoes" />
-            <Tabs.Screen name="AdicionarTRansacao" />
+            <Tabs.Screen name="AdicionarTransacao" />
             <Tabs.Screen name="Graficos" />
             <Tabs.Screen name="Configuracao" />
             <Tabs.Screen name="Perfil" />
             <Tabs.Screen name="Metas" />
+            <Tabs.Screen name="AdicionarMeta" />
         </Tabs>
         </>
     );

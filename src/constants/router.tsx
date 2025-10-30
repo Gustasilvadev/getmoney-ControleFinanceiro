@@ -7,9 +7,10 @@ export const useNavigation = () => {
   const navigateTo = {
     login: () => router.push('/auth/login'),
     register: () => router.push('/auth/register'),
-    home:() => router.push('/home'),
+    home:() => router.push('/Home'),
     perfil: () => router.push('/Perfil'),
     metas: () => router.push('/Metas'),
+    adicionarMeta: () => router.push('/AdicionarMeta'),
     back: () => router.back(),
   };
 
