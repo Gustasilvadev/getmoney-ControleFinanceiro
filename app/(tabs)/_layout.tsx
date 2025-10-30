@@ -8,7 +8,7 @@ export default function TabLayout() {
             tabBar={() => <Footer />}
             screenOptions={{ headerShown: false }}
         >
-            <Tabs.Screen name="Home" />
+            <Tabs.Screen name="home" />
             <Tabs.Screen name="HistoricoTransacoes" />
             <Tabs.Screen name="AdicionarTRansacao" />
             <Tabs.Screen name="Graficos" />
