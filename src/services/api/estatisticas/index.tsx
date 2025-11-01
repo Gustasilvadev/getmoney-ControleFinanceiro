@@ -32,18 +32,18 @@ export const EstatisticaService = {
         }
     },
 
-    listarGastosPorCategoria: async(): Promise<ValorTotalResponse> =>{
+    listarGastosPorCategoria: async(): Promise<ValorTotalResponse[]> =>{
         try{
-            const response = await api.get<ValorTotalResponse>('/estatistica/analisePorCategoria');
+            const response = await api.get<ValorTotalResponse[]>('/estatistica/analisePorCategoria');
             return response.data;
         }catch(error){
             throw error;
         }
     },
 
-    listarAnaliseEvolucaoMensal: async(): Promise<EvolucaoMensalResponse> =>{
+    listarAnaliseEvolucaoMensal: async(): Promise<EvolucaoMensalResponse[]> =>{
         try{
-            const response = await api.get<EvolucaoMensalResponse>('/estatistica/analiseEvolucaoMensal');
+            const response = await api.get<EvolucaoMensalResponse[]>('/estatistica/analiseEvolucaoMensal');
             return response.data;
         }catch(error){
             throw error;

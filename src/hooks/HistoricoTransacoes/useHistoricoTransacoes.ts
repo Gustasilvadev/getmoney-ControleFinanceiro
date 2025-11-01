@@ -1,15 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApi } from '../useApi';
 import {TransacaoService} from '../../services/api/transacao';
 
-export const useHistoricoTransacoes = () => {
+export const useHistoricoTransacoes = (refreshKey?: number) => {
 
-  const [mes, setMes] = useState(new Date().getMonth() + 1);
+  const [mes, setMes] = useState("todos");
   const [ano, setAno] = useState(new Date().getFullYear());
   
-  const { data: transacoes, loading } = useApi(TransacaoService.listarTransacao);
+  const [transacoes, setTransacoes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
+
+  const carregarTransacoes = async () => {
+    try {
+      setLoading(true);
+      const data = await TransacaoService.listarTransacao();
+      setTransacoes(data || []);
+    } catch (error) {
+      console.error('Erro ao carregar transações:', error);
+      setTransacoes([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Carrega transações quando o componente monta ou quando refreshKey muda
+  useEffect(() => {
+    carregarTransacoes();
+  }, [refreshKey]); // ← Recarrega quando refreshKey muda
+
+  
   const obterMeses = () => ['Todos','Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+  // Adicione refreshKey como dependência para recarregar quando mudar
 
     // Calcula anos disponíveis baseado nas transações
     const obterAnosDisponiveis = (transacoes: any[]) => {

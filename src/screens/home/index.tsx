@@ -9,14 +9,25 @@ import { UsuarioService } from "@/src/services/api/usuario";
 import { CategoriaTipo } from "@/src/enums/categoriaTipo";
 import { ProgressoMetaResponse } from "@/src/interfaces/estatistica/response";
 import { TransacaoResponse } from "@/src/interfaces/transacao/response";
+import { useCallback, useState } from "react";
+import { useFocusEffect } from "expo-router";
 
 export const HomeScreen = () => {
 
-    const { data: usuario, loading: carregandoUsuario } = useApi(UsuarioService.listarUsuarioLogado);
-    const { data: resumo, loading: carregandoresumo } = useApi(EstatisticaService.listarLucro);
-    const { data: progressoDaMeta = [], loading: carregandoProgresso } = useApi<ProgressoMetaResponse[]>(EstatisticaService.listarProgressoDaMeta);
-    const { data: transacoes, loading: carregandoTransacoes } = useApi<TransacaoResponse[]>(TransacaoService.listarTransacao);
+    const [refreshKey, setRefreshKey] = useState(0);
+    
+    const { data: usuario, loading: carregandoUsuario } = useApi(UsuarioService.listarUsuarioLogado, null, [refreshKey]);
+    const { data: resumo, loading: carregandoresumo } = useApi(EstatisticaService.listarLucro, null, [refreshKey]);
+    const { data: progressoDaMeta = [], loading: carregandoProgresso } = useApi<ProgressoMetaResponse[]>(EstatisticaService.listarProgressoDaMeta, [], [refreshKey]);
+    const { data: transacoes, loading: carregandoTransacoes } = useApi<TransacaoResponse[]>(TransacaoService.listarTransacao, [], [refreshKey]);
 
+    // Recarrega quando a tela ganha foco
+    useFocusEffect(
+        useCallback(() => {
+            setRefreshKey(prev => prev + 1);
+        }, [])
+    );
+    
     return (
       <ScrollView
         contentContainerStyle={styles.scrollContainer}

@@ -105,7 +105,7 @@ export const AdicionarTransacao = () =>{
                     <InputForm
                         label="Valor"
                         placeholder="Valor da transação"
-                        iconName="information-circle-outline"
+                        iconName="cash-outline"
                         value={valor}
                         onChangeText={setValor}
                     />

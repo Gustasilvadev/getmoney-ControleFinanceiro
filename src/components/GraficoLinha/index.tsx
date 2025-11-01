@@ -7,11 +7,15 @@ import { useApi } from "@/src/hooks/useApi";
 import { EstatisticaService } from "@/src/services/api/estatisticas";
 
 import { styles } from "./style";
+import { EvolucaoMensalResponse } from "@/src/interfaces/estatistica/response";
 
+interface GraficoLinhaProps {
+  refreshKey?: number;
+}
 
-export const GraficoLinha = () => {
+export const GraficoLinha = ({ refreshKey = 0 }: GraficoLinhaProps) => {
     
-  const { data: apiData, loading: apiLoading } = useApi(() => EstatisticaService.listarAnaliseEvolucaoMensal());
+  const { data: apiData, loading: apiLoading } = useApi<EvolucaoMensalResponse[]>(() => EstatisticaService.listarAnaliseEvolucaoMensal(),[],[refreshKey]);
 
   const { data: chartData, transformData } = useGraficoLinha();
 

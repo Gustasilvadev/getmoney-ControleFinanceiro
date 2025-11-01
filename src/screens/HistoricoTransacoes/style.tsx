@@ -2,8 +2,7 @@ import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-
-     scrollContainer: {
+    scrollContainer: {
         flexGrow: 1,
         paddingBottom: 20,
     },
@@ -14,7 +13,6 @@ export const styles = StyleSheet.create({
         backgroundColor: '#009490',
         paddingHorizontal: 20,
         paddingVertical: 25,
-        
     },
 
     titleHeader: {
@@ -105,7 +103,7 @@ export const styles = StyleSheet.create({
         textAlign: 'left',
     },
 
-     periodContainer: {
+    periodContainer: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -147,7 +145,6 @@ export const styles = StyleSheet.create({
         width:120,
         color: '#000000',
         fontFamily: FONTS.openSans.semiBold,
-        
     },
 
     pickerMes: {
@@ -184,7 +181,7 @@ export const styles = StyleSheet.create({
     transacaoCard:{
         backgroundColor: '#FFFFFF',
         borderRadius: 12,
-        minHeight: 120,
+        minHeight: 140, // Aumentei um pouco para caber tudo
         padding: 16,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -205,39 +202,27 @@ export const styles = StyleSheet.create({
     },
 
     contentRight:{
-        marginRight: 12,
-        flexShrink: 0,
         alignItems: "flex-end",
-        minWidth:80,
-    },
-
-    descricaoLinha: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        marginBottom: 8,
+        minWidth: 100,
     },
 
     descricao:{
         fontSize: 16,
         fontFamily: FONTS.openSans.bold,
-        flex:1,
-        marginRight: 12,
         color: '#1A202C',
-        marginBottom: 4,
-    },
-
-    data: {
-        fontFamily:FONTS.openSans.semiBold,
-        fontSize: 14,
-        color: '#718096',
-        marginBottom: 8,
+        marginBottom: 6,
+        flexWrap: 'wrap', // Permite quebra de linha
     },
 
     categoriaNome: {
         fontSize: 14,
         fontFamily:FONTS.openSans.semiBold,
         color: '#2D3748',
+        marginBottom: 4,
+    },
+
+    metasContainer: {
+        marginBottom: 6,
     },
 
     metaNome: {
@@ -245,17 +230,24 @@ export const styles = StyleSheet.create({
         fontFamily:FONTS.openSans.semiBold,
         color: '#2D3748',
         marginBottom: 2,
+        flexWrap: 'wrap', // Permite quebra de linha
+    },
+
+    data: {
+        fontFamily:FONTS.openSans.semiBold,
+        fontSize: 14,
+        color: '#718096',
+        marginTop: 4,
     },
 
     valor: {
         fontSize: 18,
         fontFamily:FONTS.montserrat.semiBold,
-        
+        marginBottom: 8,
     },
 
     valorReceita: {
         color: '#009490',
-    
     },
 
     valorDespesa: {
@@ -272,6 +264,4 @@ export const styles = StyleSheet.create({
         textAlign:"center",
         margin:30,
     },
-
-
 });

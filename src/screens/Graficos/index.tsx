@@ -2,9 +2,19 @@ import { View,Text, ScrollView } from "react-native";
 import {GraficoDonut} from "../../components/GraficoDonut"
 import { styles } from "./style";
 import { GraficoLinha } from "@/src/components/GraficoLinha";
+import { useCallback, useState } from "react";
+import { useFocusEffect } from "expo-router";
 
 
 export const GraficosScreen = () => {
+
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    useFocusEffect(
+        useCallback(() => {
+            setRefreshKey(prev => prev + 1);
+        }, [])
+    );
 
     return(
 
@@ -21,9 +31,8 @@ export const GraficosScreen = () => {
             </View>
 
             <View style={styles.containerCharts}>
-                <GraficoDonut/>
-
-                <GraficoLinha/>
+                <GraficoDonut refreshKey={refreshKey} />
+                <GraficoLinha refreshKey={refreshKey} />
             </View>
 
         </ScrollView>

@@ -8,10 +8,20 @@ import { useGraficoDonut } from "@/src/hooks/GraficoDonut/useGraficoDonut";
 import { useApi } from "@/src/hooks/useApi";
 
 import { EstatisticaService } from "@/src/services/api/estatisticas";
+import { ValorTotalResponse } from "@/src/interfaces/estatistica/response";
 
-export const GraficoDonut = ()=>{
 
-    const { data: apiData, loading: apiLoading } = useApi(() => EstatisticaService.listarGastosPorCategoria());
+interface GraficoDonutProps {
+  refreshKey?: number;
+}
+
+export const GraficoDonut = ({ refreshKey = 0 }: GraficoDonutProps) =>{
+
+     const { data: apiData, loading: apiLoading } = useApi<ValorTotalResponse[]>(
+        () => EstatisticaService.listarGastosPorCategoria(),
+        [], // initialData como array vazio
+        [refreshKey]
+    );
 
     // Hook para transformar dados do gráfico
     const { data: chartData, total, transformData } = useGraficoDonut();
