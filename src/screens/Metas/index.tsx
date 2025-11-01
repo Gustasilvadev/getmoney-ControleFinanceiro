@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, ScrollView } from "react-native"
+import { View, Text, FlatList, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { styles } from "./style";
 import { ProgressoMetaResponse } from "@/src/interfaces/estatistica/response";
 import { EstatisticaService } from "@/src/services/api/estatisticas";
@@ -6,6 +6,11 @@ import { useNavigation } from "../../constants/router";
 import { BotaoSalvar } from "@/src/components/BotaoSalvar";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
+import { Meta } from "@/src/interfaces/meta";
+import { Usuario } from "@/src/interfaces/usuario";
+import { MetaService } from "@/src/services/api/metas";
+import { MetaModalEditar } from "@/src/components/ModalEditarMeta";
+import { BotaoDeletarEditar } from "@/src/components/BotaoEditarDeletar";
 
 
 export const MetasScreen = () => {
@@ -14,6 +19,8 @@ export const MetasScreen = () => {
     
     const [progressoDaMeta, setProgressoDaMeta] = useState<ProgressoMetaResponse[]>([]);
     const [carregandoProgresso, setCarregandoProgresso] = useState(true);
+    const [modalEditarVisible, setModalEditarVisible] = useState(false);
+    const [metaSelecionada, setMetaSelecionada] = useState<ProgressoMetaResponse | null>(null);
 
     const carregarMetas = async () => {
         try {
@@ -32,6 +39,84 @@ export const MetasScreen = () => {
             carregarMetas();
         }, [])
     );
+
+    const handleEditarMeta = (metaProgresso: ProgressoMetaResponse) => {
+        setMetaSelecionada(metaProgresso);
+        setModalEditarVisible(true);
+    };
+
+    const handleDeletarMeta = async (metaId: number) => {
+        Alert.alert(
+            "Confirmar Exclusão",
+            "Tem certeza que deseja excluir esta meta?",
+            [
+                {
+                    text: "Cancelar",
+                    style: "cancel"
+                },
+                {
+                    text: "Excluir",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            await MetaService.deletarMeta(metaId);
+                            await carregarMetas();
+                            Alert.alert('Sucesso', 'Meta excluída com sucesso!');
+                        } catch (error) {
+                            console.error('Erro ao deletar meta:', error);
+                            Alert.alert('Erro', 'Não foi possível excluir a meta');
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
+    const handleSalvarEdicao = async (metaEditada: Meta) => {
+        try {
+            await MetaService.editarPorMetaId(
+                metaEditada.id,
+                metaEditada.nome,
+                metaEditada.valorAlvo,
+                metaEditada.data
+            );
+            
+            setModalEditarVisible(false);
+            await carregarMetas();
+            Alert.alert('Sucesso', 'Meta atualizada com sucesso!');
+        } catch (error) {
+            console.error('Erro ao editar meta:', error);
+            Alert.alert('Erro', 'Não foi possível atualizar a meta');
+        }
+    };
+
+    const handleFecharModal = () => {
+        setModalEditarVisible(false);
+        setMetaSelecionada(null);
+    };
+
+    // Converter ProgressoMetaResponse para Meta
+    const converterParaMeta = (metaProgresso: ProgressoMetaResponse): Meta => {
+    // Se não temos a data, usar uma data padrão no formato correto
+        const dataPadrao = new Date();
+        dataPadrao.setMonth(dataPadrao.getMonth() + 1);
+        
+        const formatarDataParaAPI = (data: Date): string => {
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const dia = String(data.getDate()).padStart(2, '0');
+            return `${ano}-${mes}-${dia}`; // Formato YYYY-MM-DD
+        };
+
+        return {
+            id: metaProgresso.metaId,
+            nome: metaProgresso.metaNome,
+            valorAlvo: metaProgresso.valorAlvo,
+            data: formatarDataParaAPI(dataPadrao), // Data no formato correto
+            status: metaProgresso.status,
+            usuario: {} as Usuario
+        };
+    };
     
     return(
         <ScrollView
@@ -55,28 +140,36 @@ export const MetasScreen = () => {
                         keyExtractor={(item) => item.metaId.toString()}
                         renderItem={({ item }) => (
                         <View style={styles.cardMeta}>
-                            <Text style={styles.cardTitleMeta}>{item.metaNome}</Text>
-
-                            <View style={styles.progressBar}>
-                            <View
-                                style={[
-                                styles.progressFill,
-                                { width: `${Math.min(item.percentualConcluido, 100)}%` },
-                                ]}>
+                            {/* Cabeçalho do card com título e botões */}
+                            <View style={styles.cardHeader}>
+                                <Text style={styles.cardTitleMeta}>{item.metaNome}</Text>
+                                <BotaoDeletarEditar
+                                    onEdit={() => handleEditarMeta(item)}
+                                    onDelete={() => handleDeletarMeta(item.metaId)}
+                                />
                             </View>
 
-                            <View style={styles.progressInfo}>
+                            {/* Barra de progresso */}
+                            <View style={styles.progressContainer}>
+                                <View style={styles.progressBar}>
+                                    <View
+                                        style={[
+                                        styles.progressFill,
+                                        { width: `${Math.min(item.percentualConcluido, 100)}%` },
+                                        ]}>
+                                    </View>
+                                </View>
 
-                                <Text style={styles.cardSubTitleMeta}>
-                                R${item.valorAtual.toFixed(2)} de R$
-                                {item.valorAlvo.toFixed(2)}
-                                </Text>
+                                <View style={styles.progressInfo}>
+                                    <Text style={styles.cardSubTitleMeta}>
+                                        R${item.valorAtual.toFixed(2)} de R$
+                                        {item.valorAlvo.toFixed(2)}
+                                    </Text>
 
-                                <Text style={styles.cardSubTitlePercent}>
-                                {Math.min(item.percentualConcluido, 100)}%
-                                </Text>
-
-                            </View>
+                                    <Text style={styles.cardSubTitlePercent}>
+                                        {Math.min(item.percentualConcluido, 100)}%
+                                    </Text>
+                                </View>
                             </View>
                         </View>
                         )}
@@ -92,12 +185,18 @@ export const MetasScreen = () => {
                             onPress={navigation.adicionarMeta}
                             title="Adicionar Meta"
                         />
-
                     </View>
-
                 </View>
-
             </View>
+
+             {/* Modal de Edição de Meta */}
+            <MetaModalEditar
+                visible={modalEditarVisible}
+                meta={metaSelecionada ? converterParaMeta(metaSelecionada) : null}
+                onClose={handleFecharModal}
+                onSave={handleSalvarEdicao}
+            />
+            
         </ScrollView>
           
     );

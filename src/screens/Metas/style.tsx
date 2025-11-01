@@ -37,18 +37,18 @@ export const styles = StyleSheet.create({
         fontSize:18,
         color:'#535652',
         marginLeft:20,
+        marginBottom: 10,
     },
 
     containerMetas:{
-        marginTop:50,
-
+        marginTop:30,
     },
 
     cardMeta:{
         backgroundColor:'#FFFFFF',
-        margin:20,
+        marginHorizontal:20,
+        marginVertical:10,
         borderRadius:12,
-        height:100,
         padding:15,
         shadowColor: '#000',
         shadowOffset: {width: 0,height: 2},
@@ -58,50 +58,55 @@ export const styles = StyleSheet.create({
         borderLeftWidth: 0,
     },
 
+    cardHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: 15,
+    },
+
     cardTitleMeta:{
         fontFamily:FONTS.montserrat.bold,
-        fontSize:15,
+        fontSize:16,
         color:'#535652',
-        marginLeft:10,
+        flex: 1,
+        marginRight: 10,
+    },
+
+    progressContainer: {
+        marginTop: 5,
     },
 
     progressBar: {
-        height: 10,
-        backgroundColor: '#CDCDCD',
-        borderRadius: 3,
-        margin: 10,
+        height: 12,
+        backgroundColor: '#E8E8E8',
+        borderRadius: 6,
+        marginBottom: 8,
+        overflow: 'hidden',
     },
 
     progressFill: {
         height: '100%',
         backgroundColor: '#136F6C',
-        borderRadius: 3,
-        position:"absolute",
+        borderRadius: 6,
     },
 
     progressInfo:{
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginTop: 25,
     },
 
     cardSubTitleMeta:{
-        position:"absolute",
-        width: '100%',
         fontFamily:FONTS.openSans.semiBold,
         fontSize: 14,
         color: '#535652',
-        zIndex: 1,
     },
 
     cardSubTitlePercent: {
-        position:"absolute",
         fontFamily:FONTS.montserrat.bold,
-        right: 10,
         fontSize: 14,
         color: '#136F6C',
-        zIndex: 1,
     },
 
     emptyText:{
@@ -112,6 +117,31 @@ export const styles = StyleSheet.create({
     },
 
     botao:{
-        margin:40,
-    }
+        margin:30,
+    },
+
+    // Estilos para os botões de ação
+    actionButtonsContainer: {
+        flexDirection: 'row',
+        gap: 8,
+    },
+    actionButton: {
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+        minWidth: 60,
+        alignItems: 'center',
+    },
+    editButton: {
+        backgroundColor: '#007AFF',
+    },
+    deleteButton: {
+        backgroundColor: '#FF3B30',
+    },
+    actionButtonText: {
+        color: 'white',
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    
 });
