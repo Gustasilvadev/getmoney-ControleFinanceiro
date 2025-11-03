@@ -2,12 +2,21 @@ import { SplashScreen } from "@/src/screens/splash/index";
 import { useAppFonts } from "@/src/hooks/fonts/use-fonts";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
+import { StatusBar } from "react-native";
+import * as NavigationBar from "expo-navigation-bar";
 
 
 export default function Index (){
 
     const [isLoading, setIsLoading] = useState(true);
     const fontsLoaded = useAppFonts();
+
+  useEffect(() => {
+    // Esconde StatusBar e NavigationBar globalmente
+    StatusBar.setHidden(true);
+    NavigationBar.setVisibilityAsync("hidden");
+    NavigationBar.setBehaviorAsync("overlay-swipe");
+  }, []);
 
   useEffect(() => {
     if (fontsLoaded) {
