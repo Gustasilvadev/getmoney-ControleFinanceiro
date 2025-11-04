@@ -20,7 +20,6 @@ export const useSelecaoMeta = () => {
         try {
             setLoading(true);
             const metas = await MetaService.listarMetas();
-            console.log('Metas da API:', metas);
             setMetas(metas);
 
         } catch (error) {

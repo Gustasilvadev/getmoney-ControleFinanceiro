@@ -17,7 +17,7 @@ export const Footer = () => {
   const menuItems: MenuItem[] = [
     { 
       id: 'Home', 
-      route: '/Home',
+      route: '/home',
       icon: require('@/assets/images/iconHome.png')
     },
     { 

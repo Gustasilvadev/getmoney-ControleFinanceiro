@@ -1,16 +1,20 @@
 import { useState } from 'react';
 
-export const useFormLogin =()=>{
+export const useFormLogin = () => {
     const [errors, setErrors] = useState({ email: '', senha: '' });
 
     const validate = (email: string, senha: string) => {
         const newErrors = { email: '', senha: '' };
 
-        if (!email) newErrors.email = 'Email é obrigatório*';
-        else if (!email.includes('@')) newErrors.email = 'Email inválido*';
+        if (!email.trim() && !senha.trim()) {
+            newErrors.email = 'O campos não pode estar em branco*';
+            newErrors.senha = 'O campos não pode estar em branco*';
+        } 
 
-        if (!senha) newErrors.senha = 'Senha é obrigatória*';
-        else if (senha.length < 3) newErrors.senha = 'Senha muito curta*';
+        else if (!email.trim() || !senha.trim() || !email.includes('@') || senha.length < 3) {
+            newErrors.email = 'E-mail ou senha inválidos*';
+            newErrors.senha = 'E-mail ou senha inválidos*';
+        }
 
         setErrors(newErrors);
         return !newErrors.email && !newErrors.senha;

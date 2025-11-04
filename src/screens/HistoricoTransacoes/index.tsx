@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useApi } from '@/src/hooks/useApi';
 import { View,Text, ScrollView, FlatList, TextInput, Alert } from "react-native";
 import { Picker } from '@react-native-picker/picker';

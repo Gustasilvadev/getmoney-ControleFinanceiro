@@ -50,8 +50,8 @@ export const AdicionarTransacao = () =>{
             try {
                 await criarCategoria(nomeNovaCategoria);
                 setNomeNovaCategoria('');
-            } catch (error) {
-            console.error('Erro ao criar categoria:', error);
+            } catch{
+                console.error('Erro ao criar categoria:');
             }
         }
     };
@@ -81,8 +81,7 @@ export const AdicionarTransacao = () =>{
             setDescricao('');
             setData('');
             
-        } catch (error) {
-            console.error('Erro:', error);
+        } catch {
             alert('Erro ao salvar transação');
         } finally {
             setSalvando(false);

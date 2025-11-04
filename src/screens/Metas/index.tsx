@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, ScrollView, Alert } from "react-native"
+import { View, Text, FlatList, ScrollView, Alert } from "react-native"
 import { styles } from "./style";
 import { ProgressoMetaResponse } from "@/src/interfaces/estatistica/response";
 import { EstatisticaService } from "@/src/services/api/estatisticas";
@@ -27,7 +27,7 @@ export const MetasScreen = () => {
             setCarregandoProgresso(true);
             const data = await EstatisticaService.listarProgressoDaMeta();
             setProgressoDaMeta(data);
-        } catch (error) {
+        } catch {
             setProgressoDaMeta([]);
         } finally {
             setCarregandoProgresso(false);
@@ -62,8 +62,7 @@ export const MetasScreen = () => {
                             await MetaService.deletarMeta(metaId);
                             await carregarMetas();
                             Alert.alert('Sucesso', 'Meta excluída com sucesso!');
-                        } catch (error) {
-                            console.error('Erro ao deletar meta:', error);
+                        } catch {
                             Alert.alert('Erro', 'Não foi possível excluir a meta');
                         }
                     }
@@ -84,8 +83,7 @@ export const MetasScreen = () => {
             setModalEditarVisible(false);
             await carregarMetas();
             Alert.alert('Sucesso', 'Meta atualizada com sucesso!');
-        } catch (error) {
-            console.error('Erro ao editar meta:', error);
+        } catch {
             Alert.alert('Erro', 'Não foi possível atualizar a meta');
         }
     };

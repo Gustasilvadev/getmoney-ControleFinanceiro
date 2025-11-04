@@ -1,20 +1,24 @@
 import { useState } from 'react';
 
-export const useFormRegister =()=>{
-    const [errors, setErrors] = useState({ nome:'', email: '', senha: '' });
+export const useFormRegister = () => {
+    const [errors, setErrors] = useState({ nome: '', email: '', senha: '' });
 
-    const validate = (nome:string,email: string, senha: string) => {
-        const newErrors = { nome:'', email: '', senha: '' };
+    const validate = (nome: string, email: string, senha: string) => {
+        const newErrors = { nome: '', email: '', senha: '' };
 
-        if (!nome) newErrors.nome = 'Nome é obrigatório*';
-        else if (nome.length < 5  ) newErrors.nome = 'Nome muito curto*';
-        else if (nome.length > 20 ) newErrors.nome = 'Nome muito longo*';
-
-        if (!email) newErrors.email = 'Email é obrigatório*';
-        else if (!email.includes('@')) newErrors.email = 'Email inválido*';
-
-        if (!senha) newErrors.senha = 'Senha é obrigatória*';
-        else if (senha.length < 3) newErrors.senha = 'Senha muito curta*';
+        if (!nome.trim() && !email.trim() && !senha.trim()) {
+            newErrors.nome = 'O campos não pode estar em branco*';
+            newErrors.email = 'O campos não pode estar em branco*';
+            newErrors.senha = 'O campos não pode estar em branco*';
+        } 
+        // Verifica se algum campo está vazio ou com dados inválidos
+        else if (!nome.trim() || !email.trim() || !senha.trim() || 
+                 nome.length < 5 || nome.length > 20 || 
+                 !email.includes('@') || senha.length < 3) {
+            newErrors.nome = 'Mínimo 5 e maximo 20 caracteres*';
+            newErrors.email = 'Dados inválidos*';
+            newErrors.senha = 'Mínimo 8 caracteres*';
+        }
 
         setErrors(newErrors);
         return !newErrors.nome && !newErrors.email && !newErrors.senha;
