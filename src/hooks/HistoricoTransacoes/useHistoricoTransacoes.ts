@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useApi } from '../useApi';
+import { useCallback, useEffect, useState } from 'react';
 import {TransacaoService} from '../../services/api/transacao';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const useHistoricoTransacoes = (refreshKey?: number) => {
 
@@ -25,10 +25,15 @@ export const useHistoricoTransacoes = (refreshKey?: number) => {
   };
 
   // Carrega transações quando o componente monta ou quando refreshKey muda
+  useFocusEffect(
+    useCallback(() => {
+      carregarTransacoes();
+    }, [])
+  );
+
   useEffect(() => {
     carregarTransacoes();
-  }, [refreshKey]); // ← Recarrega quando refreshKey muda
-
+  }, [refreshKey]);
   
   const obterMeses = () => ['Todos','Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 

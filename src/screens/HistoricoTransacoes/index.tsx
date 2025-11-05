@@ -55,8 +55,6 @@ export const HistoricoTransacoesScreen = ()=>{
             onPress: async () => {
                 try {
                 await TransacaoService.deletarPorTransacaoId(transacaoId);
-                
-                // CHAME A FORCE REFRESH AQUI! ← ESTÁ FALTANDO ISSO
                 forceRefresh();
                 
                 Alert.alert("Sucesso", "Transação excluída com sucesso!");
@@ -89,7 +87,7 @@ export const HistoricoTransacoesScreen = ()=>{
     };
 
     return(
-                <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
             <ScrollView
             contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}>

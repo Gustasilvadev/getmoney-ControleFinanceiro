@@ -140,7 +140,7 @@ export const AdicionarTransacao = () =>{
 
                     <InputForm
                         label="Meta"
-                        placeholder="Selecione uma meta"
+                        placeholder="Selecione uma meta (opcional)"
                         iconName="chevron-down"
                         value={metaSelecionada?.nome}
                         onPress={abrirMetaModal}

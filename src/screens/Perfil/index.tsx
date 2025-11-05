@@ -12,7 +12,6 @@ export const PerfilScreen = () => {
     const { data: usuario, loading: carregandoUsuario } = useApi(UsuarioService.listarUsuarioLogado);
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
     const [senhaAtual, setSenhaAtual] = useState('');
     const [novaSenha, setNovaSenha] = useState('');
     const [salvandoDados, setSalvandoDados] = useState(false);
@@ -26,8 +25,8 @@ export const PerfilScreen = () => {
     }, [usuario]);
 
     const handleSalvarDados = async () => {
-        if (!nome.trim() || !email.trim()) {
-            Alert.alert('Erro', 'Preencha nome e email');
+        if (!nome.trim()) {
+            Alert.alert('Erro', 'Preencha nome');
             return;
         }
 
@@ -40,36 +39,40 @@ export const PerfilScreen = () => {
         try {
             await UsuarioService.editarPorUsuarioId(usuario.id, nome, email);
             Alert.alert('Sucesso', 'Dados atualizados com sucesso!');
-        } catch (error) {
+        } catch {
             Alert.alert('Erro', 'Não foi possível atualizar os dados');
         } finally {
             setSalvandoDados(false);
         }
     };
 
-     const handleAlterarSenha = async () => {
-    if (!senhaAtual.trim() || !novaSenha.trim()) {
-        Alert.alert('Erro', 'Preencha a senha atual e a nova senha');
-        return;
-    }
-
-    setSalvandoSenha(true);
-    try {
-        await UsuarioService.alterarSenhaUsuario(senhaAtual, novaSenha);
-        Alert.alert('Sucesso', 'Senha alterada com sucesso!');
-        setSenhaAtual('');
-        setNovaSenha('');
-    } catch (error: any) {
-        if (error.response?.status === 403) {
-            Alert.alert('Acesso Negado', 
-                'Você não tem permissão para alterar a senha. \nPossíveis causas:\n• Sessão expirada\n• Problema no servidor');
-        } else {
-            Alert.alert('Erro', 'Não foi possível alterar a senha');
+    const handleAlterarSenha = async () => {
+        if (novaSenha.trim().length < 8) {
+            Alert.alert("Erro", "A nova senha deve conter pelo menos 8 caracteres.");
+            return;
         }
-    } finally {
+        if (!senhaAtual.trim() || !novaSenha.trim()) {
+            Alert.alert('Erro', 'Preencha a senha atual e a nova senha');
+            return;
+        }
+
+        setSalvandoSenha(true);
+        try {
+            await UsuarioService.alterarSenhaUsuario(senhaAtual, novaSenha);
+            Alert.alert('Sucesso', 'Senha alterada com sucesso!');
+            setSenhaAtual('');
+            setNovaSenha('');
+        } catch (error: any) {
+            if (error.response?.status === 403) {
+                Alert.alert('Acesso Negado', 
+                    'Você não tem permissão para alterar a senha. \nPossíveis causas:\n• Sessão expirada\n• Problema no servidor');
+            } else {
+                Alert.alert('Erro', 'Não foi possível alterar a senha');
+            }
+        } finally {
         setSalvandoSenha(false);
-    }
-};
+         }
+    };
 
     return(
         <Pressable style={styles.container} onPress={Keyboard.dismiss}>
@@ -90,14 +93,6 @@ export const PerfilScreen = () => {
                     iconName="person-outline"
                     value={nome}
                     onChangeText={setNome}
-                    />
-
-                    <InputForm
-                    label="Email"
-                    placeholder="Digite seu email"
-                    iconName="mail-outline"
-                    value={email}
-                    onChangeText={setEmail}
                     />
 
                     <TouchableOpacity 
@@ -129,13 +124,22 @@ export const PerfilScreen = () => {
                         />
 
                         {/* Botão para alterar senha */}
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={[
                                 styles.botaoSenha,
-                                (!senhaAtual.trim() || !novaSenha.trim()) && styles.botaoDesabilitado
+                                (
+                                    !senhaAtual.trim() ||
+                                    !novaSenha.trim() ||
+                                    novaSenha.trim().length < 8
+                                ) && styles.botaoDesabilitado
                             ]}
                             onPress={handleAlterarSenha}
-                            disabled={!senhaAtual.trim() || !novaSenha.trim() || salvandoSenha}
+                            disabled={
+                                !senhaAtual.trim() ||
+                                !novaSenha.trim() ||
+                                novaSenha.trim().length < 8 ||
+                                salvandoSenha
+                            }
                         >
                             <Text style={styles.textoBotao}>
                                 {salvandoSenha ? "Alterando..." : "Alterar Senha"}
