@@ -122,11 +122,12 @@ export const styles = StyleSheet.create({
 
     cancelButton: {
         flex: 1,
-        padding: 16,
+        marginTop: 20,
         borderRadius: 8,
         borderWidth: 1,
         borderColor: '#136F6C',
-        alignItems: 'center',
+        justifyContent:"center",
+        alignItems: "center",
     },
 
     cancelButtonText: {

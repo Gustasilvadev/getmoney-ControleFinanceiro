@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
     saveButton: {
+        flex:1,
         backgroundColor: '#136F6C',
         borderRadius: 10,
         padding: 16,

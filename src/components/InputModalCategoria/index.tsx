@@ -1,4 +1,4 @@
-import { Modal, View, Text, Pressable, TextInput } from 'react-native';
+import { Modal, View, Text, Pressable, TextInput, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CategoriaBasicaResponse } from '@/src/interfaces/categoria/response';
 import { styles } from './style';
@@ -130,25 +130,28 @@ import { styles } from './style';
                     Categorias ({categorias.length})
                 </Text>
 
-                <View style={styles.categoriasList}>
+                <ScrollView 
+                    style={styles.categoriasList}
+                    showsVerticalScrollIndicator={true}
+                >
                     {categorias.map((item) => (
-                    <Pressable
-                        key={item.id}
-                        style={styles.categoriaItem}
-                        onPress={() => onSelecionarCategoria(item)}
-                    >
-                        <Text style={styles.categoriaText}>{item.nome}</Text>
-                        <Icon name="chevron-forward" size={16} color="#858587" />
-                    </Pressable>
+                        <Pressable
+                            key={item.id}
+                            style={styles.categoriaItem}
+                            onPress={() => onSelecionarCategoria(item)}
+                        >
+                            <Text style={styles.categoriaText}>{item.nome}</Text>
+                            <Icon name="chevron-forward" size={16} color="#858587" />
+                        </Pressable>
                     ))}
-                </View>
+                </ScrollView>
 
                 <Pressable 
-                    style={[styles.modalButton, styles.closeButton, { marginTop: 'auto' }]}
+                    style={[styles.modalButton, styles.closeButton, { marginTop: 15 }]}
                     onPress={onClose}
                 >
                     <Text style={styles.modalButtonText}>Fechar</Text>
                 </Pressable>
             </View>
-        );
-        }
+    );
+}

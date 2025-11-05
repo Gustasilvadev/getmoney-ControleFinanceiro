@@ -1,5 +1,5 @@
 import { MetaBasicaResponse } from "@/src/interfaces/meta/response";
-import { Modal, View,Text, Pressable } from "react-native";
+import { Modal, View,Text, Pressable, ScrollView } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from "./style";
 
@@ -54,11 +54,17 @@ export function MetaModal({
                 </Text>
               </View>
             ) : (
-              <View style={styles.metasList}>
+              <ScrollView 
+                style={styles.metasList}
+                showsVerticalScrollIndicator={true}
+              >
                 {metas.map((item) => (
                   <Pressable
                       key={item.id}
-                      style={styles.metaItem}
+                      style={[
+                        styles.metaItem,
+                        metaSelecionada?.id === item.id && styles.itemSelecionado
+                      ]}
                       onPress={() => onSelecionarMeta(item)}
                   >
                       <View style={styles.metaInfo}>
@@ -70,11 +76,11 @@ export function MetaModal({
                       <Icon name="chevron-forward" size={16} color="#858587" />
                   </Pressable>
                 ))}
-              </View>
+              </ScrollView>
             )}
 
             <Pressable 
-              style={[styles.modalButton, styles.closeButton, { marginTop: 'auto' }]}
+              style={[styles.modalButton, styles.closeButton, { marginTop: 15 }]}
               onPress={onClose}
             >
               <Text style={styles.modalButtonText}>Fechar</Text>
