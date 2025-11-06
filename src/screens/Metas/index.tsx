@@ -1,4 +1,4 @@
-import { View, Text, FlatList, ScrollView, Alert } from "react-native"
+import { View, Text, FlatList, ScrollView, TouchableOpacity } from "react-native"
 import { styles } from "./style";
 import { ProgressoMetaResponse } from "@/src/interfaces/estatistica/response";
 import { EstatisticaService } from "@/src/services/api/estatisticas";
@@ -11,6 +11,7 @@ import { Usuario } from "@/src/interfaces/usuario";
 import { MetaService } from "@/src/services/api/metas";
 import { MetaModalEditar } from "@/src/components/ModalEditarMeta";
 import { BotaoDeletarEditar } from "@/src/components/BotaoEditarDeletar";
+import { Alert } from "@/src/components/Alert";
 
 
 export const MetasScreen = () => {
@@ -21,6 +22,12 @@ export const MetasScreen = () => {
     const [carregandoProgresso, setCarregandoProgresso] = useState(true);
     const [modalEditarVisible, setModalEditarVisible] = useState(false);
     const [metaSelecionada, setMetaSelecionada] = useState<Meta | null>(null);
+
+    const [confirmAlertVisible, setConfirmAlertVisible] = useState(false);
+    const [resultAlertVisible, setResultAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+    const [metaParaExcluir, setMetaParaExcluir] = useState<{id: number, nome: string} | null>(null);
 
     const carregarMetas = async () => {
         try {
@@ -40,37 +47,45 @@ export const MetasScreen = () => {
         }, [])
     );
 
+    const mostrarAlerta = (titulo: string, mensagem: string) => {
+        setAlertTitle(titulo);
+        setAlertMessage(mensagem);
+        setResultAlertVisible(true);
+    };
+
+    // Função para mostrar confirmação de exclusão
+    const mostrarConfirmacaoExclusao = (id: number, nome: string) => {
+        setMetaParaExcluir({ id, nome });
+        setConfirmAlertVisible(true);
+    };
+
+    // Função para executar a exclusão após confirmação
+    const executarExclusao = async () => {
+        if (!metaParaExcluir) return;
+
+        try {
+            await MetaService.deletarMeta(metaParaExcluir.id);
+            await carregarMetas();
+            mostrarAlerta("Sucesso", "Meta excluída com sucesso!");
+        } catch (error) {
+            console.error('Erro ao excluir meta:', error);
+            mostrarAlerta("Erro", "Não foi possível excluir a meta.");
+        } finally {
+            setMetaParaExcluir(null);
+            setConfirmAlertVisible(false);
+        }
+    };
+
+    // Função para cancelar a exclusão
+    const cancelarExclusao = () => {
+        setMetaParaExcluir(null);
+        setConfirmAlertVisible(false);
+    };
+
     const handleEditarMeta = (metaProgresso: ProgressoMetaResponse) => {
-    // Converte antes de abrir o modal
         const metaConvertida = converterParaMeta(metaProgresso);
         setMetaSelecionada(metaConvertida);
         setModalEditarVisible(true);
-    };
-
-    const handleDeletarMeta = async (metaId: number) => {
-        Alert.alert(
-            "Confirmar Exclusão",
-            "Tem certeza que deseja excluir esta meta?",
-            [
-                {
-                    text: "Cancelar",
-                    style: "cancel"
-                },
-                {
-                    text: "Excluir",
-                    style: "destructive",
-                    onPress: async () => {
-                        try {
-                            await MetaService.deletarMeta(metaId);
-                            await carregarMetas();
-                            Alert.alert('Sucesso', 'Meta excluída com sucesso!');
-                        } catch {
-                            Alert.alert('Erro', 'Não foi possível excluir a meta');
-                        }
-                    }
-                }
-            ]
-        );
     };
 
     const handleSalvarEdicao = async (metaEditada: Meta) => {
@@ -84,20 +99,21 @@ export const MetasScreen = () => {
             
             setModalEditarVisible(false);
             await carregarMetas();
-            Alert.alert('Sucesso', 'Meta atualizada com sucesso!');
-        } catch {
-            Alert.alert('Erro', 'Não foi possível atualizar a meta');
+            mostrarAlerta("Sucesso", "Meta atualizada com sucesso!");
+        } catch (error) {
+            console.error('Erro ao atualizar meta:', error);
+            mostrarAlerta("Erro", "Não foi possível atualizar a meta.");
         }
     };
+
 
     const handleFecharModal = () => {
         setModalEditarVisible(false);
         setMetaSelecionada(null);
     };
 
-    // Converter ProgressoMetaResponse para Meta
+     // Converter ProgressoMetaResponse para Meta
     const converterParaMeta = (metaProgresso: ProgressoMetaResponse): Meta => {
-    // Se não temos a data, usar uma data padrão no formato correto
         const dataPadrao = new Date();
         dataPadrao.setMonth(dataPadrao.getMonth() + 1);
         
@@ -105,14 +121,14 @@ export const MetasScreen = () => {
             const ano = data.getFullYear();
             const mes = String(data.getMonth() + 1).padStart(2, '0');
             const dia = String(data.getDate()).padStart(2, '0');
-            return `${ano}-${mes}-${dia}`; // Formato YYYY-MM-DD
+            return `${ano}-${mes}-${dia}`;
         };
 
         return {
             id: metaProgresso.metaId,
             nome: metaProgresso.metaNome,
             valorAlvo: metaProgresso.valorAlvo,
-            data: formatarDataParaAPI(dataPadrao), // Data no formato correto
+            data: formatarDataParaAPI(dataPadrao),
             status: metaProgresso.status,
             usuario: {} as Usuario
         };
@@ -145,7 +161,7 @@ export const MetasScreen = () => {
                                 <Text style={styles.cardTitleMeta}>{item.metaNome}</Text>
                                 <BotaoDeletarEditar
                                     onEdit={() => handleEditarMeta(item)}
-                                    onDelete={() => handleDeletarMeta(item.metaId)}
+                                    onDelete={() => mostrarConfirmacaoExclusao(item.metaId, item.metaNome)}
                                 />
                             </View>
 
@@ -197,6 +213,48 @@ export const MetasScreen = () => {
                 onSave={handleSalvarEdicao}
             />
             
+            {/* Alert de Confirmação de Exclusão */}
+            {confirmAlertVisible && (
+                <View style={styles.customAlertOverlay}>
+                    <View style={styles.customAlertContainer}>
+                        <View style={styles.customAlertHeader}>
+                            <Text style={styles.customAlertTitle}>Confirmar exclusão</Text>
+                        </View>
+                        
+                        <View style={styles.customAlertBody}>
+                            <Text style={styles.customAlertMessage}>
+                                Tem certeza que deseja excluir a meta "{metaParaExcluir?.nome}"?
+                            </Text>
+                        </View>
+                        
+                        <View style={styles.customAlertFooter}>
+                            <TouchableOpacity 
+                                style={styles.customAlertCancelButton} 
+                                onPress={cancelarExclusao}
+                            >
+                                <Text style={styles.customAlertCancelText}>Cancelar</Text>
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity 
+                                style={styles.customAlertConfirmButton} 
+                                onPress={executarExclusao}
+                            >
+                                <Text style={styles.customAlertConfirmText}>Excluir</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            )}
+
+            {/* Alert de Resultado */}
+            <Alert
+                visible={resultAlertVisible}
+                title={alertTitle}
+                message={alertMessage}
+                onClose={() => setResultAlertVisible(false)}
+                confirmText="OK"
+            />
+
         </ScrollView>
           
     );

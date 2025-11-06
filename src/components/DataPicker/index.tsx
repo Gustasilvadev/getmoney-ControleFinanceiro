@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Pressable, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -20,15 +20,36 @@ export function DataPicker({
   onChangeText
 }: DatePickerProps) {
   const [showPicker, setShowPicker] = useState(false);
-  const [date, setDate] = useState(value ? new Date(value) : new Date());
 
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowPicker(Platform.OS === 'ios'); // No iOS mantém aberto, no Android fecha
+  useEffect(() => {
+    if (value) {
+      // Converte YYYY-MM-DD para Date sem problemas de timezone
+      const [year, month, day] = value.split('-');
+      // Cria a data no timezone local
+      const newDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      setDate(newDate);
+    }
+  }, [value]);
+  
+  const getInitialDate = () => {
+    if (!value) return new Date();
+    const [year, month, day] = value.split('-');
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  };
+
+  const [date, setDate] = useState(getInitialDate());
+
+    const handleDateChange = (event: any, selectedDate?: Date) => {
+    setShowPicker(Platform.OS === 'ios');
     
     if (selectedDate) {
       setDate(selectedDate);
-      // Formata para YYYY-MM-DD
-      const formattedDate = selectedDate.toISOString().split('T')[0];
+      
+      const year = selectedDate.getFullYear();
+      const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = selectedDate.getDate().toString().padStart(2, '0');
+      
+      const formattedDate = `${year}-${month}-${day}`;
       onChangeText(formattedDate);
     }
   };

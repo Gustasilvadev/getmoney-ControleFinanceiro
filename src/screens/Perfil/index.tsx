@@ -1,10 +1,11 @@
 
-import { Pressable, View, Text, Keyboard, Alert, TouchableOpacity } from "react-native"
+import { Pressable, View, Text, Keyboard, TouchableOpacity } from "react-native"
 import { styles } from "./style"
 import { InputForm } from "@/src/components/InputForm"
 import { useEffect, useState } from "react";
 import { UsuarioService } from "@/src/services/api/usuario";
 import { useApi } from "@/src/hooks/useApi";
+import { Alert } from "@/src/components/Alert";
 
 
 export const PerfilScreen = () => {
@@ -17,6 +18,10 @@ export const PerfilScreen = () => {
     const [salvandoDados, setSalvandoDados] = useState(false);
     const [salvandoSenha, setSalvandoSenha] = useState(false);
 
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+
     useEffect(() => {
         if (usuario) {
             setNome(usuario.nome || '');
@@ -24,54 +29,67 @@ export const PerfilScreen = () => {
         }
     }, [usuario]);
 
+     const mostrarAlerta = (titulo: string, mensagem: string) => {
+        setAlertTitle(titulo);
+        setAlertMessage(mensagem);
+        setAlertVisible(true);
+    };
+
     const handleSalvarDados = async () => {
         if (!nome.trim()) {
-            Alert.alert('Erro', 'Preencha nome');
+            mostrarAlerta("Atenção", "Preencha o nome");
             return;
         }
 
         if (!usuario) {
-            Alert.alert('Erro', 'Usuário não encontrado');
+            mostrarAlerta("Erro", "Usuário não encontrado");
             return;
         }
 
         setSalvandoDados(true);
         try {
             await UsuarioService.editarPorUsuarioId(usuario.id, nome, email);
-            Alert.alert('Sucesso', 'Dados atualizados com sucesso!');
-        } catch {
-            Alert.alert('Erro', 'Não foi possível atualizar os dados');
+            mostrarAlerta("Sucesso", "Dados atualizados com sucesso!");
+        } catch (error) {
+            console.error('Erro ao atualizar dados:', error);
+            mostrarAlerta("Erro", "Não foi possível atualizar os dados");
         } finally {
             setSalvandoDados(false);
         }
     };
 
     const handleAlterarSenha = async () => {
-        if (novaSenha.trim().length < 8) {
-            Alert.alert("Erro", "A nova senha deve conter pelo menos 8 caracteres.");
+        if (!senhaAtual.trim() || !novaSenha.trim()) {
+            mostrarAlerta("Atenção", "Preencha a senha atual e a nova senha");
             return;
         }
-        if (!senhaAtual.trim() || !novaSenha.trim()) {
-            Alert.alert('Erro', 'Preencha a senha atual e a nova senha');
+
+        if (novaSenha.trim().length < 8) {
+            mostrarAlerta("Atenção", "A nova senha deve conter pelo menos 8 caracteres");
             return;
         }
 
         setSalvandoSenha(true);
         try {
             await UsuarioService.alterarSenhaUsuario(senhaAtual, novaSenha);
-            Alert.alert('Sucesso', 'Senha alterada com sucesso!');
+            mostrarAlerta("Sucesso", "Senha alterada com sucesso!");
             setSenhaAtual('');
             setNovaSenha('');
         } catch (error: any) {
+            
             if (error.response?.status === 403) {
-                Alert.alert('Acesso Negado', 
-                    'Você não tem permissão para alterar a senha. \nPossíveis causas:\n• Sessão expirada\n• Problema no servidor');
+                mostrarAlerta(
+                    "Acesso Negado", 
+                    "Você não tem permissão para alterar a senha. \nPossíveis causas:\n• Sessão expirada\n• Problema no servidor\n• Senha incorreta"
+                );
+            } else if (error.response?.status === 400) {
+                mostrarAlerta("Erro", "Senha atual incorreta");
             } else {
-                Alert.alert('Erro', 'Não foi possível alterar a senha');
+                mostrarAlerta("Erro", "Não foi possível alterar a senha");
             }
         } finally {
-        setSalvandoSenha(false);
-         }
+            setSalvandoSenha(false);
+        }
     };
 
     return(
@@ -148,6 +166,14 @@ export const PerfilScreen = () => {
 
                 </View>
             </View>
+
+            <Alert
+                visible={alertVisible}
+                title={alertTitle}
+                message={alertMessage}
+                onClose={() => setAlertVisible(false)}
+                confirmText="OK"
+            />
             
         </Pressable>
     );

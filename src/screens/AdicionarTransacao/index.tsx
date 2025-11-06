@@ -11,6 +11,7 @@ import { useSelecaoMeta } from '@/src/hooks/SelecaoMeta/useSelecaoMeta';
 import { TransacaoService } from '@/src/services/api/transacao';
 import { BotaoSalvar } from '@/src/components/BotaoSalvar';
 import { DataPicker } from '@/src/components/DataPicker';
+import { Alert} from "@/src/components/Alert"
 
 export const AdicionarTransacao = () =>{
 
@@ -21,6 +22,10 @@ export const AdicionarTransacao = () =>{
     const [descricao, setDescricao] = useState('');
     const [data, setData] = useState('');
     const [salvando, setSalvando] = useState(false);
+
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
 
     const {
         modalVisible:categoriaModalVisible,
@@ -45,20 +50,63 @@ export const AdicionarTransacao = () =>{
         selecionarMeta
     } = useSelecaoMeta();
 
+
+    const mostrarAlerta = (titulo: string, mensagem: string) => {
+        setAlertTitle(titulo);
+        setAlertMessage(mensagem);
+        setAlertVisible(true);
+    };
+    
     const handleCriarCategoria = async () => {
         if (nomeNovaCategoria.trim()) {
             try {
                 await criarCategoria(nomeNovaCategoria);
                 setNomeNovaCategoria('');
             } catch{
-                console.error('Erro ao criar categoria:');
+                mostrarAlerta("Erro", "Erro ao criar uma categoria. Tente novamente.");
             }
         }
     };
 
     const handleSalvarTransacao = async () => {
-        if (!valor || !descricao || !data || !categoriaSelecionada) {
-            alert('Preencha todos os campos obrigatórios');
+        // Validações básicas de campos obrigatórios
+        if (!valor.trim() || !descricao.trim() || !data.trim() || !categoriaSelecionada) {
+            mostrarAlerta("Atenção", "Preencha todos os campos obrigatórios");
+            return;
+        }
+
+        // Validação do valor
+        const valorLimpo = valor.replace(/\./g, '').replace(',', '.');
+        const valorNumerico = parseFloat(valorLimpo);
+        
+        if (isNaN(valorNumerico)) {
+            mostrarAlerta("Erro", "Valor inválido. Use apenas números");
+            return;
+        }
+
+        if (valorNumerico <= 0) {
+            mostrarAlerta("Atenção", "O valor deve ser maior que zero");
+            return;
+        }
+
+        if (valorNumerico > 9999999.99) {
+            mostrarAlerta("Atenção", "O valor não pode ser superior a 9.999.999,99");
+            return;
+        }
+
+        if (valorNumerico < 0.01) {
+            mostrarAlerta("Atenção", "O valor deve ser de pelo menos R$ 0,01");
+            return;
+        }
+
+        // Validação da descrição
+        if (descricao.trim().length < 2) {
+            mostrarAlerta("Atenção", "A descrição deve ter pelo menos 2 caracteres");
+            return;
+        }
+
+        if (descricao.trim().length > 15) {
+            mostrarAlerta("Atenção", "A descrição não pode ter mais de 15 caracteres");
             return;
         }
 
@@ -73,8 +121,7 @@ export const AdicionarTransacao = () =>{
                 categoriaSelecionada.id,            
                 metaSelecionada?.id ? [metaSelecionada.id] : []
             );
-            
-            alert('Transação salva com sucesso!');
+            mostrarAlerta("Sucesso","Transação salva com sucesso!");
             
             // Limpa o formulário
             setValor('');
@@ -82,7 +129,7 @@ export const AdicionarTransacao = () =>{
             setData('');
             
         } catch {
-            alert('Erro ao salvar transação');
+            mostrarAlerta("Erro","Erro ao criar transação. Tente novamente.");
         } finally {
             setSalvando(false);
         }
@@ -149,13 +196,20 @@ export const AdicionarTransacao = () =>{
 
                     <View style={styles.botao}>
                         <BotaoSalvar 
-                        onPress={handleSalvarTransacao}
-                        loading={salvando}
-                        disabled={!valor || !descricao || !data || !categoriaSelecionada}
+                            onPress={handleSalvarTransacao}
+                            loading={salvando}
+                            disabled={!valor || !descricao || !data || !categoriaSelecionada}
                         />
                     </View>
 
                 </View>
+                    <Alert
+                        visible={alertVisible}
+                        title={alertTitle}
+                        message={alertMessage}
+                        onClose={() => setAlertVisible(false)}
+                        confirmText="OK"
+                    />
             </View>
 
              <InputModalCategoria

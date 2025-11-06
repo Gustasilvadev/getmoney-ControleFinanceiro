@@ -124,6 +124,7 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 8,
     },
+    
     actionButton: {
         paddingHorizontal: 12,
         paddingVertical: 6,
@@ -131,16 +132,106 @@ export const styles = StyleSheet.create({
         minWidth: 60,
         alignItems: "center",
     },
+
     editButton: {
         backgroundColor: '#007AFF',
     },
+
     deleteButton: {
         backgroundColor: '#FF3B30',
     },
+
     actionButtonText: {
         color: '#FFFFFF',
         fontSize: 12,
         fontFamily:FONTS.montserrat.semiBold,
+    },
+
+        customAlertOverlay: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: '#00000080',
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1000,
+    },
+
+    customAlertContainer: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 12,
+        width: '80%',
+        maxWidth: 320,
+        shadowColor: '#000000',
+        shadowOffset: {width: 0,height: 2},
+        shadowOpacity: 0.25,
+        shadowRadius: 3.80,
+        elevation: 5,
+    },
+
+    customAlertHeader: {
+        padding: 20,
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+    },
+
+    customAlertTitle: {
+        fontSize: 18,
+        fontFamily:FONTS.montserrat.bold,
+        textAlign: "center",
+        color: '#DC3545',
+    },
+
+    customAlertBody: {
+        padding: 20,
+        paddingVertical: 15,
+    },
+
+    customAlertMessage: {
+        fontSize: 16,
+        textAlign: "center",
+        lineHeight: 22,
+        color: '#333333',
+    },
+
+    customAlertFooter: {
+        padding: 20,
+        paddingTop: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+
+    customAlertCancelButton: {
+        flex: 1,
+        backgroundColor: '#6C757D',
+        paddingVertical: 12,
+        borderRadius: 8,
+        alignItems: "center",
+        marginRight: 8,
+    },
+
+    customAlertCancelText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontFamily:FONTS.montserrat.semiBold,
+    },
+
+    customAlertConfirmButton: {
+        flex: 1,
+        backgroundColor: '#DC3545',
+        paddingVertical: 12,
+        borderRadius: 8,
+        alignItems: "center",
+        marginLeft: 8,
+    },
+
+    customAlertConfirmText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontFamily:FONTS.montserrat.bold,
     },
     
 });

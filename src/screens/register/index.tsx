@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { LogoTitle } from "@/src/components/LogoTitle";
-import { View,Text,TextInput,TouchableOpacity,Keyboard, Pressable, Alert } from "react-native";
+import { View,Text,TextInput,TouchableOpacity,Keyboard, Pressable } from "react-native";
 import {styles} from "./style"
 import { useNavigation } from "@/src/constants/router";
 import { registerService } from "@/src/services/api/auth/register";
 import { useFormRegister } from "@/src/hooks/formRegister";
+import { Alert } from "@/src/components/Alert";
 
 
 export const RegisterScreen = () =>{
@@ -15,16 +16,42 @@ export const RegisterScreen = () =>{
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const { errors, validate, clearError } = useFormRegister();
+    const [loading, setLoading] = useState(false);
+
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+
+    const mostrarAlerta = (titulo: string, mensagem: string) => {
+        setAlertTitle(titulo);
+        setAlertMessage(mensagem);
+        setAlertVisible(true);
+    };
 
     const handleRegister = async () => {
-         if (!validate(nome,email, senha)) return;
+        if (!validate(nome, email, senha)) return;
 
+        setLoading(true);
         try {
-            await registerService.register(nome,email, senha);
-            navigation.login();
-    
+            await registerService.register(nome, email, senha);
+            mostrarAlerta("Sucesso", "Conta criada com sucesso!");
+            setTimeout(() => {
+                navigation.login();
+            }, 1000);
         } catch (error: any) {
-            alert(error.message || 'Erro ao criar usuario');
+            console.error('Erro no registro:', error);
+            
+            if (error.response?.status === 400) {
+                mostrarAlerta("Erro", "Dados inválidos. Verifique as informações.");
+            } else if (error.response?.status === 409) {
+                mostrarAlerta("Atenção", "Este e-mail já está em uso.");
+            } else if (error.message?.includes('Network Error')) {
+                mostrarAlerta("Erro", "Sem conexão com a internet.");
+            } else {
+                mostrarAlerta("Erro", error.message || 'Erro ao criar usuário');
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -92,6 +119,15 @@ export const RegisterScreen = () =>{
                     </View>
                 </View>
             </View>
+
+            {/* Alert Personalizado */}
+            <Alert
+                visible={alertVisible}
+                title={alertTitle}
+                message={alertMessage}
+                onClose={() => setAlertVisible(false)}
+                confirmText="OK"
+            />
         </Pressable>
     );
 }

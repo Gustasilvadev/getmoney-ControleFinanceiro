@@ -45,4 +45,8 @@ export const styles = StyleSheet.create({
         gap: 15,
     },
 
+    botao:{
+        height:70,
+    },
+
 });

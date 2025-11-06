@@ -5,6 +5,7 @@ import {styles} from "./style"
 import { useNavigation } from "@/src/constants/router";
 import { LoginService } from "@/src/services/api/auth/login";
 import { useFormLogin } from '@/src/hooks/formLogin';
+import { Alert} from "@/src/components/Alert"
 
 
 export const LoginScreen = () => {
@@ -12,18 +13,36 @@ export const LoginScreen = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const { errors, validate, clearError } = useFormLogin();
+    const { errors, validate, clearError, setInvalidCredentialsError  } = useFormLogin();
 
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+
+    const [loading, setLoading] = useState(false);
+
+    const mostrarAlerta = (titulo: string, mensagem: string) => {
+        setAlertTitle(titulo);
+        setAlertMessage(mensagem);
+        setAlertVisible(true);
+    };
 
     const handleLogin = async () => {
-         if (!validate(email, senha)) return;
+        if (!validate(email, senha)) return;
 
         try {
+            setLoading(true);
             await LoginService.login(email, senha);
             navigation.home();
-
         } catch (error: any) {
-            alert(error.message || 'Erro no login');
+            // Se o login falhou no servidor, mostra erro de credenciais
+            if (error.response?.status === 401 || error.response?.status === 400) {
+                setInvalidCredentialsError();
+            } else {
+                mostrarAlerta("Erro", "Não foi possível fazer login. Tente novamente.");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -56,15 +75,18 @@ export const LoginScreen = () => {
                     <View style={styles.inputContainer}>
                         {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
                         <TextInput style={[styles.input, errors.senha && styles.inputError]}
-                        placeholder="Senha"
-                        value={senha}
-                        onChangeText={(text) => {
-                                    setSenha(text);
-                                    clearError('senha');
-                                }}
-                        placeholderTextColor='#858587'
-                        keyboardType="default"
-                        secureTextEntry></TextInput>
+                            placeholder="Senha"
+                            value={senha}
+                            onChangeText={(text) => {
+                                        setSenha(text);
+                                        clearError('senha');
+                                    }}
+                            placeholderTextColor='#858587'
+                            keyboardType="default"
+                            secureTextEntry>
+
+                        </TextInput>
+
                     </View>
                     
 
@@ -79,6 +101,14 @@ export const LoginScreen = () => {
                     </View>
                 </View>
             </View>
+
+                <Alert
+                    visible={alertVisible}
+                    title={alertTitle}
+                    message={alertMessage}
+                    onClose={() => setAlertVisible(false)}
+                    confirmText="OK"
+                />
         </Pressable>
     );
 }
