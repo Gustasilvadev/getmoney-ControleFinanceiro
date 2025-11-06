@@ -103,7 +103,7 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         color: '#858587',
         fontFamily: FONTS.openSans.regular,
-        fontStyle: 'italic',
+        fontStyle: "italic",
         marginVertical: 20,
         fontSize: 14,
     },

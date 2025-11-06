@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
 
 footerContainer: {
-    position: 'relative',
+    position: "relative",
   },
   
   footer: {
@@ -20,13 +20,13 @@ footerContainer: {
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 5,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   topCurve: {
     backgroundColor:'#FFFFFF',
-    position: 'absolute',
+    position: "absolute",
     top: -50,
     left: '50%',
     marginLeft: -40,
@@ -35,11 +35,11 @@ footerContainer: {
     borderTopWidth: 1,
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    borderTopColor: "#E0E0E0", 
+    borderTopColor: '#E0E0E0', 
     borderLeftWidth: 1,
-    borderLeftColor: "#E0E0E0",
+    borderLeftColor: '#E0E0E0',
     borderRightWidth: 1,
-    borderRightColor: "#E0E0E0",
+    borderRightColor: '#E0E0E0',
   },
 
   tab: {
@@ -53,7 +53,7 @@ footerContainer: {
   },
 
   centerTab: {
-    position: 'absolute',
+    position: "absolute",
     top: -40,
     left: '50%',
     marginLeft: -20,
@@ -62,23 +62,23 @@ footerContainer: {
   },
 
   activeTab: {
-    backgroundColor: "#00948f27",
+    backgroundColor: '#00948f27',
   },
 
   icon: {
     width: 32,
     height: 32,
-    tintColor: "#666666",
+    tintColor: '#666666',
   },
 
   centerIcon: {
-    tintColor: "#136F6C",
+    tintColor: '#136F6C',
     width: 35,
     height: 35,
   },
 
   activeIcon: {
-    tintColor: "#009490",
+    tintColor: '#009490',
   },
   
 });

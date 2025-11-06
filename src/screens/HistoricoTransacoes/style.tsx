@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
         fontFamily: FONTS.montserrat.bold,
         fontSize: 18,
         color: '#535652',
-        textAlign: 'left',
+        textAlign: "left",
     },
 
     periodContainer: {

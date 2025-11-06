@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
         fontFamily:FONTS.openSans.semiBold,
         color:'#858587',
         flex: 1,
-        textAlignVertical: 'center',
+        textAlignVertical: "center",
         includeFontPadding: false,
         
         

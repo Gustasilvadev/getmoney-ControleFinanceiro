@@ -59,9 +59,9 @@ export const styles = StyleSheet.create({
     },
 
     cardHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
         marginBottom: 15,
     },
 
@@ -82,7 +82,7 @@ export const styles = StyleSheet.create({
         backgroundColor: '#E8E8E8',
         borderRadius: 6,
         marginBottom: 8,
-        overflow: 'hidden',
+        overflow: "hidden",
     },
 
     progressFill: {
@@ -120,9 +120,8 @@ export const styles = StyleSheet.create({
         margin:30,
     },
 
-    // Estilos para os botões de ação
     actionButtonsContainer: {
-        flexDirection: 'row',
+        flexDirection: "row",
         gap: 8,
     },
     actionButton: {
@@ -130,7 +129,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 6,
         borderRadius: 6,
         minWidth: 60,
-        alignItems: 'center',
+        alignItems: "center",
     },
     editButton: {
         backgroundColor: '#007AFF',
@@ -139,9 +138,9 @@ export const styles = StyleSheet.create({
         backgroundColor: '#FF3B30',
     },
     actionButtonText: {
-        color: 'white',
+        color: '#FFFFFF',
         fontSize: 12,
-        fontWeight: '600',
+        fontFamily:FONTS.montserrat.semiBold,
     },
     
 });

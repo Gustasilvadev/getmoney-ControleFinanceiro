@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
         backgroundColor: '#136F6C',
         padding: 16,
         borderRadius: 8,
-        alignItems: 'center',
+        alignItems: "center",
         marginTop: 20,
     },
     
@@ -50,18 +50,18 @@ export const styles = StyleSheet.create({
         backgroundColor: '#136F6C',
         padding: 16,
         borderRadius: 8,
-        alignItems: 'center',
+        alignItems: "center",
         marginTop: 10,
     },
     
     botaoDesabilitado: {
-        backgroundColor: '#CCC',
+        backgroundColor: '#CCCCCC',
     },
     
     textoBotao: {
-        color: '#FFF',
+        color: '#FFFFFF',
         fontSize: 16,
-        fontWeight: 'bold',
+        fontFamily:FONTS.montserrat.semiBold,
     },
     
     separador: {

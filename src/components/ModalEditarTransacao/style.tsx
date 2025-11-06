@@ -1,12 +1,13 @@
+import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#00000080',
+        justifyContent: "center",
+        alignItems: "center",
     },
 
     modalContainer: {
@@ -14,13 +15,13 @@ export const styles = StyleSheet.create({
         borderRadius: 12,
         width: '90%',
         maxHeight: '80%',
-        overflow: 'hidden',
+        overflow: "hidden",
     },
 
     modalHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         padding: 16,
         borderBottomWidth: 1,
         borderBottomColor: '#E5E5E5',
@@ -28,7 +29,7 @@ export const styles = StyleSheet.create({
 
     modalTitle: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily:FONTS.montserrat.semiBold,
         color: '#136F6C',
     },
     closeButton: {
@@ -37,8 +38,8 @@ export const styles = StyleSheet.create({
 
     closeButtonText: {
         fontSize: 18,
-        color: '#666',
-        fontWeight: 'bold',
+        color: '#666666',
+        fontFamily:FONTS.montserrat.semiBold,
     },
 
     modalContent: {
@@ -47,8 +48,8 @@ export const styles = StyleSheet.create({
     },
 
     modalFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        justifyContent: "space-between",
         padding: 16,
         borderTopWidth: 1,
         borderTopColor: '#E5E5E5',
@@ -60,13 +61,13 @@ export const styles = StyleSheet.create({
     },
     sectionTitle: {
         fontSize: 16,
-        fontWeight: '600',
+        fontFamily:FONTS.montserrat.semiBold,
         marginBottom: 8,
-        color: '#333',
+        color: '#333333',
     },
 
     radioGroup: {
-        flexDirection: 'row',
+        flexDirection: "row",
         gap: 12,
     },
 
@@ -76,24 +77,24 @@ export const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: '#DDD',
-        alignItems: 'center',
+        alignItems: "center",
     },
     radioButtonSelected: {
         backgroundColor: '#136F6C',
         borderColor: '#136F6C',
     },
     radioText: {
-        color: '#666',
-        fontWeight: '500',
+        color: '#666666',
+        fontFamily:FONTS.montserrat.semiBold,
     },
     radioTextSelected: {
         color: '#FFFFFF',
     },
     pickerContainer: {
         borderWidth: 1,
-        borderColor: '#DDD',
+        borderColor: '#DDDDDD',
         borderRadius: 8,
-        overflow: 'hidden',
+        overflow: "hidden",
     },
 
     picker: {
@@ -103,7 +104,7 @@ export const styles = StyleSheet.create({
     metaItem: {
         padding: 12,
         borderWidth: 1,
-        borderColor: '#DDD',
+        borderColor: '#DDDDDD',
         borderRadius: 8,
         marginBottom: 8,
     },
@@ -117,7 +118,7 @@ export const styles = StyleSheet.create({
     
     metaTextSelected: {
         color: '#136F6C',
-        fontWeight: '500',
+        fontFamily:FONTS.montserrat.semiBold,
     },
 
     cancelButton: {
@@ -132,7 +133,7 @@ export const styles = StyleSheet.create({
 
     cancelButtonText: {
         color: '#136F6C',
-        fontWeight: '600',
+        fontFamily:FONTS.montserrat.semiBold,
     },
 
 });

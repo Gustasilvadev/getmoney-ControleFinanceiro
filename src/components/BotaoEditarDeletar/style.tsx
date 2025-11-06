@@ -1,10 +1,11 @@
+import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 
     actionButtonsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
+        flexDirection: "row",
+        justifyContent: "flex-end",
         marginTop: 8,
         gap: 8,
     },
@@ -14,7 +15,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 6,
         borderRadius: 6,
         minWidth: 60,
-        alignItems: 'center',
+        alignItems: "center",
     },
 
     editButton: {
@@ -28,7 +29,7 @@ export const styles = StyleSheet.create({
     actionButtonText: {
         color: '#FFFFFF',
         fontSize: 12,
-        fontWeight: '500',
+        fontFamily:FONTS.openSans.semiBold,
     },
 
 });

@@ -3,11 +3,11 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     padding: 16,
     borderRadius: 12,
     margin: 12,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     fontFamily:FONTS.montserrat.bold,
     marginBottom: 16,
     textAlign: "center",
-    color: '#333',
+    color: '#333333',
   },
 
   loadingText: {
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
 
   emptyText: {
     textAlign: "center",
-    color: '#666',
+    color: '#666666',
     fontSize: 16,
     paddingVertical: 40,
   },
@@ -73,7 +73,7 @@ export const styles = StyleSheet.create({
 
   legendValue: {
     fontSize: 1,
-    color: '#666',
+    color: '#666666',
   },
 
   table: {
@@ -85,11 +85,11 @@ export const styles = StyleSheet.create({
     fontFamily:FONTS.montserrat.bold,
     marginBottom: 12,
     color: '#333',
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   tableHeader: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: '#4ECDC4',
     paddingVertical: 10,
     paddingHorizontal: 8,
@@ -100,13 +100,13 @@ export const styles = StyleSheet.create({
   headerCell: {
     flex: 1,
     fontSize: 12,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center',
+    fontFamily: FONTS.montserrat.semiBold,
+    color: '#FFFFFF',
+    textAlign: "center",
   },
 
   tableRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingVertical: 8,
     paddingHorizontal: 8,
     borderBottomWidth: 1,
@@ -118,41 +118,41 @@ export const styles = StyleSheet.create({
   },
 
   oddRow: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
   },
 
   cellMonth: {
     flex: 1,
     fontSize: 12,
-    fontWeight: '600',
-    color: '#333',
-    textAlign: 'center',
+    fontFamily:FONTS.montserrat.semiBold,
+    color: '#333333',
+    textAlign: "center",
   },
 
   cellReceita: {
     flex: 1,
     fontSize: 12,
-    fontWeight: '500',
+    fontFamily:FONTS.montserrat.semiBold,
     color: '#4ECDC4',
-    textAlign: 'center',
+    textAlign: "center",
   },
   cellDespesa: {
     flex: 1,
     fontSize: 12,
-    fontWeight: '500',
+    fontFamily:FONTS.montserrat.semiBold,
     color: '#FF6B6B',
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   cellSaldo: {
     flex: 1,
     fontSize: 12,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontFamily:FONTS.montserrat.semiBold,
+    textAlign: "center",
   },
 
   totalRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: '#2c3e50',
     paddingVertical: 10,
     paddingHorizontal: 8,
@@ -164,32 +164,32 @@ export const styles = StyleSheet.create({
   totalLabel: {
     flex: 1,
     fontSize: 12,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center',
+    fontFamily:FONTS.openSans.semiBold,
+    color: '#FFFFFF',
+    textAlign: "center",
   },
 
   totalReceita: {
     flex: 1,
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily:FONTS.openSans.bold,
     color: '#4ECDC4',
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   totalDespesa: {
     flex: 1,
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily:FONTS.montserrat.semiBold,
     color: '#FF6B6B',
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   totalSaldo: {
     flex: 1,
     fontSize: 12,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontFamily:FONTS.montserrat.semiBold,
+    textAlign: "center",
   },
 
   saldoPositivo: {

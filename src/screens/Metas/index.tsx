@@ -20,7 +20,7 @@ export const MetasScreen = () => {
     const [progressoDaMeta, setProgressoDaMeta] = useState<ProgressoMetaResponse[]>([]);
     const [carregandoProgresso, setCarregandoProgresso] = useState(true);
     const [modalEditarVisible, setModalEditarVisible] = useState(false);
-    const [metaSelecionada, setMetaSelecionada] = useState<ProgressoMetaResponse | null>(null);
+    const [metaSelecionada, setMetaSelecionada] = useState<Meta | null>(null);
 
     const carregarMetas = async () => {
         try {
@@ -41,7 +41,9 @@ export const MetasScreen = () => {
     );
 
     const handleEditarMeta = (metaProgresso: ProgressoMetaResponse) => {
-        setMetaSelecionada(metaProgresso);
+    // Converte antes de abrir o modal
+        const metaConvertida = converterParaMeta(metaProgresso);
+        setMetaSelecionada(metaConvertida);
         setModalEditarVisible(true);
     };
 
@@ -190,7 +192,7 @@ export const MetasScreen = () => {
              {/* Modal de Edição de Meta */}
             <MetaModalEditar
                 visible={modalEditarVisible}
-                meta={metaSelecionada ? converterParaMeta(metaSelecionada) : null}
+                meta={metaSelecionada}
                 onClose={handleFecharModal}
                 onSave={handleSalvarEdicao}
             />

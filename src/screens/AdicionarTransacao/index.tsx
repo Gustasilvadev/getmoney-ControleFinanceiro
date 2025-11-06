@@ -147,11 +147,14 @@ export const AdicionarTransacao = () =>{
                         isCombobox={true}
                     />
 
-                    <BotaoSalvar 
+                    <View style={styles.botao}>
+                        <BotaoSalvar 
                         onPress={handleSalvarTransacao}
                         loading={salvando}
                         disabled={!valor || !descricao || !data || !categoriaSelecionada}
-                    />
+                        />
+                    </View>
+
                 </View>
             </View>
 

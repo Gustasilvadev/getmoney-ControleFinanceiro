@@ -9,26 +9,26 @@ export const styles = StyleSheet.create({
     },
 
     checkboxGroup: {
-        flexDirection: 'row',
+        flexDirection: "row",
         backgroundColor: '#F8F8F8',
         borderRadius: 10,
         padding: 8,   
     },
 
     checkboxItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         borderRadius: 8,
         paddingHorizontal: 20,
         paddingVertical: 12,
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: "center",
         marginHorizontal: 4,
     },
 
     checkboxItemSelected: {
         backgroundColor: '#FFFFFF',
-        shadowColor: '#000',
+        shadowColor: '#000000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -42,9 +42,9 @@ export const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#136F6C',
         marginRight: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'transparent',
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "transparent",
     },
 
     checkboxCircleSelected: {
@@ -52,11 +52,11 @@ export const styles = StyleSheet.create({
     },
 
     checkIcon: {
-        display: 'none',
+        display: "none",
     },
 
     checkIconSelected: {
-        display: 'flex',
+        display: "flex",
     },
 
     checkboxText: {

@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 16,
         alignItems: "center",
-        marginTop: 20,
+        marginTop: 15,
     },
 
     saveButtonDisabled: {

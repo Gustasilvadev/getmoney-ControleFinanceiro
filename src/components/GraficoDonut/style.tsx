@@ -4,11 +4,11 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
 
     container: {
-        backgroundColor: 'white',
+        backgroundColor: '#FFFFFF',
         borderRadius: 12,
         padding: 16,
         margin: 8,
-        alignItems: 'center',
+        alignItems: "center",
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
@@ -38,11 +38,11 @@ export const styles = StyleSheet.create({
 
     errorText: {
         color: '#D32F2F',
-        textAlign: 'center',
+        textAlign: "center",
     },
 
     emptyText: {
-        color: '#999',
+        color: '#999999',
         textAlign: "center",
     },
 
@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
     legendText: {
         fontSize: 14,
         fontFamily:FONTS.openSans.semiBold,
-        color: '#666',
+        color: '#666666',
         flex: 1,
     },
 
