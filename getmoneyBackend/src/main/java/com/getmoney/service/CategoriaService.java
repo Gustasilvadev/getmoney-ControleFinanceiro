@@ -3,7 +3,6 @@ package com.getmoney.service;
 import com.getmoney.dto.request.CategoriaRequestDTO;
 import com.getmoney.dto.response.*;
 import com.getmoney.entity.Categoria;
-import com.getmoney.entity.Transacao;
 import com.getmoney.entity.Usuario;
 import com.getmoney.enums.CategoriaTipo;
 import com.getmoney.enums.Status;
@@ -13,14 +12,11 @@ import com.getmoney.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,13 +26,13 @@ public class CategoriaService {
     private final UsuarioRepository usuarioRepository;
     private TransacaoRepository transacaoRepository;
 
-    @Autowired
     private ModelMapper modelMapper;
 
-    public CategoriaService(CategoriaRepository categoriaRepository, TransacaoRepository transacaoRepository, UsuarioRepository usuarioRepository ) {
+    public CategoriaService(CategoriaRepository categoriaRepository, UsuarioRepository usuarioRepository, TransacaoRepository transacaoRepository, ModelMapper modelMapper) {
         this.categoriaRepository = categoriaRepository;
-        this.transacaoRepository = transacaoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.transacaoRepository = transacaoRepository;
+        this.modelMapper = modelMapper;
     }
 
     public List<CategoriaResponseDTO> listarCategorias(Integer usuarioId) {
