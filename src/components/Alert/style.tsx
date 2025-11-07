@@ -1,23 +1,24 @@
+import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#00000080',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
 
   alertContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     width: '100%',
     maxWidth: 320,
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: {width: 0,height: 2},
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 3.80,
     elevation: 5,
   },
 
@@ -25,13 +26,13 @@ export const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#F0F0F0',
   },
 
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontFamily:FONTS.montserrat.semiBold,
+    textAlign: "center",
     color: '#009490',
   },
 
@@ -41,10 +42,10 @@ export const styles = StyleSheet.create({
   },
 
   message: {
-    fontSize: 16,
-    textAlign: 'center',
-    lineHeight: 22,
-    color: '#333',
+    fontSize: 18,
+    textAlign: "center",
+    color: '#333333',
+    fontFamily:FONTS.montserrat.bold,
   },
 
   footer: {
@@ -57,13 +58,13 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   confirmButtonText: {
-    color: 'white',
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily:FONTS.montserrat.semiBold,
   },
   
 });

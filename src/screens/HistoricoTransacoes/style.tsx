@@ -181,7 +181,7 @@ export const styles = StyleSheet.create({
     transacaoCard:{
         backgroundColor: '#FFFFFF',
         borderRadius: 12,
-        minHeight: 140, // Aumentei um pouco para caber tudo
+        minHeight: 140,
         padding: 16,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -211,7 +211,7 @@ export const styles = StyleSheet.create({
         fontFamily: FONTS.openSans.bold,
         color: '#1A202C',
         marginBottom: 6,
-        flexWrap: 'wrap', // Permite quebra de linha
+        flexWrap: "wrap",
     },
 
     categoriaNome: {
@@ -230,7 +230,7 @@ export const styles = StyleSheet.create({
         fontFamily:FONTS.openSans.semiBold,
         color: '#2D3748',
         marginBottom: 2,
-        flexWrap: 'wrap', // Permite quebra de linha
+        flexWrap: "wrap",
     },
 
     data: {
@@ -313,6 +313,7 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         lineHeight: 22,
         color: '#333333',
+        fontFamily:FONTS.montserrat.semiBold,
     },
 
     customAlertFooter: {

@@ -281,7 +281,7 @@ export const HistoricoTransacoesScreen = ()=>{
                         
                         <View style={styles.customAlertBody}>
                             <Text style={styles.customAlertMessage}>
-                                Tem certeza que deseja excluir a transação "{transacaoParaExcluir?.descricao}"?
+                                {`Tem certeza que deseja excluir a transação "${transacaoParaExcluir?.descricao}"?`}
                             </Text>
                         </View>
                         

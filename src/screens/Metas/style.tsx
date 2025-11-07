@@ -147,7 +147,7 @@ export const styles = StyleSheet.create({
         fontFamily:FONTS.montserrat.semiBold,
     },
 
-        customAlertOverlay: {
+    customAlertOverlay: {
         position: "absolute",
         top: 0,
         left: 0,
@@ -195,6 +195,7 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         lineHeight: 22,
         color: '#333333',
+        fontFamily:FONTS.montserrat.semiBold,
     },
 
     customAlertFooter: {
