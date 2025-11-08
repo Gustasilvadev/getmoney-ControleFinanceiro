@@ -4,20 +4,16 @@ import com.getmoney.dto.request.MetaRequestDTO;
 import com.getmoney.dto.request.MetaRequestUpdateDTO;
 import com.getmoney.dto.response.MetaResponseDTO;
 import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
-import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Meta;
 import com.getmoney.entity.Usuario;
-import com.getmoney.enums.Status;
 import com.getmoney.repository.MetaRepository;
 import com.getmoney.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +23,12 @@ public class MetaService {
     private final MetaRepository metaRepository;
     private final UsuarioRepository usuarioRepository;
 
-    @Autowired
     private ModelMapper modelMapper;
 
-    public MetaService(MetaRepository metaRepository, UsuarioRepository usuarioRepository) {
+    public MetaService(MetaRepository metaRepository, UsuarioRepository usuarioRepository, ModelMapper modelMapper) {
         this.metaRepository = metaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.modelMapper = modelMapper;
     }
 
     /**
@@ -121,12 +117,15 @@ public class MetaService {
             throw new RuntimeException("Meta não encontrada com ID: " + metaId);
         }
 
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setSkipNullEnabled(true)
-                .setPropertyCondition(Conditions.isNotNull());
-
-        modelMapper.map(metaRequestUpdateDTO, metaExistente);
+        if (metaRequestUpdateDTO.getNome() != null) {
+            metaExistente.setNome(metaRequestUpdateDTO.getNome());
+        }
+        if (metaRequestUpdateDTO.getValorAlvo() != null) {
+            metaExistente.setValorAlvo(metaRequestUpdateDTO.getValorAlvo());
+        }
+        if (metaRequestUpdateDTO.getData() != null) {
+            metaExistente.setData(metaRequestUpdateDTO.getData());
+        }
 
         Meta metaAtualizada = metaRepository.save(metaExistente);
         return modelMapper.map(metaAtualizada, MetaResponseDTO.class);

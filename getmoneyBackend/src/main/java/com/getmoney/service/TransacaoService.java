@@ -2,8 +2,6 @@ package com.getmoney.service;
 
 import com.getmoney.dto.request.TransacaoRequestDTO;
 import com.getmoney.dto.request.TransacaoUpdateRequestDTO;
-import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
-import com.getmoney.dto.response.MetaBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoBasicaResponseDTO;
 import com.getmoney.dto.response.TransacaoResponseDTO;
 import com.getmoney.entity.Categoria;
@@ -32,14 +30,14 @@ public class TransacaoService {
     private final CategoriaRepository categoriaRepository;
     private final MetaRepository metaRepository;
 
-    @Autowired
     private ModelMapper modelMapper;
 
-    public TransacaoService(TransacaoRepository transacaoRepository, UsuarioRepository usuarioRepository, CategoriaRepository categoriaRepository, MetaRepository metaRepository) {
-        this.transacaoRepository = transacaoRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.categoriaRepository = categoriaRepository;
+    public TransacaoService(ModelMapper modelMapper, MetaRepository metaRepository, CategoriaRepository categoriaRepository, UsuarioRepository usuarioRepository, TransacaoRepository transacaoRepository) {
+        this.modelMapper = modelMapper;
         this.metaRepository = metaRepository;
+        this.categoriaRepository = categoriaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.transacaoRepository = transacaoRepository;
     }
 
     public List<TransacaoResponseDTO> listarTransacoesAtivas(Integer usuarioId) {

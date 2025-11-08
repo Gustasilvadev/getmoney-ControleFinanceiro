@@ -25,16 +25,17 @@ public class UsuarioService {
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, TokenService tokenService, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.tokenService = tokenService;
+        this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
-
 
     /**
      * Busca o usuario logado

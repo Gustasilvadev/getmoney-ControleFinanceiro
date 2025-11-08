@@ -1,7 +1,6 @@
-package com.getmoney.service.CategoriaServiceTest;
+package com.getmoney.service;
 
 import com.getmoney.dto.request.CategoriaRequestDTO;
-import com.getmoney.dto.response.CategoriaBasicaResponseDTO;
 import com.getmoney.dto.response.CategoriaResponseDTO;
 import com.getmoney.entity.Categoria;
 import com.getmoney.entity.Usuario;
@@ -10,7 +9,6 @@ import com.getmoney.enums.Status;
 import com.getmoney.repository.CategoriaRepository;
 import com.getmoney.repository.TransacaoRepository;
 import com.getmoney.repository.UsuarioRepository;
-import com.getmoney.service.CategoriaService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -42,11 +42,17 @@ public class ResumoFinanceiroService {
      * Obtém o resumo financeiro de um usuário, calculando totais de receitas, despesas e lucro.
      */
     public ResumoFinanceiroResponseDTO getResumoFinanceiro(Integer usuarioId) {
+        // Trata valores nulos
         BigDecimal receitas = transacaoRepository.TotalReceitas(usuarioId);
         BigDecimal despesas = transacaoRepository.TotalDespesas(usuarioId);
-        BigDecimal lucro = receitas.subtract(despesas);
 
-        return new ResumoFinanceiroResponseDTO(receitas, despesas, lucro);
+        // Se for null, usa ZERO
+        BigDecimal receitasSafe = receitas != null ? receitas : BigDecimal.ZERO;
+        BigDecimal despesasSafe = despesas != null ? despesas : BigDecimal.ZERO;
+
+        BigDecimal lucro = receitasSafe.subtract(despesasSafe);
+
+        return new ResumoFinanceiroResponseDTO(receitasSafe, despesasSafe, lucro);
     }
 
     /**

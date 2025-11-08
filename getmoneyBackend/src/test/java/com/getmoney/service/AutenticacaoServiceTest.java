@@ -1,7 +1,6 @@
-package com.getmoney.service.AutenticacaoServiceTest;
+package com.getmoney.service;
 
 import com.getmoney.repository.UsuarioRepository;
-import com.getmoney.service.AutenticacaoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Testes unitários para a classe AutenticaoService
+ */
 @ExtendWith(MockitoExtension.class)
 class AutenticacaoServiceTest {
 
@@ -24,7 +26,7 @@ class AutenticacaoServiceTest {
 
     /**
      * Testa o cenário onde o usuário é encontrado com sucesso
-     * Verifica se o método loadUserByUsername retorna os UserDetails corretamente
+     * Verifica se o metodo loadUserByUsername retorna os UserDetails corretamente
      * quando o email existe no banco de dados
      */
     @Test
@@ -47,7 +49,7 @@ class AutenticacaoServiceTest {
 
     /**
      * Testa o cenário onde o usuário não é encontrado
-     * Verifica se o método lança UsernameNotFoundException com a mensagem correta
+     * Verifica se o metodo lança UsernameNotFoundException com a mensagem correta
      * quando o email não existe no banco de dados
      */
     @Test
