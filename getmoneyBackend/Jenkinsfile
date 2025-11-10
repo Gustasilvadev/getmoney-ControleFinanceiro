@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     // Atualiza o PATH se necessário
-                    env.PATH = "/usr/bin:$PATH"
+                    env.PATH = "${env.MAVEN_HOME}\\bin;%PATH%"
                     // Instalar as dependências Maven antes de compilar o projeto
                     bat 'mvn clean install'  // Instala as dependências do Maven
                 }
@@ -42,6 +42,10 @@ pipeline {
 
                     // Executar o novo container
                     // bat "docker-compose up -d --build"
+
+                    dir('getmoneyBackend') {
+                        bat "${mavenCmd} clean install"
+                    }
                 }
             }
         }
