@@ -15,7 +15,7 @@ export const useGraficoLinha = () => {
   const transformData = (apiData: EvolucaoMensalResponse | EvolucaoMensalResponse[]): void => {
     // Converte para array sempre
     const dataArray = Array.isArray(apiData) ? apiData : [apiData];
-    
+
     if (!dataArray || dataArray.length === 0) {
       setData([]);
       return;
@@ -23,7 +23,7 @@ export const useGraficoLinha = () => {
 
     // Ordena do mais antigo para o mais recente
     const sortedData = [...dataArray].sort((a, b) => 
-      new Date(a.periodo).getTime() - new Date(b.periodo).getTime()
+      a.periodo.localeCompare(b.periodo)
     );
 
     const transformed = sortedData.map(item => ({
@@ -39,13 +39,17 @@ export const useGraficoLinha = () => {
   // Formata a data 2025-09-01 para Set/25
   const formatPeriodo = (periodo: string): string => {
     try {
-      const date = new Date(periodo);
+      // Extrair partes diretamente da string "YYYY-MM-DD"
+      const [ano, mes, dia] = periodo.split('-').map(Number);
+      
       const monthNames = [
         "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", 
         "Jul", "Ago", "Set", "Out", "Nov", "Dez"
       ];
-      const month = monthNames[date.getMonth()];
-      const year = date.getFullYear().toString().slice(2);
+      
+      // Usar o mês diretamente da string
+      const month = monthNames[mes - 1]; // -1 porque o array é 0-based
+      const year = ano.toString().slice(2);
       
       return `${month}/${year}`;
     } catch (error) {

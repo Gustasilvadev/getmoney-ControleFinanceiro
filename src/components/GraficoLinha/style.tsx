@@ -113,6 +113,12 @@ export const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
 
+  highlightedRow: {
+    backgroundColor: '#F0F8FF',
+    borderLeftWidth: 3,
+    borderLeftColor: '#4ECDC4',
+  },
+
   evenRow: {
     backgroundColor: '#fafafa',
   },
@@ -198,6 +204,28 @@ export const styles = StyleSheet.create({
 
   saldoNegativo: {
     color: '#FF6B6B',
+  },
+
+  tooltip: {
+    position: "absolute",
+    top: 50,
+    alignSelf: "center",
+    backgroundColor: '#000000E6',
+    padding: 12,
+    borderRadius: 8,
+    zIndex: 1000,
+    minWidth: 150,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: '#333333',
+    shadowColor: '#000',
+  },
+
+  tooltipText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontFamily:FONTS.montserrat.semiBold,
+    marginBottom: 2,
   },
 
 });

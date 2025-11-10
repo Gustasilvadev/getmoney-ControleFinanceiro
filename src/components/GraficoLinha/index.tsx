@@ -1,5 +1,5 @@
-import { Line, CartesianChart } from "victory-native";
-import { useEffect } from "react";
+import { CartesianChart, Line, useChartPressState} from "victory-native";
+import { useEffect, useState } from "react";
 import { useGraficoLinha, GraficoLinhaData  } from "@/src/hooks/GraficoLinha/useGraficoLinha";
 import { ActivityIndicator, View,Text } from "react-native";
 
@@ -19,6 +19,14 @@ export const GraficoLinha = ({ refreshKey = 0 }: GraficoLinhaProps) => {
 
   const { data: chartData, transformData } = useGraficoLinha();
 
+  const [tooltipData, setTooltipData] = useState<GraficoLinhaData | null>(null);
+
+  // Estado para tooltips
+   const pressState = useChartPressState({ 
+    x: "" as string, 
+    y: { receitas: 0, despesas: 0 } 
+  });
+
   // Transforma os dados quando a API retornar
   useEffect(() => {
     if (apiData) {
@@ -26,6 +34,20 @@ export const GraficoLinha = ({ refreshKey = 0 }: GraficoLinhaProps) => {
     }
   }, [apiData, transformData]);
 
+  useEffect(() => {
+    if (pressState.isActive) {
+      // Acessar o valor dentro do objeto SharedValue
+      const sharedValueObj = (pressState.state.x as any).value;
+      
+      // Extrair o valor real que está dentro do .value
+      const xValue = sharedValueObj.value;
+      const found = chartData.find(item => item.x === xValue);
+      
+      setTooltipData(found || null);
+    } else {
+      setTooltipData(null);
+    }
+  }, [pressState.isActive, pressState.state.x.value, chartData]);
 
   // Estados de carregamento
   if (apiLoading) {
@@ -46,39 +68,46 @@ export const GraficoLinha = ({ refreshKey = 0 }: GraficoLinhaProps) => {
     );
   }
 
-  // Cores para as linhas
-  const colorScale = {
-    receitas: '#4ECDC4',
-    despesas: '#FF6B6B'
-  };
-
-  // Soma todos os valores 
-  const totalReceitas = chartData.reduce((sum, item) => sum + item.receitas, 0);
-  const totalDespesas = chartData.reduce((sum, item) => sum + item.despesas, 0);
-
-    return (
-      <View style={styles.container}>
-      <Text style={styles.title}>Evolução Mensal - Receitas vs Despesas</Text>
+  return (
+    <View style={styles.container}>
+    <Text style={styles.title}>Evolução Mensal - Receitas vs Despesas</Text>
       
-      {/* Gráfico */}
-      <View style={{ height: 250 }}>
-        <CartesianChart<GraficoLinhaData, "x", "receitas" | "despesas">
+     {pressState.isActive && tooltipData && (
+        <View style={styles.tooltip}>
+          <Text style={styles.tooltipText}>{tooltipData.x}</Text>
+          <Text style={[styles.tooltipText, { color: '#4ECDC4' }]}>
+            Receitas: R$ {tooltipData.receitas.toFixed(2)}
+          </Text>
+          <Text style={[styles.tooltipText, { color: '#FF6B6B' }]}>
+            Despesas: R$ {tooltipData.despesas.toFixed(2)}
+          </Text>
+        </View>
+      )}
+
+      {/* Gráfico com interação */}
+      <View style={{ height: 280 }}>
+        <CartesianChart
           data={chartData}
           xKey="x"
           yKeys={["receitas", "despesas"]}
-          domainPadding={{ left: 30, right: 30, top: 30 }}
+          domainPadding={{ left: 40, right: 40, top: 50 }}
+          chartPressState={pressState.state}
+          axisOptions={{
+            labelColor: '#666',
+            formatYLabel: (value) => `R$ ${Number(value).toFixed(0)}`
+          }}
         >
           {({ points }) => (
             <>
               <Line 
-                points={points.receitas} 
-                color={colorScale.receitas}
+                points={points.receitas}
+                color="#4ECDC4"
                 strokeWidth={3}
                 curveType="linear"
               />
               <Line 
-                points={points.despesas} 
-                color={colorScale.despesas}
+                points={points.despesas}
+                color="#FF6B6B"
                 strokeWidth={3}
                 curveType="linear"
               />
@@ -91,12 +120,16 @@ export const GraficoLinha = ({ refreshKey = 0 }: GraficoLinhaProps) => {
       <View style={styles.legend}>
         <View style={styles.legendItem}>
           <View style={[styles.legendColor, { backgroundColor: '#4ECDC4' }]} />
-          <Text style={styles.legendText}>Receitas: R$ {totalReceitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Text>
+          <Text style={styles.legendText}>
+            Receitas: R$ {chartData.reduce((sum, item) => sum + item.receitas, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+          </Text>
         </View>
         
         <View style={styles.legendItem}>
           <View style={[styles.legendColor, { backgroundColor: '#FF6B6B' }]} />
-          <Text style={styles.legendText}>Despesas: R$ {totalDespesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</Text>
+          <Text style={styles.legendText}>
+            Despesas: R$ {chartData.reduce((sum, item) => sum + item.despesas, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+          </Text>
         </View>
       </View>
 
@@ -111,11 +144,12 @@ export const GraficoLinha = ({ refreshKey = 0 }: GraficoLinhaProps) => {
           <Text style={styles.headerCell}>Saldo</Text>
         </View>
 
-        {chartData.map((item, index) => (
-          <View key={index} style={[
-            styles.tableRow,
-            index % 2 === 0 ? styles.evenRow : styles.oddRow
-          ]}>
+          {chartData.map((item, index) => (
+            <View key={index} style={[
+              styles.tableRow,
+              index % 2 === 0 ? styles.evenRow : styles.oddRow,
+              tooltipData && item.x === tooltipData.x && styles.highlightedRow
+            ]}>
             <Text style={styles.cellMonth}>{item.x}</Text>
             <Text style={styles.cellReceita}>
               R$ {item.receitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
