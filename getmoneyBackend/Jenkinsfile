@@ -13,7 +13,12 @@ pipeline {
                     // Atualiza o PATH se necessário
                     env.PATH = "${env.MAVEN_HOME}\\bin;%PATH%"
                     // Instalar as dependências Maven antes de compilar o projeto
-                    bat 'mvn clean install'  // Instala as dependências do Maven
+                    // bat 'mvn clean install'  // Instala as dependências do Maven
+
+                    dir('getmoneyBackend') {
+                        // Instalar as dependências Maven antes de compilar o projeto
+                        bat 'mvn clean install'
+                    }
                 }
             }
         }
