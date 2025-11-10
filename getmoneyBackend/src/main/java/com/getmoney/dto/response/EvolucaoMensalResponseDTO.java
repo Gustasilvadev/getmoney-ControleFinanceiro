@@ -1,10 +1,13 @@
 package com.getmoney.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EvolucaoMensalResponseDTO {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Sao_Paulo")
     private LocalDate periodo;
     private BigDecimal totalDespesas;
     private BigDecimal totalReceitas;
