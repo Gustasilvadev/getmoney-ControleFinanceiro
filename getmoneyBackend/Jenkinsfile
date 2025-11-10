@@ -12,8 +12,6 @@ pipeline {
                 script {
                     // Atualiza o PATH se necessário
                     env.PATH = "${env.MAVEN_HOME}\\bin;%PATH%"
-                    // Instalar as dependências Maven antes de compilar o projeto
-                    // bat 'mvn clean install'  // Instala as dependências do Maven
 
                     dir('getmoneyBackend') {
                         // Instalar as dependências Maven antes de compilar o projeto
@@ -26,6 +24,9 @@ pipeline {
         stage('Construir Imagem Docker') {
             steps {
                 script {
+                    // Atualiza o PATH para Docker e Maven
+                    env.PATH = "${env.DOCKER_HOME};${env.MAVEN_HOME}\\bin;${env.PATH}"
+
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
@@ -36,28 +37,29 @@ pipeline {
             }
         }
 
-         stage('Fazer Deploy') {
-                     steps {
-                         script {
-                             def appName = 'getmoney'
-                             def imageTag = "${appName}:${env.BUILD_ID}"
+        stage('Fazer Deploy') {
+            steps {
+                script {
+                    def appName = 'getmoney'
+                    def imageTag = "${appName}:${env.BUILD_ID}"
 
-                             // Parar e remover o container existente, se houver
-                             bat "docker stop ${appName} || exit 0"
-                             bat "docker rm -v ${appName} || exit 0"
+                    // Para e remove container existente, se houver
+                    bat "docker stop ${appName} || exit 0"
+                    bat "docker rm -v ${appName} || exit 0"
 
-                             // bat "docker run -d --name ${appName} -p 8080:8080 ${imageTag}"
-                         }
-                     }
-                 }
-             }
+                    // Executa o container (descomente quando quiser rodar)
+                    // bat "docker run -d --name ${appName} -p 8080:8080 ${imageTag}"
+                }
+            }
+        }
+    }
 
-             post {
-                 success {
-                     echo 'Deploy realizado com sucesso!'
-                 }
-                 failure {
-                     echo 'Houve um erro durante o deploy.'
-                 }
-             }
-         }
+    post {
+        success {
+            echo 'Deploy realizado com sucesso!'
+        }
+        failure {
+            echo 'Houve um erro durante o deploy.'
+        }
+    }
+}
