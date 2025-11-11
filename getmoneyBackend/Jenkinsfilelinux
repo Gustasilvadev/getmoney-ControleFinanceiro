@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+    stages {
+        stage('Verificar Repositório') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], useRemoteConfigs: [[url: 'https://github.com/Gustasilvadev/getmoney-ControleFinanceiro']]])
+            }
+        }
+
+        stage('Instalar Dependências') {
+            steps {
+                script {
+                    env.PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
+
+                    dir('getmoneyBackend') {
+                        sh 'mvn clean install'
+                    }
+                }
+            }
+        }
+
+        stage('Construir Imagem Docker') {
+            steps {
+                script {
+                    // Atualiza o PATH para Docker e Maven no Linux
+                    env.PATH = "${env.DOCKER_HOME}:${env.MAVEN_HOME}/bin:${env.PATH}"
+
+                    def appName = 'getmoney'
+                    def imageTag = "${appName}:${env.BUILD_ID}"
+
+                    dir('getmoneyBackend') {
+                        sh "docker build -t ${imageTag} ."
+                    }
+                }
+            }
+        }
+
+        stage('Fazer Deploy') {
+            steps {
+                script {
+                    def appName = 'getmoney'
+                    def imageTag = "${appName}:${env.BUILD_ID}"
+
+                    // Para e remove container existente, se houver
+                    sh "docker stop ${appName} || true"
+                    sh "docker rm -v ${appName} || true"
+
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deploy realizado com sucesso!'
+        }
+        failure {
+            echo 'Houve um erro durante o deploy.'
+        }
+    }
+}
