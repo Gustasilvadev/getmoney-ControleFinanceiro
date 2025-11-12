@@ -2,7 +2,7 @@ import axios from 'axios';
 import { AuthService } from './storage';
 
 export const api = axios.create({
-  baseURL: 'http://192.168.0.4:8080/api',
+  baseURL: 'http://academico3.rj.senac.br/getmoney/api',
   // baseURL: 'http://10.136.36.51:8080/api',
   timeout: 10000,
 
