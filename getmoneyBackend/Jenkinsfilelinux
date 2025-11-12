@@ -37,8 +37,8 @@ pipeline {
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
                     // Para e remove container existente, se houver
-                    sh "docker stop ${appName} || true"
-                    sh "docker rm -v ${appName} || true"
+                    sh "docker stop ${appName} || exit 0"
+                    sh "docker rm -v ${appName} || exit 0"
 
                 }
             }
