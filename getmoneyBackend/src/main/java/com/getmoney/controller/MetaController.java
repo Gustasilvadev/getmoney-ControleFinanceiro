@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/meta")
 @Tag(name="Meta", description = "Api de gerenciamento de metas")
+@CrossOrigin("*")
 public class MetaController {
 
     private MetaService metaService;

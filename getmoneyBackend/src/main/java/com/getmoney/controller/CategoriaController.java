@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categoria")
 @Tag(name="Categoria", description = "Api de gerenciamento de categorias")
+@CrossOrigin("*")
 public class CategoriaController {
 
     private CategoriaService categoriaService;

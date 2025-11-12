@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/usuario")
 @Tag(name="Usuario", description = "Api de gerenciamento de usuarios")
-
+@CrossOrigin("*")
 public class UsuarioController {
 
     private UsuarioService usuarioService;

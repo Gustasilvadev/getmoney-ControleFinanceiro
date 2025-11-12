@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/transacao")
 @Tag(name="Transacao", description = "Api de gerenciamento de transacoes")
+@CrossOrigin("*")
 public class TransacaoController {
 
     private TransacaoService transacaoService;
