@@ -12,7 +12,9 @@ pipeline {
                 script {
                     env.PATH = "/usr/bin:$PATH"
 
-                     sh 'mvn clean install'
+                     dir('getmoneyBackend') {
+                        sh 'mvn clean install'
+                     }
 
                 }
             }
@@ -24,7 +26,9 @@ pipeline {
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
-                    sh "docker build -t ${imageTag} ."
+                    dir('getmoneyBackend') {
+                      sh "docker build -t ${imageTag} ."
+                    }
 
                 }
             }
