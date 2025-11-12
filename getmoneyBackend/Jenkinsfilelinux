@@ -10,7 +10,7 @@ pipeline {
         stage('Instalar Dependências') {
             steps {
                 script {
-                    env.PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
+                    env.PATH = "/usr/bin:$PATH"
 
                     dir('getmoneyBackend') {
                         sh 'mvn clean install'
@@ -22,9 +22,6 @@ pipeline {
         stage('Construir Imagem Docker') {
             steps {
                 script {
-                    // Atualiza o PATH para Docker e Maven no Linux
-                    env.PATH = "${env.DOCKER_HOME}:${env.MAVEN_HOME}/bin:${env.PATH}"
-
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
