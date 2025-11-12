@@ -44,6 +44,9 @@ pipeline {
                     sh "docker stop ${appName} || exit 0"
                     sh "docker rm -v ${appName} || exit 0"
 
+                    // Executar o novo container
+                    sh "docker run -d --name ${appName} -p 8401:8401 ${imageTag}"
+
                 }
             }
         }
