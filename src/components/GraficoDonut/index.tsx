@@ -1,7 +1,7 @@
 import { Pie, PolarChart } from "victory-native";
 
-import { useEffect } from "react";
-import { View, Text } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, ActivityIndicator, TouchableWithoutFeedback } from "react-native";
 import {styles} from "./style";
 
 import { useGraficoDonut } from "@/src/hooks/GraficoDonut/useGraficoDonut";
@@ -17,7 +17,7 @@ interface GraficoDonutProps {
 
 export const GraficoDonut = ({ refreshKey = 0 }: GraficoDonutProps) =>{
 
-     const { data: apiData, loading: apiLoading } = useApi<ValorTotalResponse[]>(
+    const { data: apiData, loading: apiLoading } = useApi<ValorTotalResponse[]>(
         () => EstatisticaService.listarGastosPorCategoria(),
         [], // initialData como array vazio
         [refreshKey]
@@ -26,13 +26,21 @@ export const GraficoDonut = ({ refreshKey = 0 }: GraficoDonutProps) =>{
     // Hook para transformar dados do gráfico
     const { data: chartData, total, transformData } = useGraficoDonut();
 
-    // Transforma os dados quando a API retornar
     useEffect(() => {
         if (apiData) {
-            const arrayData = Array.isArray(apiData) ? apiData : [apiData];
-            transformData(arrayData);
+        const arrayData = Array.isArray(apiData) ? apiData : [apiData];
+        transformData(arrayData);
         }
     }, [apiData, transformData]);
+
+    // Estado para tooltip
+    const [selectedSlice, setSelectedSlice] = useState<{ 
+        label: string; 
+        value: number; 
+        percentage: number;
+        color: string;
+    } | null>(null);
+
 
     // Cores para o gráfico
     const colorScale = [
@@ -40,56 +48,120 @@ export const GraficoDonut = ({ refreshKey = 0 }: GraficoDonutProps) =>{
         '#A29BFE', '#FD79A8', '#00CEC9', '#FDCB6E'
     ];
 
-    // Converter os dados do hook para o formato do Victory Native
-    const victoryData = chartData.map((item, index) => ({
-        value: item.y, // categoria valor 
-        label: item.x, // categoria nome
-        color: colorScale[index % colorScale.length] // cor correspondente
-    }));
+    // Função para selecionar uma fatia
+    const selectSlice = (index: number) => {
+        if (chartData && chartData[index]) {
+        const item = chartData[index];
+        const percentage = total > 0 ? (item.y / total) * 100 : 0;
+        const itemColor = colorScale[index % colorScale.length];
+        
+        setSelectedSlice({
+            label: item.x,
+            value: item.y,
+            percentage: percentage,
+            color: itemColor
+        });
+        }
+    };
 
-    if (chartData.length === 0) {
+
+    // Estados de carregamento
+    if (apiLoading) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.emptyText}>Nenhum gasto encontrado</Text>
-            </View>
+        <View style={styles.container}>
+            <ActivityIndicator size="large" color="#4ECDC4" />
+            <Text style={styles.loadingText}>Carregando gastos por categoria...</Text>
+        </View>
         );
     }
 
-    return(
+    if (chartData.length === 0) {
+        return (
+        <View style={styles.container}>
+            <Text style={styles.emptyText}>Nenhum gasto encontrado</Text>
+        </View>
+        );
+    }
 
-         <View style={styles.container}>
+
+     return (
+        <View style={styles.container}>
             <Text style={styles.title}>Gastos por Categoria</Text>
       
-            <Text style={styles.totalText}>
-                Total: R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-            </Text>
-      
-            <View style={{ height: 250, width:250 }}>
-                <PolarChart
-                    data={victoryData}
-                    colorKey="color"
-                    valueKey="value"
-                    labelKey="label"
-                >
-                    <Pie.Chart innerRadius={80} />
-                </PolarChart>
+        <Text style={styles.totalText}>
+            Total: R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+        </Text>
+
+        <View style={styles.chartContainer}>
+        
+            {/* Gráfico */}
+            <View style={styles.chartWrapper}>
+            <PolarChart
+                data={chartData.map((item, index) => ({
+                value: item.y,
+                label: item.x,
+                color: colorScale[index % colorScale.length]
+                }))}
+                colorKey="color"
+                valueKey="value"
+                labelKey="label"
+            >
+                <Pie.Chart innerRadius={80} />
+            </PolarChart>
             </View>
 
-            <View style={styles.legend}>
-                {chartData.map((item, index) => (
-                    <View key={index} style={styles.legendItem}>
-                        <View 
-                            style={[
-                                styles.legendColor, 
-                                { backgroundColor: colorScale[index % colorScale.length] }
-                            ]} 
-                        />
-                        <Text style={styles.legendText}>
-                            {item.x}: R$ {item.y.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                        </Text>
-                    </View>
-                ))}
-            </View>
+            {/* Tooltip */}
+            {selectedSlice && (
+            <View style={styles.tooltipCentro}>
+                <View style={[styles.tooltipColor, { backgroundColor: selectedSlice.color }]} />
+                    <Text style={styles.tooltipTitle} numberOfLines={1}>
+                        {selectedSlice.label}
+                    </Text>
+                    <Text style={styles.tooltipTextSmall}>
+                        R$ {selectedSlice.value.toFixed(0)}
+                    </Text>
+                    <Text style={styles.tooltipTextSmall}>
+                        {selectedSlice.percentage.toFixed(0)}%
+                    </Text>
+                </View>
+            )}
         </View>
+
+        {/* Instrução */}
+        <Text style={styles.instructionText}>
+            Toque em um item da legenda para ver detalhes
+        </Text>
+
+        {/* Legenda */}
+        <View style={styles.legend}>
+            {chartData.map((item, index) => {
+                const percentage = total > 0 ? (item.y / total) * 100 : 0;
+                const itemColor = colorScale[index % colorScale.length];
+          
+                return (
+                    <View 
+                    key={index} 
+                    style={[
+                        styles.legendItem,
+                        selectedSlice && item.x === selectedSlice.label && styles.highlightedLegendItem
+                    ]}
+                    >
+                    <View 
+                        style={[
+                        styles.legendColor, 
+                        { backgroundColor: itemColor }
+                        ]} 
+                    />
+                    <Text 
+                        style={styles.legendText}
+                        onPress={() => selectSlice(index)}
+                    >
+                        {item.x}: R$ {item.y.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} ({percentage.toFixed(1)}%)
+                    </Text>
+                    </View>
+                );
+                })}
+        </View>
+    </View>
   );
 };

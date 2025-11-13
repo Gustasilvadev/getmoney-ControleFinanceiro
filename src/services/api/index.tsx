@@ -3,7 +3,6 @@ import { AuthService } from './storage';
 
 export const api = axios.create({
   baseURL: 'http://academico3.rj.senac.br/getmoney/api',
-  // baseURL: 'http://10.136.36.51:8080/api',
   timeout: 10000,
 
   headers:{
@@ -36,7 +35,7 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    if (error.response.status === 401) {
       await AuthService.logout();
       throw new Error('Sessão expirada');
     }

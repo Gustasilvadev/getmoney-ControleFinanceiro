@@ -26,10 +26,10 @@ export const useGraficoDonut = () => {
     // Transforma dados da API para formato do gráfico
     const transformedData = dataArray.map(item => ({
       x: item.categoriaNome,
-      y: item.valorTotal
+      y: Math.abs(item.valorTotal) // Converte negativo para positivo
     }));
 
-    const totalAmount = dataArray.reduce((sum, item) => sum + item.valorTotal, 0);
+    const totalAmount = transformedData.reduce((sum, item) => sum + item.y, 0);
 
     setData(transformedData);
     setTotal(totalAmount);
