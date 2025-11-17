@@ -156,7 +156,7 @@ export const GraficoDonut = ({ refreshKey = 0 }: GraficoDonutProps) =>{
                         style={styles.legendText}
                         onPress={() => selectSlice(index)}
                     >
-                        {item.x}: R$ {item.y.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} ({percentage.toFixed(1)}%)
+                        {item.x}: R$ {item.y.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </Text>
                     </View>
                 );
