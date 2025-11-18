@@ -2,6 +2,14 @@ import { FONTS } from "@/src/constants/fonts";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+    safeArea:{
+        flex:1,
+        backgroundColor:'#D2E1E0',
+    },
+    keyboardAvoiding:{
+        flex:1,
+        backgroundColor:'#009490',
+    },
     container:{
         flex:1,
         gap:80,

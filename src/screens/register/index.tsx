@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LogoTitle } from "@/src/components/LogoTitle";
-import { View,Text,TextInput,TouchableOpacity,Keyboard, Pressable } from "react-native";
+import { View,Text,TextInput,TouchableOpacity,Keyboard, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {styles} from "./style"
 import { useNavigation } from "@/src/constants/router";
 import { registerService } from "@/src/services/api/auth/register";
@@ -21,6 +22,16 @@ export const RegisterScreen = () =>{
     const [alertVisible, setAlertVisible] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
+
+    const scrollViewRef = useRef<ScrollView | null>(null);
+
+    useEffect(() => {
+        const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+            scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        });
+
+        return () => hideSubscription.remove();
+    }, []);
 
     const mostrarAlerta = (titulo: string, mensagem: string) => {
         setAlertTitle(titulo);
@@ -56,78 +67,96 @@ export const RegisterScreen = () =>{
     };
 
     return(
-        <Pressable style={styles.container} onPress={Keyboard.dismiss}>
-            <LogoTitle/>
-        
-            <View style={styles.form}>
-
-                <Text style={styles.title}>Crie Sua Conta</Text>   
-                   
-                <View style={styles.formInput}>
-
-                    <View style={styles.inputContainer}>
-                        {errors.nome ? <Text style={styles.errorText}>{errors.nome}</Text> : null}
-                        <TextInput 
-                        style={[styles.input, errors.nome && styles.inputError]} 
-                        placeholder="Nome"
-                        value={nome}
-                        onChangeText={(text) => {
-                                    setNome(text);
-                                    clearError('nome');
-                                }}
-                        placeholderTextColor='#858587'
-                        keyboardType="default"
-                        autoCapitalize="none"></TextInput>
-                    </View>
-
-                    <View style={styles.inputContainer}>
-                        {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
-                        <TextInput style={[styles.input,errors.email && styles.inputError]}
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={(text) => {
-                                    setEmail(text);
-                                    clearError('email');
-                                }}
-                        placeholderTextColor='#858587'
-                        keyboardType="email-address"></TextInput>
-                    </View>
-        
-                    <View style={styles.inputContainer}>
-                        {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
-                        <TextInput style={[styles.input, errors.senha && styles.inputError]}
-                        placeholder="Senha"
-                        value={senha}
-                        onChangeText={(text) => {
-                                    setSenha(text);
-                                    clearError('senha');
-                                }}
-                        placeholderTextColor='#858587'
-                        keyboardType="default"
-                        secureTextEntry></TextInput>
-                    </View>
-
-
-                    <View style={styles.options}>
-
-                        <Text style={styles.textOptions} onPress={navigation.login}>Ja tenho conta</Text>
+        <SafeAreaView 
+            style={styles.safeArea}
+            edges={['bottom']}
+            >
+            <KeyboardAvoidingView 
+                style={styles.keyboardAvoiding}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
+            >
+                <ScrollView 
+                    ref={scrollViewRef}
+                    style={{ flex: 1, backgroundColor: '#009490' }}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <Pressable style={styles.container} onPress={Keyboard.dismiss}>
+                        <LogoTitle/>
                     
-                        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                            <Text style={styles.buttonText}>Criar</Text>
-                        </TouchableOpacity>
+                        <View style={styles.form}>
 
-                    </View>
-                </View>
-            </View>
+                            <Text style={styles.title}>Crie Sua Conta</Text>   
+                            
+                            <View style={styles.formInput}>
 
-            {/* Alert Personalizado */}
-            <Alert
-                visible={alertVisible}
-                title={alertTitle}
-                message={alertMessage}
-                onClose={() => setAlertVisible(false)}
-                confirmText="OK"
-            />
-        </Pressable>
+                                <View style={styles.inputContainer}>
+                                    {errors.nome ? <Text style={styles.errorText}>{errors.nome}</Text> : null}
+                                    <TextInput 
+                                    style={[styles.input, errors.nome && styles.inputError]} 
+                                    placeholder="Nome"
+                                    value={nome}
+                                    onChangeText={(text) => {
+                                                setNome(text);
+                                                clearError('nome');
+                                            }}
+                                    placeholderTextColor='#858587'
+                                    keyboardType="default"
+                                    autoCapitalize="none"></TextInput>
+                                </View>
+
+                                <View style={styles.inputContainer}>
+                                    {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+                                    <TextInput style={[styles.input,errors.email && styles.inputError]}
+                                    placeholder="Email"
+                                    value={email}
+                                    onChangeText={(text) => {
+                                                setEmail(text);
+                                                clearError('email');
+                                            }}
+                                    placeholderTextColor='#858587'
+                                    keyboardType="email-address"></TextInput>
+                                </View>
+                    
+                                <View style={styles.inputContainer}>
+                                    {errors.senha ? <Text style={styles.errorText}>{errors.senha}</Text> : null}
+                                    <TextInput style={[styles.input, errors.senha && styles.inputError]}
+                                    placeholder="Senha"
+                                    value={senha}
+                                    onChangeText={(text) => {
+                                                setSenha(text);
+                                                clearError('senha');
+                                            }}
+                                    placeholderTextColor='#858587'
+                                    keyboardType="default"
+                                    secureTextEntry></TextInput>
+                                </View>
+
+
+                                <View style={styles.options}>
+
+                                    <Text style={styles.textOptions} onPress={navigation.login}>Ja tenho conta</Text>
+                                
+                                    <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                                        <Text style={styles.buttonText}>Criar</Text>
+                                    </TouchableOpacity>
+
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* Alert Personalizado */}
+                        <Alert
+                            visible={alertVisible}
+                            title={alertTitle}
+                            message={alertMessage}
+                            onClose={() => setAlertVisible(false)}
+                            confirmText="OK"
+                        />
+                    </Pressable>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     );
 }
