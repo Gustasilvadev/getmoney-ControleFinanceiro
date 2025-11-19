@@ -1,7 +1,18 @@
-# IGNORAR TUDO
-*
+# PRIMEIRO: PERMITIR pastas nativas (IMPORTANTE!)
+!android/
+!android/**/*
+!ios/
+!ios/**/*
 
-# PERMITIR APENAS arquivos do React Native
+# SEGUNDO: PERMITIR pastas do React Native
+!app/
+!app/**/*
+!assets/
+!assets/**/*
+!src/
+!src/**/*
+
+# TERCEIRO: PERMITIR arquivos do React Native
 !App.tsx
 !App.js
 !app.json
@@ -13,21 +24,10 @@
 !metro.config.js
 !eas.json
 
-# PERMITIR pastas do React Native
-!app/
-!app/**/*
-!assets/
-!assets/**/*
-!src/
-!src/**/*
+# QUARTO: IGNORAR TUDO O RESTO
+*
 
-# PERMITIR pastas nativas
-!ios/
-!ios/**/*
-!android/
-!android/**/*
-
-# IGNORAR backend Java COMPLETAMENTE
+# QUINTO: IGNORAR backend Java COMPLETAMENTE
 getmoneyBackend/
 *.java
 target/
