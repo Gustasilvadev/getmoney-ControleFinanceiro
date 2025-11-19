@@ -31,7 +31,20 @@ public class SegurancaConfig {
 
     public static final String[] ENDPOINTS_SEM_AUTENTICACAO = {
             "/api/autenticacao/registrarUsuario",
-            "/api/autenticacao/autenticarUsuario"
+            "/api/autenticacao/autenticarUsuario",
+
+            "/",
+            "/install",
+            "/download-apk",
+            "/index.html",
+            "/install.html",
+            "/app-release.apk",
+    };
+
+    public static final String[] ENDPOINTS_WEB_PAGES = {
+            "/",
+            "/install",
+            "/download-apk"
     };
 
     /**
@@ -55,6 +68,7 @@ public class SegurancaConfig {
                .authorizeHttpRequests(authorize -> authorize
                        .requestMatchers(ENDPOINTS_SEM_AUTENTICACAO).permitAll()
                        .requestMatchers(SWAGGER_ENDPOINTS).permitAll()
+                       .requestMatchers(ENDPOINTS_WEB_PAGES).permitAll()
                        .anyRequest().authenticated()
                )
                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
