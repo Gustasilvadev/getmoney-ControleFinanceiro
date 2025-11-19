@@ -1,0 +1,37 @@
+# IGNORAR TUDO
+*
+
+# PERMITIR APENAS arquivos do React Native
+!App.tsx
+!App.js
+!app.json
+!package.json
+!package-lock.json
+!yarn.lock
+!tsconfig.json
+!babel.config.js
+!metro.config.js
+!eas.json
+
+# PERMITIR pastas do React Native
+!app/
+!app/**/*
+!assets/
+!assets/**/*
+!src/
+!src/**/*
+
+# PERMITIR pastas nativas
+!ios/
+!ios/**/*
+!android/
+!android/**/*
+
+# IGNORAR backend Java COMPLETAMENTE
+getmoneyBackend/
+*.java
+target/
+.mvn/
+*.jar
+*.war
+pom.xml
