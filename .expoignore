@@ -1,0 +1,15 @@
+# BACKEND - IGNORAR NO BUILD DO EXPO
+getmoneyBackend/
+*.java
+target/
+.mvn/
+*.jar
+*.war
+pom.xml
+
+# EXPO
+.expo/
+dist/
+
+# NODE
+node_modules/
