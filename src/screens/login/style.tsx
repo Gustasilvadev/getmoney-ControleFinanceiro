@@ -37,6 +37,7 @@ export const styles = StyleSheet.create({
         fontFamily: FONTS.montserrat.bold,
         fontSize:32,
         marginTop:20,
+        
     },
 
     inputContainer: {
@@ -67,6 +68,7 @@ export const styles = StyleSheet.create({
         fontSize:16,
         borderWidth: 1,
         borderColor:'#009490',
+        color: '#000000',
     },
 
     inputError:{

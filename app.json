@@ -4,7 +4,6 @@
     "slug": "getmoney",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "getmoney",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +12,6 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/IconApp.png",
         "backgroundImage": "./assets/images/IconBackground.png",
         "monochromeImage": "./assets/images/IconApp.png"

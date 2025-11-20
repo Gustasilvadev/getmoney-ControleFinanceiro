@@ -108,6 +108,7 @@ export const LoginScreen = () => {
                                         placeholderTextColor='#858587'
                                         keyboardType="default"
                                         secureTextEntry
+                                        
                                     />
                                 </View>
 
