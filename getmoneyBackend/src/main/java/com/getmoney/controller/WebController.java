@@ -20,6 +20,6 @@ public class WebController {
 
     @GetMapping("/download-apk")
     public String downloadApk() {
-        return "redirect:/app-release.apk";
+        return "redirect:https://expo.dev/artifacts/eas/9kSBQj3ZJaBTduZ2QPj9vz.apk";
     }
 }
