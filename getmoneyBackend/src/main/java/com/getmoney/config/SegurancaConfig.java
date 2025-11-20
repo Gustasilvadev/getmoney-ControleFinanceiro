@@ -27,11 +27,13 @@ public class SegurancaConfig {
             "/swagger-ui",
             "/swagger-ui/**",
             "/swagger-ui.html",
+            "/test-expo-url"
     };
 
     public static final String[] ENDPOINTS_SEM_AUTENTICACAO = {
             "/api/autenticacao/registrarUsuario",
             "/api/autenticacao/autenticarUsuario",
+            "/test-expo-url",
 
             "/",
             "/install",
