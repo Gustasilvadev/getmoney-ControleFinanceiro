@@ -23,7 +23,7 @@ public class WebController {
 
     @GetMapping("/download-apk")
     public void downloadApk(HttpServletResponse response) throws IOException {
-        String expoUrl = "https://expo.dev/artifacts/eas/application-0046c96b-7e06-4b35-93fa-ff5f42f50a8c.apk";
+        String expoUrl = "https://expo.dev/artifacts/eas/2YS3UerEwMnwMpZTrnTwu.apk";
 
         response.setContentType("application/vnd.android.package-archive");
         response.setHeader("Content-Disposition", "attachment; filename=\"GetMoney.apk\"");
