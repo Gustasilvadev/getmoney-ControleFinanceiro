@@ -1,20 +1,10 @@
 package com.getmoney.controller;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
+import java.io.*;
 import java.net.URL;
 
 @Controller
@@ -33,7 +23,7 @@ public class WebController {
 
     @GetMapping("/download-apk")
     public void downloadApk(HttpServletResponse response) throws IOException {
-        String expoUrl = "https://expo.dev/artifacts/eas/9kSBQj3ZJaBTduZ2QPj9vz.apk";
+        String expoUrl = "https://expo.dev/artifacts/eas/application-0046c96b-7e06-4b35-93fa-ff5f42f50a8c.apk";
 
         response.setContentType("application/vnd.android.package-archive");
         response.setHeader("Content-Disposition", "attachment; filename=\"GetMoney.apk\"");
