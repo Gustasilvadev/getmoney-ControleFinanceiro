@@ -1,15 +1,19 @@
 package com.getmoney.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Controller;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
-import java.net.URL;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-@Controller
+@RestController
 @CrossOrigin("*")
 public class WebController {
 
@@ -23,7 +27,7 @@ public class WebController {
         return "forward:/install.html";
     }
 
-        @GetMapping("/download/app")
+    @GetMapping("/download/app")
     public ResponseEntity<Resource> downloadApk() throws MalformedURLException {
         Path path = Paths.get("/app/apk/app-release.apk");
         Resource resource = new UrlResource(path.toUri());
