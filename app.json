@@ -2,18 +2,22 @@
   "expo": {
     "name": "getmoney",
     "slug": "getmoney",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "getmoney",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#000000",
+      "resizeMode": "contain",
+      "image": "./assets/images/IconApp.png"
+    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 3,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/IconApp.png",
         "backgroundImage": "./assets/images/IconBackground.png",
         "monochromeImage": "./assets/images/IconApp.png"
@@ -32,11 +36,18 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "686bd41f-7927-42bb-b223-825d86f68c4b"
+      }
     }
   }
 }
