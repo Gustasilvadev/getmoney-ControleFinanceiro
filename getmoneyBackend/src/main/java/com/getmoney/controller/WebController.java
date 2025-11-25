@@ -26,13 +26,18 @@ public class WebController {
     @GetMapping("/download-apk")
     @ResponseBody
     public void downloadApk(HttpServletResponse response) throws IOException {
-        String expoUrl = "https://expo.dev/artifacts/eas/sNuVUNCNgZ3mSMFnYvE7X2.apk";
+        File apkFile = new File("/app/apk/getmoney.apk");
+
+        if (!apkFile.exists()) {
+            response.sendError(404, "APK não encontrado");
+            return;
+        }
 
         response.setContentType("application/vnd.android.package-archive");
         response.setHeader("Content-Disposition", "attachment; filename=\"GetMoney.apk\"");
+        response.setContentLength((int) apkFile.length());
 
-        URL url = new URL(expoUrl);
-        try (InputStream in = url.openStream();
+        try (InputStream in = new FileInputStream(apkFile);
              OutputStream out = response.getOutputStream()) {
             in.transferTo(out);
         }
