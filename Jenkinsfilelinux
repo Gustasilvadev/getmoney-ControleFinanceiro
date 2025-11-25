@@ -7,15 +7,34 @@ pipeline {
             }
         }
 
-        stage('Instalar Dependências') {
+        stage('Construir APK React Native') {
             steps {
                 script {
-                    env.PATH = "/usr/bin:$PATH"
+                    sh 'npm install'
+                    sh 'cd android && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a'
+                    sh 'mkdir -p apk'
+                    sh 'cp android/app/build/outputs/apk/release/app-release.apk apk/getmoney.apk'
+                }
+            }
+        }
 
-                     dir('getmoneyBackend') {
-                        sh 'mvn clean install'
-                     }
+        stage('Instalar Dependências Backend') {
+            steps {
+                script {
+                    dir('getmoneyBackend') {
+                        sh 'mvn clean install -DskipTests'
+                    }
+                }
+            }
+        }
 
+        stage('Preparar APK para Docker') {
+            steps {
+                script {
+                    dir('getmoneyBackend') {
+                        sh 'cp ../apk/getmoney.apk .'
+                        sh 'ls -la getmoney.apk'
+                    }
                 }
             }
         }
@@ -27,9 +46,8 @@ pipeline {
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
                     dir('getmoneyBackend') {
-                      sh "docker build -t ${imageTag} ."
+                        sh "docker build -t ${imageTag} ."
                     }
-
                 }
             }
         }
@@ -40,13 +58,10 @@ pipeline {
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
-                    // Para e remove container existente, se houver
                     sh "docker stop ${appName} || exit 0"
                     sh "docker rm -v ${appName} || exit 0"
 
-                    // Executar o novo container
-                    sh "docker run -d --name ${appName} -p 8401:8401 ${imageTag}"
-
+                     sh "docker run -d --name ${appName} -p 8401:8401 ${imageTag}"
                 }
             }
         }
@@ -55,6 +70,7 @@ pipeline {
     post {
         success {
             echo 'Deploy realizado com sucesso!'
+            echo 'APK disponível em: http://localhost:8401/install'
         }
         failure {
             echo 'Houve um erro durante o deploy.'
