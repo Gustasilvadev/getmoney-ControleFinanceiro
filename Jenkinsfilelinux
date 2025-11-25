@@ -8,12 +8,18 @@ pipeline {
         }
 
         stage('Construir APK React Native') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                }
+            }
             steps {
                 script {
                     sh 'npm install'
-                    sh 'cd android && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a'
+                    sh 'npm install -g @expo/eas-cli'
+                    sh 'eas build --platform android --profile production --non-interactive --local'
                     sh 'mkdir -p apk'
-                    sh 'cp android/app/build/outputs/apk/release/app-release.apk apk/getmoney.apk'
+                    sh 'cp *.apk apk/getmoney.apk'
                 }
             }
         }
