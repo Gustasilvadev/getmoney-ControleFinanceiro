@@ -2,25 +2,20 @@
   "expo": {
     "name": "getmoney",
     "slug": "getmoney",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "scheme": "getmoney",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "backgroundColor": "#000000",
-      "resizeMode": "contain",
-      "image": "./assets/images/IconApp.png"
-    },
+    "icon": "./assets/images/IconApp.png",
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/IconApp.png",
-        "backgroundImage": "./assets/images/IconBackground.png",
-        "monochromeImage": "./assets/images/IconApp.png"
+        "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -37,7 +32,16 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#000000",
+          "image": "./assets/images/IconApp.png",
+          "imageWidth": 100,
+          "resizeMode": "contain"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
