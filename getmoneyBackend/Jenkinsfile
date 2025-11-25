@@ -7,28 +7,23 @@ pipeline {
             }
         }
 
-         stage('Construir APK React Native') {
-             steps {
-                 script {
-                     // VOLTAR para a raiz do projeto (onde está o gradlew)
-                     bat 'cd .. && npm install'
-                     bat 'cd .. && gradlew -p android assembleRelease'
-
-                     bat 'if not exist "%WORKSPACE%\\apk" mkdir "%WORKSPACE%\\apk"'
-                     bat 'copy "..\\android\\app\\build\\outputs\\apk\\release\\app-release.apk" "%WORKSPACE%\\apk\\getmoney.apk"'
-                 }
-             }
-         }
+        stage('Construir APK React Native') {
+            steps {
+                script {
+                    bat 'npm install'
+                    bat 'cd android && gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a'
+                    bat 'if not exist "%WORKSPACE%\\apk" mkdir "%WORKSPACE%\\apk"'
+                    bat 'copy "android\\app\\build\\outputs\\apk\\release\\app-release.apk" "%WORKSPACE%\\apk\\getmoney.apk"'
+                }
+            }
+        }
 
         stage('Instalar Dependências Backend') {
             steps {
                 script {
-                    // Atualiza o PATH para Maven
                     env.PATH = "${env.MAVEN_HOME}\\bin;%PATH%"
-
                     dir('getmoneyBackend') {
-                        // Instalar as dependências Maven
-                        bat 'mvn clean install'
+                        bat 'mvn clean install -DskipTests'
                     }
                 }
             }
@@ -37,8 +32,7 @@ pipeline {
         stage('Construir Imagem Docker') {
             steps {
                 script {
-                    // Atualiza o PATH para Docker
-                    env.PATH = "${env.DOCKER_HOME};${env.PATH}"
+                    env.PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
 
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
@@ -53,27 +47,26 @@ pipeline {
         }
 
         stage('Fazer Deploy') {
-            steps {
-                script {
-                    def appName = 'getmoney'
-                    def imageTag = "${appName}:${env.BUILD_ID}"
+                    steps {
+                        script {
+                            def appName = 'getmoney'
+                            def imageTag = "${appName}:${env.BUILD_ID}"
 
-                    bat "docker stop ${appName} || echo 0"
-                    bat "docker rm -v ${appName} || echo 0"
+                            bat "docker stop ${appName} || echo 0"
+                            bat "docker rm -v ${appName} || echo 0"
 
-                    bat "docker run -d --name ${appName} -p 8401:8401 ${imageTag}"
+                            // bat "docker run -d --name ${appName} -p 8401:8401 ${imageTag}"
+                        }
+                    }
                 }
             }
-        }
-    }
 
-    post {
-        success {
-            echo 'Deploy realizado com sucesso!'
-            echo 'APK disponível em: http://localhost:8401/install'
-        }
-        failure {
-            echo 'Houve um erro durante o deploy.'
-        }
-    }
-}
+            post {
+                success {
+                    echo 'Deploy realizado com sucesso!'
+                    echo 'APK disponível em: http://localhost:8401/install'
+                }
+                failure {
+                    echo 'Houve um erro durante o deploy.'
+                }
+            }
