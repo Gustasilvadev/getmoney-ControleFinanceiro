@@ -12,8 +12,6 @@ RUN mvn dependency:go-offline
 COPY getmoneyBackend/src ./src
 RUN mvn clean package -DskipTests
 
-
-
 #########################################
 # 2) Build do APK React Native (Android)#
 #########################################
@@ -46,10 +44,11 @@ RUN npm install
 
 # Copia o restante do projeto mobile
 COPY getmoneyFrontend/ .
+
 RUN npx expo prebuild --platform android
 RUN ls
 # Dá permissão e gera o APK release
-WORKDIR /getmoneyBackend/android
+WORKDIR /getmoneyFrontend/android
 RUN chmod +x ./gradlew && \
     ./gradlew assembleRelease
 
