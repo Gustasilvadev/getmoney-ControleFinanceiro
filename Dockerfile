@@ -46,7 +46,8 @@ RUN npm install
 
 # Copia o restante do projeto mobile
 COPY getmoneyFrontend/ .
-
+RUN npx expo prebuild --platform android
+RUN ls
 # Dá permissão e gera o APK release
 WORKDIR /getmoneyBackend/android
 RUN chmod +x ./gradlew && \
@@ -67,8 +68,7 @@ COPY --from=backend-build /getmoneyBackend/target/*.jar app.jar
 RUN mkdir -p /app/apk
 
 # Copia o APK gerado pelo estágio mobile
-COPY --from=mobile-build /getmoneyFrontend/android/app/build/outputs/apk/release/app-release.apk ./apk/app-release.apk
-
+COPY --from=mobile-build /getmoneyFrontend/android/app/build/outputs/apk/release/app-release.apk /app/apk/app-release.apk
 EXPOSE 8401
 
 CMD ["java", "-jar", "/app/app.jar"]
