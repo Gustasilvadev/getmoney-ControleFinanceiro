@@ -64,6 +64,8 @@ WORKDIR /app
 # Copia o JAR do backend
 COPY --from=backend-build /getmoneyBackend/target/*.jar app.jar
 
+RUN mkdir -p /app/apk
+
 # Copia o APK gerado pelo estágio mobile
 COPY --from=mobile-build /getmoneyFrontend/android/app/build/outputs/apk/release/app-release.apk ./apk/app-release.apk
 
