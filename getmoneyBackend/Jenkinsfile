@@ -7,23 +7,18 @@ pipeline {
             }
         }
 
-        stage('Construir APK React Native') {
-            steps {
-                script {
-                    // Instalar dependências do React Native
-                    bat 'npm install'
+         stage('Construir APK React Native') {
+             steps {
+                 script {
+                     // VOLTAR para a raiz do projeto (onde está o gradlew)
+                     bat 'cd .. && npm install'
+                     bat 'cd .. && gradlew -p android assembleRelease'
 
-                    // Construir APK Android
-                    bat 'cd android && gradlew assembleRelease'
-
-                    // Criar diretório para APK
-                    bat 'if not exist "%WORKSPACE%\\apk" mkdir "%WORKSPACE%\\apk"'
-
-                    // Copiar APK gerado
-                    bat 'copy "android\\app\\build\\outputs\\apk\\release\\app-release.apk" "%WORKSPACE%\\apk\\getmoney.apk"'
-                }
-            }
-        }
+                     bat 'if not exist "%WORKSPACE%\\apk" mkdir "%WORKSPACE%\\apk"'
+                     bat 'copy "..\\android\\app\\build\\outputs\\apk\\release\\app-release.apk" "%WORKSPACE%\\apk\\getmoney.apk"'
+                 }
+             }
+         }
 
         stage('Instalar Dependências Backend') {
             steps {
@@ -49,10 +44,8 @@ pipeline {
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
                     dir('getmoneyBackend') {
-                        bat 'copy "%WORKSPACE%\\apk\\getmoney.apk" "."'
-
+                        bat 'copy "..\\apk\\getmoney.apk" "."'
                         bat "docker build -t ${imageTag} ."
-
                         bat 'del "getmoney.apk"'
                     }
                 }
