@@ -43,8 +43,8 @@ RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
 WORKDIR /getmoneyFrontend
 
 # Dependências do RN
-COPY getmoneyFrontend/package.json mobile/yarn.lock ./
-RUN yarn install
+COPY getmoneyFrontend/package.json getmoneyFrontend/package-lock.json ./
+RUN npm install
 
 # Copia o restante do projeto mobile
 COPY getmoneyFrontend/ .
