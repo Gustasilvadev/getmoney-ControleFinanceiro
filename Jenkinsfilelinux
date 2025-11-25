@@ -15,45 +15,49 @@ pipeline {
             }
             steps {
                 script {
+                    // Instalar dependências do projeto
                     sh 'npm install'
-                    sh 'npm install -g @expo/eas-cli'
-                    sh 'eas build --platform android --profile production --non-interactive --local'
+                    
+                    // Instalar dependências Android
+                    sh 'cd android && ./gradlew dependencies || true'
+                    
+                    // Gerar APK
+                    sh 'cd android && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a'
+                    
+                    // Criar diretório e copiar APK
                     sh 'mkdir -p apk'
-                    sh 'cp *.apk apk/getmoney.apk'
+                    sh 'cp android/app/build/outputs/apk/release/app-release.apk apk/getmoney.apk'
+                    
+                    // Verificar se o APK foi gerado
+                    sh 'ls -la apk/'
                 }
             }
         }
 
-        stage('Instalar Dependências Backend') {
+
+        stage('Instalar Dependências') {
             steps {
                 script {
-                    dir('getmoneyBackend') {
-                        sh 'mvn clean install -DskipTests'
-                    }
+                    env.PATH = "/usr/bin:$PATH"
+
+                     dir('getmoneyBackend') {
+                        sh 'mvn clean install'
+                     }
+
                 }
             }
         }
 
-        stage('Preparar APK para Docker') {
-            steps {
-                script {
-                    dir('getmoneyBackend') {
-                        sh 'cp ../apk/getmoney.apk .'
-                        sh 'ls -la getmoney.apk'
-                    }
-                }
-            }
-        }
-
-         stage('Construir Imagem Docker') {
+        stage('Construir Imagem Docker') {
             steps {
                 script {
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
                     dir('getmoneyBackend') {
-                        sh "docker build -t ${imageTag} ."
+                      sh "docker build -t ${imageTag} ."
                     }
+
                 }
             }
         }
@@ -64,10 +68,13 @@ pipeline {
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
+                    // Para e remove container existente, se houver
                     sh "docker stop ${appName} || exit 0"
                     sh "docker rm -v ${appName} || exit 0"
 
+                    // Executar o novo container
                     sh "docker run -d --name ${appName} -p 8401:8401 ${imageTag}"
+
                 }
             }
         }
@@ -76,7 +83,6 @@ pipeline {
     post {
         success {
             echo 'Deploy realizado com sucesso!'
-            echo 'APK disponível em: http://localhost:8401/install'
         }
         failure {
             echo 'Houve um erro durante o deploy.'
