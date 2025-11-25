@@ -40,10 +40,10 @@ RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
     mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest && \
     yes | sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-WORKDIR /mobile
+WORKDIR /getmoneyFrontend
 
 # Dependências do RN
-COPY mobile/package.json mobile/yarn.lock ./
+COPY getmoneyFrontend/package.json mobile/yarn.lock ./
 RUN yarn install
 
 # Copia o restante do projeto mobile
