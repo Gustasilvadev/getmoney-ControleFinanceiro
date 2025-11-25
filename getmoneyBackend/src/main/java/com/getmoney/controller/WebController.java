@@ -23,23 +23,18 @@ public class WebController {
         return "forward:/install.html";
     }
 
-    @GetMapping("/download-apk")
-    @ResponseBody
-    public void downloadApk(HttpServletResponse response) throws IOException {
-        File apkFile = new File("/app/apk/getmoney.apk");
+        @GetMapping("/download/app")
+    public ResponseEntity<Resource> downloadApk() throws MalformedURLException {
+        Path path = Paths.get("/app/apk/app-release.apk");
+        Resource resource = new UrlResource(path.toUri());
 
-        if (!apkFile.exists()) {
-            response.sendError(404, "APK não encontrado");
-            return;
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
         }
 
-        response.setContentType("application/vnd.android.package-archive");
-        response.setHeader("Content-Disposition", "attachment; filename=\"GetMoney.apk\"");
-        response.setContentLength((int) apkFile.length());
-
-        try (InputStream in = new FileInputStream(apkFile);
-             OutputStream out = response.getOutputStream()) {
-            in.transferTo(out);
-        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"app-release.apk\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }

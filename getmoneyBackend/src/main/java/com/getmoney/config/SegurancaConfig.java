@@ -46,7 +46,8 @@ public class SegurancaConfig {
     public static final String[] ENDPOINTS_WEB_PAGES = {
             "/",
             "/install",
-            "/download-apk"
+            "/download-apk",
+            "/download/app"
     };
 
     /**
