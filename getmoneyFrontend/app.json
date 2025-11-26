@@ -41,6 +41,15 @@
           "imageWidth": 100,
           "resizeMode": "contain"
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true,
+            "networkSecurityConfig": "@xml/network_security_config"
+          }
+        }
       ]
     ],
     "experiments": {
