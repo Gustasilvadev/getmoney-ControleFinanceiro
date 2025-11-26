@@ -12,30 +12,48 @@ COPY getmoneyBackend/src ./src
 RUN mvn clean package -DskipTests -q
 
 #########################################
-# 2) Build do APK simplificado #
+# 2) Build do APK COM ANDROID SDK #
 #########################################
-FROM node:18-alpine AS mobile-build
+FROM node:18-bullseye AS mobile-build
 
-# Instala Java e dependências básicas (IMPORTANTE para Android)
-RUN apk add --no-cache openjdk11-jre bash
+# Instala JDK 21 e Android SDK
+RUN apt-get update && apt-get install -y \
+    openjdk-21-jdk \
+    curl \
+    unzip \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configura Android SDK
+ENV ANDROID_HOME /opt/android-sdk
+RUN mkdir -p $ANDROID_HOME
+RUN curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip && \
+    unzip sdk-tools.zip -d $ANDROID_HOME/cmdline-tools && \
+    mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest && \
+    rm sdk-tools.zip
+
+ENV PATH $PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
+
+# Aceita licenças e instala platform
+RUN yes | sdkmanager --licenses
+RUN sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
 WORKDIR /getmoneyFrontend
 
-# Copia apenas o necessário para cache
+# Copia arquivos para cache
 COPY getmoneyFrontend/package*.json ./
 COPY getmoneyFrontend/app.json ./
 COPY getmoneyFrontend/eas.json ./
-RUN npm ci --silent --no-optional
+RUN npm ci --silent
 
-# Copia source (evita copiar node_modules)
+# Copia source
 COPY getmoneyFrontend/src ./src
 COPY getmoneyFrontend/assets ./assets
 COPY getmoneyFrontend/*.js ./
 COPY getmoneyFrontend/*.json ./
 
-# Build CORRETO
+# Build do APK
 RUN npx expo prebuild --platform android
-
 WORKDIR /getmoneyFrontend/android
 RUN chmod +x ./gradlew && ./gradlew assembleRelease --no-daemon --stacktrace
 
