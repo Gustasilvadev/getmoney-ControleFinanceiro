@@ -51,14 +51,27 @@ COPY getmoneyFrontend ./
 RUN npm ci --silent
 RUN npx expo prebuild --platform android
 
-# Configuração do Gradle para JDK 21
+# Configuração CORRETA do Gradle para JDK 21
 WORKDIR /getmoneyFrontend/android
-RUN echo "org.gradle.java.home=/usr/lib/jvm/temurin-21-jdk-amd64" >> gradle.properties && \
-    echo "android.jdkVersion=21" >> gradle.properties
 
-# Garante que gradlew tem permissões de execução E usa modo offline
+# Descobre o caminho correto do Java home
+RUN java_home=$(dirname $(dirname $(readlink -f $(which java)))) && \
+    echo "org.gradle.java.home=$java_home" >> gradle.properties && \
+    echo "android.jdkVersion=21" >> gradle.properties && \
+    echo "Java home configurado para: $java_home"
+
+# Configurações adicionais do Gradle para evitar problemas
+RUN echo "android.nonFinalResIds=false" >> gradle.properties && \
+    echo "android.enableJetifier=true" >> gradle.properties
+
+# Garante que gradlew tem permissões de execução
 RUN chmod +x ./gradlew
-RUN ./gradlew assembleRelease --offline --no-daemon
+
+# Primeiro faz download das dependências (sem offline)
+RUN ./gradlew dependencies --no-daemon
+
+# Depois faz o build release
+RUN ./gradlew assembleRelease --no-daemon --stacktrace
 
 #########################################
 # 3) Imagem final #
