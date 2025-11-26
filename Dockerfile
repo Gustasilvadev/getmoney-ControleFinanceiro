@@ -12,12 +12,13 @@ COPY getmoneyBackend/src ./src
 RUN mvn clean package -DskipTests -q
 
 #########################################
-# 2) Build APK - ULTRA SIMPLES #
+# 2) Build APK - COM JDK CORRETO #
 #########################################
 FROM node:22-alpine AS mobile-build
 
-# Instala Android SDK compacto
-RUN apk add --no-cache curl unzip openjdk21
+# Instala dependências + JDK 17 CORRETO
+RUN apk add --no-cache curl unzip openjdk17-jdk
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 ENV ANDROID_HOME=/opt/android-sdk
 RUN mkdir -p $ANDROID_HOME
 
@@ -27,13 +28,11 @@ RUN curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlineto
     mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest && \
     rm sdk-tools.zip
 
-ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+ENV PATH=$PATH:$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin
 
-# **ADICIONA ESTA LINHA - Aceitar licenças ANTES de usar sdkmanager**
-RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-
-# **ADICIONA ESTAS LINHAS - Instalar componentes Android**
-RUN $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
+# Aceitar licenças
+RUN yes | sdkmanager --licenses
+RUN sdkmanager \
     "platform-tools" \
     "platforms;android-34" \
     "build-tools;34.0.0"
@@ -45,9 +44,17 @@ RUN npm ci --silent
 RUN npx expo prebuild --platform android
 
 WORKDIR /getmoneyFrontend/android
+
+# Configurações do Gradle
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
+
 RUN chmod +x ./gradlew
-RUN ./gradlew clean assembleDebug
+
+# Verifica versão do Java
+RUN java -version
+
+# Build
+RUN ./gradlew clean assembleDebug --no-daemon
 
 #########################################
 # 3) Imagem final #
