@@ -44,27 +44,21 @@ RUN sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
 WORKDIR /getmoneyFrontend
 
-# Copia arquivos para cache
-COPY getmoneyFrontend/package*.json ./
-COPY getmoneyFrontend/app.json ./
-COPY getmoneyFrontend/eas.json ./
+# Copia TODOS os arquivos do frontend (incluindo gradlew)
+COPY getmoneyFrontend ./
+
+# Instala dependências e faz prebuild
 RUN npm ci --silent
-
-# Copia source
-COPY getmoneyFrontend/src ./src
-COPY getmoneyFrontend/assets ./assets
-COPY getmoneyFrontend/*.js ./
-COPY getmoneyFrontend/*.json ./
-
-# Build do APK
 RUN npx expo prebuild --platform android
 
-# ADICIONA CONFIGURAÇÃO GRADLE PARA JDK 21
+# Configuração do Gradle para JDK 21
 WORKDIR /getmoneyFrontend/android
 RUN echo "org.gradle.java.home=/usr/lib/jvm/temurin-21-jdk-amd64" >> gradle.properties && \
     echo "android.jdkVersion=21" >> gradle.properties
 
-RUN chmod +x ./gradlew && ./gradlew assembleRelease --no-daemon --stacktrace
+# Garante que gradlew tem permissões de execução E usa modo offline
+RUN chmod +x ./gradlew
+RUN ./gradlew assembleRelease --offline --no-daemon
 
 #########################################
 # 3) Imagem final #
@@ -73,8 +67,10 @@ FROM amazoncorretto:21-alpine
 
 WORKDIR /app
 
+RUN mkdir -p /app/apk
+
 COPY --from=backend-build /getmoneyBackend/target/*.jar app.jar
-COPY --from=mobile-build /getmoneyFrontend/android/app/build/outputs/apk/release/app-release.apk /app/apk/app-release.apk
+COPY --from=mobile-build /getmoneyFrontend/android/app/build/outputs/apk/release/app-release.apk /app/apk/
 
 EXPOSE 8401
 
