@@ -45,16 +45,16 @@ RUN npx expo prebuild --platform android
 
 WORKDIR /getmoneyFrontend/android
 
-# Configurações do Gradle
-RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
+# Configurações do Gradle para aumentar memória e evitar problemas
+RUN echo "sdk.dir=$ANDROID_HOME" > local.properties && \
+    echo "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" > gradle.properties && \
+    echo "org.gradle.parallel=true" >> gradle.properties && \
+    echo "org.gradle.daemon=false" >> gradle.properties
 
 RUN chmod +x ./gradlew
 
-# Verifica versão do Java
-RUN java -version
-
-# Build
-RUN ./gradlew clean assembleDebug --no-daemon
+# Build com stacktrace para ver erro detalhado
+RUN ./gradlew clean assembleDebug --no-daemon --stacktrace
 
 #########################################
 # 3) Imagem final #
