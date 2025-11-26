@@ -16,12 +16,11 @@ RUN mvn clean package -DskipTests -q
 #########################################
 FROM eclipse-temurin:21-jdk AS mobile-build
 
-# Instala dependências para Android SDK
-RUN apt-get update && apt-get install -y \
-    curl \
-    unzip \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# Instala Node.js, npm e dependências
+RUN apt-get update && \
+    apt-get install -y curl git unzip nodejs npm && \
+    npm install -g yarn && \
+    rm -rf /var/lib/apt/lists/*
 
 # Configura Android SDK
 ENV ANDROID_HOME=/opt/android-sdk
