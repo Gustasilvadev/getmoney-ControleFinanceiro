@@ -16,11 +16,26 @@ RUN mvn clean package -DskipTests -q
 #########################################
 FROM eclipse-temurin:21-jdk AS mobile-build
 
-# Instala Node.js, npm e dependências
-RUN apt-get update && \
-    apt-get install -y curl git unzip nodejs npm && \
-    npm install -g yarn && \
-    rm -rf /var/lib/apt/lists/*
+# Instala dependências para Android SDK e JDK 17
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instala o JDK 17 da Eclipse Temurin
+RUN curl -L -o temurin17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.13%2B8/OpenJDK17U-jdk_x64_linux_hotspot_17.0.13_8.tar.gz && \
+    tar -xzf temurin17.tar.gz -C /opt && \
+    rm temurin17.tar.gz
+
+# Configura o JAVA_HOME para o JDK 17
+ENV JAVA_HOME=/opt/jdk-17.0.13+8
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# INSTALA NODE.JS v22.18.0
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g yarn
 
 # Configura Android SDK
 ENV ANDROID_HOME=/opt/android-sdk
