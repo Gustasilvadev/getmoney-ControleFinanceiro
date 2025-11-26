@@ -18,20 +18,22 @@ FROM node:22-alpine AS mobile-build
 
 WORKDIR /getmoneyFrontend
 
-# Instala EAS CLI
-RUN npm install -g @expo/eas-cli
-
 # Copia arquivos de configuração do projeto
 COPY getmoneyFrontend/package*.json ./
 COPY getmoneyFrontend/app.json ./
 COPY getmoneyFrontend/eas.json ./
-COPY getmoneyFrontend/ ./
 
 # Instala dependências
 RUN npm ci --silent
 
-# Build com EAS (não precisa de Android SDK local)
-RUN eas build --platform android --local --non-interactive --output=app-release.apk
+# Instala o EAS CLI usando o expo (recomendado)
+RUN npx expo install eas-cli
+
+# Copia o resto do código
+COPY getmoneyFrontend/ ./
+
+# Build com EAS
+RUN npx eas-cli build --platform android --local --non-interactive --output=app-release.apk
 
 #########################################
 # 3) Imagem final #
