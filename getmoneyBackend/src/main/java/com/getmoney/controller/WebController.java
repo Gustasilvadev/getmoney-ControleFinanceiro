@@ -27,29 +27,18 @@ public class WebController {
         return "forward:/install.html";
     }
 
-    // @GetMapping("/download/app")
-    // public ResponseEntity<Resource> downloadApk() throws MalformedURLException {
-    //     Path path = Paths.get("/app/apk/app-release.apk");
-    //     Resource resource = new UrlResource(path.toUri());
-
-    //     if (!resource.exists()) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-
-    //     return ResponseEntity.ok()
-    //             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"app-release.apk\"")
-    //             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-    //             .body(resource);
-    // }
-
     @GetMapping("/download/app")
-    public ResponseEntity<Void> downloadApk() {
-        // VERIFIQUE qual é o link correto do último build
-        String expoApkUrl = "https://expo.dev/artifacts/eas/idEkqoZer5LS9VCRSt6UHi.apk";
-        
-        // Teste este link manualmente no navegador primeiro!
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, expoApkUrl)
-                .build();
-    }
+        public ResponseEntity<Resource> downloadApk() throws MalformedURLException {
+         Path path = Paths.get("/app/apk/app-release.apk");
+         Resource resource = new UrlResource(path.toUri());
+
+         if (!resource.exists()) {
+             return ResponseEntity.notFound().build();
+         }
+
+         return ResponseEntity.ok()
+                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"app-release.apk\"")
+                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                 .body(resource);
+     }
 }
