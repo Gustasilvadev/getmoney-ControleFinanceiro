@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![Splash Screen](./static/images/Splash.jpeg)
-
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://java.com)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.4-green.svg)](https://spring.io)
 [![React Native](https://img.shields.io/badge/React%20Native-Latest-blue.svg)](https://reactnative.dev)
@@ -32,27 +30,8 @@ O GetMoney é um aplicativo mobile multiplataforma para controle financeiro pess
 - Métricas financeiras essenciais em tempo real
 - Interface intuitiva para análises rápidas
 
-## 🎯 Telas do Aplicativo
-
-<div align="center">
-
-### Tela de Abertura
-![Splash Screen](./getmoneyBackend/src/main/resources/static/images/Splash.jpeg)
-*Tela inicial do aplicativo*
-
-### Autenticação
-![Tela de Login](./getmoneyBackend/src/main/resources/static/images/Login.jpeg)
-*Acesso seguro à sua conta*
-
-### Visão Geral Financeira
-![Resumo Financeiro](./getmoneyBackend/src/main/resources/static/images/Resumofinanceiro.jpeg)
-*Dashboard com gráficos e métricas*
-
-### Gestão de Transações
-![Nova Transação](./getmoneyBackend/src/main/resources/static/images/Novatransacao.jpeg)
-*Registro de novas receitas e despesas*
-
-</div>
+## Interface do GetMoney
+<table> <tr> <td align="center"> <img src="./getmoneyBackend/src/main/resources/static/images/Splash.jpeg" width="200" alt="Tela de Abertura"/> <br/> <strong>Tela de Abertura</strong> <br/> <em>Tela inicial do aplicativo</em> </td> <td align="center"> <img src="./getmoneyBackend/src/main/resources/static/images/Login.jpeg" width="200" alt="Tela de Login"/> <br/> <strong>Autenticação</strong> <br/> <em>Acesso seguro à sua conta</em> </td> </tr> <tr> <td align="center"> <img src="./getmoneyBackend/src/main/resources/static/images/Resumofinanceiro.jpeg" width="200" alt="Resumo Financeiro"/> <br/> <strong>Visão Geral Financeira</strong> <br/> <em>Dashboard com gráficos e métricas</em> </td> <td align="center"> <img src="./getmoneyBackend/src/main/resources/static/images/Novatransacao.jpeg" width="200" alt="Nova Transação"/> <br/> <strong>Gestão de Transações</strong> <br/> <em>Registro de novas receitas e despesas</em> </td> </tr> </table></div>
 
 ## 🏗️ Arquitetura do Projeto
 
@@ -66,8 +45,6 @@ O GetMoney é um aplicativo mobile multiplataforma para controle financeiro pess
 ├── 🗄️ Banco de Dados H2/PostgreSQL
 └── 📖 Swagger/OpenAPI 3.0
 
-### Frontend Mobile
-```plaintext
 📦 GetMoney Mobile
 ├── ⚛️ React Native
 ├── 🔷 TypeScript
@@ -78,5 +55,5 @@ O GetMoney é um aplicativo mobile multiplataforma para controle financeiro pess
 └── 📊 Victory Native para gráficos
 
 
-### 👨‍💻 Desenvolvedor
+👨‍💻 Desenvolvedor
 GitHub: @Gustasilvadev
