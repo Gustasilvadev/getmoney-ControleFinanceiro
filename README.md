@@ -1,63 +1,82 @@
 # GetMoney - Aplicativo de Controle Financeiro Pessoal
 
+<div align="center">
 
-## 📋 Visão Geral do Projeto
+![Splash Screen](./static/images/Splash.jpeg)
 
-O GetMoney é um aplicativo mobile multiplataforma para controle financeiro pessoal, permitindo ao usuário registrar manualmente suas receitas e despesas, categorizá-las e visualizar um resumo de suas finanças por meio de relatórios e gráficos interativos.
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://java.com)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.4-green.svg)](https://spring.io)
+[![React Native](https://img.shields.io/badge/React%20Native-Latest-blue.svg)](https://reactnative.dev)
 
-O aplicativo não realiza transações financeiras reais, apenas simula registros com base em acontecimentos do dia a dia, ajudando no planejamento e acompanhamento financeiro pessoal.
+*Controle suas finanças de forma inteligente e simplificada*
 
-## ⭐ Diferenciais
+</div>
 
-### 📊 Visualização Interativa de Gráficos
+## 📋 Visão Geral
 
-- Gráficos de pizza (gastos por categoria)
+O GetMoney é um aplicativo mobile multiplataforma para controle financeiro pessoal, permitindo registrar manualmente receitas e despesas, categorizar transações e visualizar relatórios financeiros através de gráficos interativos.
 
-- Gráficos de linha (evolução de receitas e despesas) de fácil interpretação
+> ⚠️ **Importante**: Este aplicativo não realiza transações financeiras reais nem possui relação com instituições bancárias. É uma ferramenta de gestão pessoal para registro de dados criados pelo usuário.
 
-- Permite análises rápidas do comportamento financeiro sem depender de relatórios complexos
+## 🚀 Funcionalidades Principais
 
-- Dashboard intuitivo com métricas financeiras essenciais
+### 💰 Gestão Completa de Finanças
+- **Controle de Gastos**: Registre e categorize seus gastos
+- **Gestão de Receitas**: Acompanhe todas as fontes de renda
+- **Histórico Financeiro**: Visualize todo seu histórico com relatórios detalhados
+- **Metas de Economia**: Defina e acompanhe metas financeiras
+
+### 📊 Dashboard Interativo
+- Gráficos de pizza para visualização de gastos por categoria
+- Gráficos de linha para evolução mensal de receitas vs despesas
+- Métricas financeiras essenciais em tempo real
+- Interface intuitiva para análises rápidas
+
+## 🎯 Telas do Aplicativo
+
+<div align="center">
+
+### Tela de Abertura
+![Splash Screen](./getmoneyBackend/src/main/resources/static/images/Splash.jpeg)
+*Tela inicial do aplicativo*
+
+### Autenticação
+![Tela de Login](./getmoneyBackend/src/main/resources/static/images/Login.jpeg)
+*Acesso seguro à sua conta*
+
+### Visão Geral Financeira
+![Resumo Financeiro](./getmoneyBackend/src/main/resources/static/images/Resumofinanceiro.jpeg)
+*Dashboard com gráficos e métricas*
+
+### Gestão de Transações
+![Nova Transação](./getmoneyBackend/src/main/resources/static/images/Novatransacao.jpeg)
+*Registro de novas receitas e despesas*
+
+</div>
 
 ## 🏗️ Arquitetura do Projeto
 
-### Backend (API REST - Java Spring Boot)
+### Backend (API REST)
+```plaintext
+📦 GetMoney Backend
+├── 🗃️ Java 21
+├── 🍃 Spring Boot 3.5.4
+├── 🔐 Spring Security + JWT
+├── 📚 Spring Data JPA
+├── 🗄️ Banco de Dados H2/PostgreSQL
+└── 📖 Swagger/OpenAPI 3.0
 
-- Java 21
+### Frontend Mobile
+```plaintext
+📦 GetMoney Mobile
+├── ⚛️ React Native
+├── 🔷 TypeScript
+├── 🧭 React Navigation
+├── 📡 Axios para consumo de API
+├── 💾 AsyncStorage para persistência local
+├── 🎨 Styled Components para estilização
+└── 📊 Victory Native para gráficos
 
-- Spring Boot 3.5.4
 
-- Spring Security + JWT
-
-- Swagger/OpenAPI
-
-### Frontend
-
-- React Native
-
-- TypeScript
-
-- Axios para consumo de API
-
-- AsyncStorage para persistência local
-
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 👨‍💻 Desenvolvedor
+GitHub: @Gustasilvadev
