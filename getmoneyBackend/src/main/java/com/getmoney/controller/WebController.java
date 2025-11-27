@@ -42,14 +42,13 @@ public class WebController {
     //             .body(resource);
     // }
 
-    @GetMapping("/download/app")
+    @GetMapping("/download-apk")
     public ResponseEntity<Void> downloadApk() {
-        // VERIFIQUE qual é o link correto do último build
-        String expoApkUrl = "https://expo.dev/artifacts/eas/idEkqoZer5LS9VCRSt6UHi.apk";
         
-        // Teste este link manualmente no navegador primeiro!
+        String apkUrl = "https://drive.google.com/uc?export=download&id=1U3OYDt74wUBcO6LwSsD-LLCXCBIMw3sK";
+        
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, expoApkUrl)
+                .header(HttpHeaders.LOCATION, apkUrl)
                 .build();
     }
 }
