@@ -5,69 +5,77 @@ FROM maven:3.9.9-amazoncorretto-21-alpine AS backend-build
 
 WORKDIR /getmoneyBackend
 
-# Copia apenas o necessário para cachear melhor
 COPY getmoneyBackend/pom.xml .
-RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline -q
 
 COPY getmoneyBackend/src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -q
 
 #########################################
-# 2) Build do APK React Native (Android)#
+# 2) Build APK - COM DEBUG COMPLETO #
 #########################################
-# Aqui eu uso uma imagem baseada em Debian/Ubuntu
-# porque Android SDK não gosta muito de Alpine.
-FROM eclipse-temurin:21-jdk AS mobile-build
+FROM node:22-alpine AS mobile-build
 
-# Instala Node, npm, etc. (exemplo simples, ajuste versões conforme seu projeto)
-RUN apt-get update && \
-    apt-get install -y curl git unzip nodejs npm && \
-    npm install -g yarn && \
-    rm -rf /var/lib/apt/lists/*
-
-# Instala Android SDK (modelo bem básico)
+# Instala dependências + JDK 17
+RUN apk add --no-cache curl unzip openjdk17-jdk
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 ENV ANDROID_HOME=/opt/android-sdk
-ENV PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+RUN mkdir -p $ANDROID_HOME
 
-RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
-    curl -Lo sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip && \
-    unzip sdk.zip -d $ANDROID_HOME/cmdline-tools && \
-    rm sdk.zip && \
+WORKDIR /tmp
+RUN curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip && \
+    unzip -q sdk-tools.zip -d $ANDROID_HOME/cmdline-tools && \
     mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest && \
-    yes | sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+    rm sdk-tools.zip
+
+ENV PATH=$PATH:$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin
+
+# Aceitar licenças
+RUN yes | sdkmanager --licenses
+RUN sdkmanager \
+    "platform-tools" \
+    "platforms;android-34" \
+    "build-tools;34.0.0"
 
 WORKDIR /getmoneyFrontend
+COPY getmoneyFrontend/ ./
 
-# Dependências do RN
-COPY getmoneyFrontend/package.json getmoneyFrontend/package-lock.json ./
-RUN npm install
-
-# Copia o restante do projeto mobile
-COPY getmoneyFrontend/ .
-
+RUN npm ci --silent
 RUN npx expo prebuild --platform android
-RUN ls
-# Dá permissão e gera o APK release
+
 WORKDIR /getmoneyFrontend/android
-RUN chmod +x ./gradlew && \
-    ./gradlew assembleRelease
 
+# Configurações do Gradle
+RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
 
+RUN chmod +x ./gradlew
+
+# Tenta múltiplas abordagens para ver o erro REAL
+RUN ./gradlew clean --no-daemon --stacktrace
+
+# Tenta compilar passo a passo para isolar o erro
+RUN ./gradlew :app:checkDebugDuplicateClasses --no-daemon --stacktrace --info || true
+RUN ./gradlew :app:compileDebugAidl --no-daemon --stacktrace --info || true
+RUN ./gradlew :app:compileDebugRenderscript --no-daemon --stacktrace --info || true
+RUN ./gradlew :app:compileDebugShaders --no-daemon --stacktrace --info || true
+RUN ./gradlew :app:generateDebugAssets --no-daemon --stacktrace --info || true
+RUN ./gradlew :app:mergeDebugAssets --no-daemon --stacktrace --info || true
+RUN ./gradlew :app:compileDebugKotlin --no-daemon --stacktrace --info || true
+
+# Tenta a compilação Java que geralmente mostra o erro real
+RUN ./gradlew :app:compileDebugJavaWithJavac --no-daemon --stacktrace --info --warning-mode all
+
+# Se chegou aqui, tenta o build completo
+RUN ./gradlew assembleDebug --no-daemon --stacktrace --info --warning-mode all
 
 #########################################
-# 3) Imagem final de runtime do backend #
+# 3) Imagem final #
 #########################################
 FROM amazoncorretto:21-alpine
 
 WORKDIR /app
-
-# Copia o JAR do backend
-COPY --from=backend-build /getmoneyBackend/target/*.jar app.jar
-
 RUN mkdir -p /app/apk
-
-# Copia o APK gerado pelo estágio mobile
-COPY --from=mobile-build /getmoneyFrontend/android/app/build/outputs/apk/release/app-release.apk /app/apk/app-release.apk
+COPY --from=backend-build /getmoneyBackend/target/*.jar app.jar
+COPY --from=mobile-build /getmoneyFrontend/android/app/build/outputs/apk/debug/app-debug.apk /app/apk/
 EXPOSE 8401
-
 CMD ["java", "-jar", "/app/app.jar"]

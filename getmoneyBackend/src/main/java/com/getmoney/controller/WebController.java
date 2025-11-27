@@ -27,6 +27,7 @@ public class WebController {
         return "forward:/install.html";
     }
 
+<<<<<<< HEAD
     // @GetMapping("/download/app")
     // public ResponseEntity<Resource> downloadApk() throws MalformedURLException {
     //     Path path = Paths.get("/app/apk/app-release.apk");
@@ -51,4 +52,20 @@ public class WebController {
                 .header(HttpHeaders.LOCATION, apkUrl)
                 .build();
     }
+=======
+    @GetMapping("/download/app")
+        public ResponseEntity<Resource> downloadApk() throws MalformedURLException {
+         Path path = Paths.get("/app/apk/app-release.apk");
+         Resource resource = new UrlResource(path.toUri());
+
+         if (!resource.exists()) {
+             return ResponseEntity.notFound().build();
+         }
+
+         return ResponseEntity.ok()
+                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"app-release.apk\"")
+                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                 .body(resource);
+     }
+>>>>>>> cd809f63459ae1ca44e3d919234fd027dcc5c8a6
 }
