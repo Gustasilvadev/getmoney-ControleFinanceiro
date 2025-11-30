@@ -15,7 +15,7 @@
       "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/IconApp.png",
-        "backgroundColor": "#000000"
+        "backgroundColor": "#FFFFFF"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
