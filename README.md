@@ -42,7 +42,7 @@ O GetMoney é um aplicativo mobile multiplataforma para controle financeiro pess
 ├── 🍃 Spring Boot 3.5.4
 ├── 🔐 Spring Security + JWT
 ├── 📚 Spring Data JPA
-├── 🗄️ Banco de Dados H2/PostgreSQL
+├── 🗄️ Banco de Dados MySql
 └── 📖 Swagger/OpenAPI 3.0
 
 📦 GetMoney Mobile
