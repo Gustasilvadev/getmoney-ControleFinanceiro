@@ -2,7 +2,7 @@
   "expo": {
     "name": "getmoney",
     "slug": "getmoney",
-    "version": "1.0.3",
+    "version": "1.0.6",
     "orientation": "portrait",
     "scheme": "getmoney",
     "userInterfaceStyle": "automatic",
@@ -12,7 +12,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 4,
+      "versionCode": 7,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/IconApp.png",
         "backgroundColor": "#000000"
