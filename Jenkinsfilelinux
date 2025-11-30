@@ -20,15 +20,14 @@ pipeline {
             }
         }
 
-        stage('Construir Imagem Docker') {
+         stage('Construir Imagem Docker') {
             steps {
                 script {
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
                     
-                    dir('getmoneyBackend') {
-                        sh "docker build -t ${imageTag} ."
-                    }
+                    // Build a partir da raiz onde está o Dockerfile
+                    sh "docker build -t ${imageTag} ."
                 }
             }
         }
