@@ -41,6 +41,7 @@ public class SegurancaConfig {
             "/index.html",
             "/install.html",
             "/app-release.apk",
+            "/images"
     };
 
     public static final String[] ENDPOINTS_WEB_PAGES = {
