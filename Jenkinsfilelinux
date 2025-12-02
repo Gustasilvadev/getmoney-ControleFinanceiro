@@ -27,7 +27,11 @@ pipeline {
                     def imageTag = "${appName}:${env.BUILD_ID}"
                     
                     // Build a partir da raiz onde está o Dockerfile
-                    sh "docker build -t ${imageTag} ."
+                    dir('getmoneyBackend') {
+                        sh "docker build -t ${imageTag} ."
+                    }
+                    
+                    
                 }
             }
         }
