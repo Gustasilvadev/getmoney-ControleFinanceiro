@@ -14,17 +14,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
-@CrossOrigin("*")
 public class WebController {
 
-    @GetMapping("/")
-    public String home() {
-        return "forward:/index.html";
+    @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<String> home() throws Exception {
+        ClassPathResource resource = new ClassPathResource("static/index.html");
+        InputStream inputStream = resource.getInputStream();
+        String body = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+        return ResponseEntity.ok(body);
     }
 
-    @GetMapping("/install")
-    public String install() {
-        return "forward:/install.html";
+    @GetMapping(value = "/install", produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<String> install() throws Exception {
+        ClassPathResource resource = new ClassPathResource("static/install.html");
+        InputStream inputStream = resource.getInputStream();
+        String body = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+        return ResponseEntity.ok(body);
     }
-
 }

@@ -35,13 +35,20 @@ public class SegurancaConfig {
             "/api/autenticacao/autenticarUsuario",
             "/test-expo-url",
 
-            "/",
-            "/install",
-            "/download-apk",
-            "/index.html",
-            "/install.html",
-            "/app-release.apk",
-            "/images"
+            // Páginas web
+                "/",
+                "/install",
+                "/index.html",
+                "/install.html",
+
+                // Download do APK (endpoint e arquivo)
+                "/download-apk",
+                "/app-release.apk",
+
+                // Recursos estáticos: imagens
+                 "/images/**",
+                "/images/*",
+                "/images",
     };
 
     public static final String[] ENDPOINTS_WEB_PAGES = {
