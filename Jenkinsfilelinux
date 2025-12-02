@@ -23,7 +23,11 @@ pipeline {
                 script {
                     def appName = 'getmoney'
                     def imageTag = "${appName}:${env.BUILD_ID}"
-                    sh "docker build -t ${imageTag} ."
+
+                    dir('getmoneyBackend') {
+                        sh "docker build -t ${imageTag} ."
+                    }
+                    
                 }
             }
         }
