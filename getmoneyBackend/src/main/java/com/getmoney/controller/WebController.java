@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@RestController
+@Controller
 @CrossOrigin("*")
 public class WebController {
 
