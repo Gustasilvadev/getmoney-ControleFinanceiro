@@ -27,13 +27,4 @@ public class WebController {
         return "forward:/install.html";
     }
 
-    @GetMapping("/download-apk")
-    public ResponseEntity<Void> downloadApk() {
-        
-        String apkUrl = "https://drive.google.com/uc?export=download&id=1U3OYDt74wUBcO6LwSsD-LLCXCBIMw3sK";
-        
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, apkUrl)
-                .build();
-    }
 }
