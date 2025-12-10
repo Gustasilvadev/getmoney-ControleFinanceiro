@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vídeo Demonstrativo - GetMoney App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+            color: #1F2937;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #10B981, #059669);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #047857; /* Verde mais escuro para contraste */
+            letter-spacing: 0.5px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #10B981;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid #059669;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .back-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            gap: 12px;
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        /* Video Section */
+        .video-section {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid #E5E7EB;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1);
+        }
+
+        .video-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .video-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #047857; /* Verde escuro */
+            margin-bottom: 15px;
+        }
+
+        .video-tag {
+            background: linear-gradient(to right, #10B981, #059669);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Video Container Centralizado */
+        .video-center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 40%;
+            max-width: 800px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: 40%;
+            display: block;
+            border-radius: 15px;
+        }
+
+        .video-info {
+            background: #F9FAFB;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid #E5E7EB;
+            text-align: center;
+        }
+
+        .video-info h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #047857; /* Verde escuro */
+        }
+
+        .video-info p {
+            color: #4B5563; /* Cinza escuro */
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        /* Sidebar - Agora abaixo do vídeo */
+        .sidebar {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.1);
+        }
+
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #047857; /* Verde escuro */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .steps-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .step-item {
+            margin-bottom: 18px;
+            padding-left: 40px;
+            position: relative;
+            font-size: 1.05rem;
+            color: #374151; /* Cinza mais escuro */
+        }
+
+        .step-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10B981;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: #ECFDF5;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #10B981;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(to right, #10B981, #059669);
+            color: #FFFFFF;
+            padding: 18px 40px;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            transition: all 0.4s ease;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(to right, #059669, #047857);
+        }
+
+        /* Video Controls */
+        .video-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #10B981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .control-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .control-btn.primary {
+            background: linear-gradient(to right, #10B981, #059669);
+        }
+
+        .control-btn.primary:hover {
+            background: linear-gradient(to right, #059669, #047857);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .video-title {
+                font-size: 1.6rem;
+            }
+
+            .video-section {
+                padding: 20px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .video-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .control-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .video-container {
+                max-width: 100%;
+            }
+        }
+
+        /* Video Loading State */
+        .video-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid #10B981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 15px;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #10B981, #059669);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #6B7280; /* Cinza médio */
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">G</div>
+            <div class="logo-text">GetMoney</div>
+        </a>
+        <a href="index.html" class="back-btn">
+            ← Voltar para Home
+        </a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Video Section -->
+        <section class="video-section">
+            <div class="video-header">
+                <h1 class="video-title">Demonstração do App GetMoney</h1>
+                <span class="video-tag">Tutorial</span>
+            </div>
+
+            <!-- Container Centralizado para o Vídeo -->
+            <div class="video-center-container">
+                <div class="video-container">
+                    <div class="video-loading" id="videoLoading">
+                        <div class="spinner"></div>
+                    </div>
+                    <!-- VIDEO REAL -->
+                    <video id="demoVideo" controls preload="metadata">
+                        <source src="images/VideoDemonstrativo.mp4" type="video/mp4">
+                        Seu navegador não suporta a reprodução de vídeos HTML5.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-time">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalTime">0:50</span>
+                </div>
+            </div>
+
+            <!-- Video Controls -->
+            <div class="video-controls">
+                <button class="control-btn primary" id="playBtn">
+                    ▶ Reproduzir Vídeo
+                </button>
+                <button class="control-btn" id="pauseBtn">
+                    ⏸ Pausar
+                </button>
+                <button class="control-btn" id="restartBtn">
+                    ↻ Reiniciar
+                </button>
+                <button class="control-btn" id="fullscreenBtn">
+                    ⛶ Tela Cheia
+                </button>
+            </div>
+
+            <div class="video-info">
+                <h3>Sobre este vídeo</h3>
+                <p>Este vídeo demonstra todas as funcionalidades principais do aplicativo GetMoney, mostrando passo a passo como utilizar cada recurso para maximizar seus ganhos.</p>
+                <p>Duração: 0:50 seg | Resolução: 1080p | Idioma: Português</p>
+            </div>
+        </section>
+
+        <!-- Sidebar - Agora abaixo do vídeo -->
+        <aside class="sidebar">
+            <!-- Download Card -->
+            <div class="card">
+                <h2 class="card-title">📱 Instale o App</h2>
+                <ul class="steps-list">
+                    <li class="step-item">Assista ao vídeo demonstrativo</li>
+                    <li class="step-item">Baixe o APK clicando no botão abaixo</li>
+                    <li class="step-item">Ative "Fontes desconhecidas" no Android</li>
+                    <li class="step-item">Instale e comece a usar agora</li>
+                </ul>
+
+                <div class="download-section">
+                    <a href="instalar-getmoney.html" class="download-btn">
+                        📥 Baixar GetMoney
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const video = document.getElementById('demoVideo');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const videoLoading = document.getElementById('videoLoading');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalTimeEl = document.getElementById('totalTime');
+
+        // Formatar tempo
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Atualizar barra de progresso
+        function updateProgress() {
+            if (video.duration) {
+                const percent = (video.currentTime / video.duration) * 100;
+                progressFill.style.width = `${percent}%`;
+                currentTimeEl.textContent = formatTime(video.currentTime);
+            }
+        }
+
+        // Esconder loading quando vídeo carregar
+        video.addEventListener('loadeddata', function() {
+            videoLoading.style.display = 'none';
+            totalTimeEl.textContent = formatTime(video.duration);
+        });
+
+        // Mostrar loading enquanto carrega
+        video.addEventListener('waiting', function() {
+            videoLoading.style.display = 'flex';
+        });
+
+        // Esconder loading quando puder reproduzir
+        video.addEventListener('canplay', function() {
+            videoLoading.style.display = 'none';
+        });
+
+        // Atualizar progresso
+        video.addEventListener('timeupdate', updateProgress);
+
+        // Clique na barra de progresso
+        document.querySelector('.progress-bar').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            video.currentTime = pos * video.duration;
+            updateProgress();
+        });
+
+        // Controles
+        playBtn.addEventListener('click', function() {
+            video.play();
+            playBtn.innerHTML = '▶ Reproduzindo...';
+            setTimeout(() => {
+                playBtn.innerHTML = '▶ Reproduzir Vídeo';
+            }, 2000);
+        });
+
+        pauseBtn.addEventListener('click', function() {
+            video.pause();
+        });
+
+        restartBtn.addEventListener('click', function() {
+            video.currentTime = 0;
+            video.play();
+        });
+
+        fullscreenBtn.addEventListener('click', function() {
+            const videoContainer = document.querySelector('.video-container');
+            if (videoContainer.requestFullscreen) {
+                videoContainer.requestFullscreen();
+            } else if (videoContainer.mozRequestFullScreen) {
+                videoContainer.mozRequestFullScreen();
+            } else if (videoContainer.webkitRequestFullscreen) {
+                videoContainer.webkitRequestFullscreen();
+            } else if (videoContainer.msRequestFullscreen) {
+                videoContainer.msRequestFullscreen();
+            }
+        });
+
+        // Atualizar tempo total
+        video.addEventListener('loadedmetadata', function() {
+            totalTimeEl.textContent = formatTime(video.duration);
+        });
+
+        // Inicializar progresso
+        updateProgress();
+    });
+</script>
+</body>
+</html>
