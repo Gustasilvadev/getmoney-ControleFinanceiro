@@ -40,6 +40,7 @@ public class SegurancaConfig {
                 "/install",
                 "/index.html",
                 "/install.html",
+                "video.html",
 
                 // Download do APK (endpoint e arquivo)
                 "/download-apk",
